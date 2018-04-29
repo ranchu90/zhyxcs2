@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhyxcs.xxzz.mapper.BankKindMapper">
+  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.BankKind">
+    <constructor>
+      <idArg column="sBankKind" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sKindName" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbankkind
+    where sBankKind = #{sbankkind,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.BankKind">
+    insert into tbankkind (sBankKind, sKindName)
+    values (#{sbankkind,jdbcType=VARCHAR}, #{skindname,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.BankKind">
+    update tbankkind
+    set sKindName = #{skindname,jdbcType=VARCHAR}
+    where sBankKind = #{sbankkind,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select sBankKind, sKindName
+    from tbankkind
+    where sBankKind = #{sbankkind,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select sBankKind, sKindName
+    from tbankkind
+  </select>
+</mapper>

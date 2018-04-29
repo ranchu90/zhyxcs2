@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhyxcs.xxzz.mapper.WorkIndexMapper">
+  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.WorkIndex">
+    <constructor>
+      <idArg column="sTransactionNum" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sApprovalState" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sBusinessCategory" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sBankName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sUpUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sUpUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sApprovalCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sIdentifier" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sStartTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="sEndTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="sReviewUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sCheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRecheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRecheckUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRecheckResult" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRecheckOpition" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRecheckTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tworkindex
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+    insert into tworkindex (sTransactionNum, sDepositorName, 
+      sApprovalState, sBusinessCategory, sAccountType, 
+      sBankCode, sBankName, sUpUserCode, 
+      sUpUserName, sApprovalCode, sIdentifier, 
+      sStartTime, sEndTime, sReviewUserCode, 
+      sCheckUserCode, sRecheckUserCode, sRecheckUserName, 
+      sRecheckResult, sRecheckOpition, sRecheckTime
+      )
+    values (#{stransactionnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR}, 
+      #{sapprovalstate,jdbcType=VARCHAR}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
+      #{sbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR}, 
+      #{supusername,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR}, 
+      #{sstarttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR}, 
+      #{scheckusercode,jdbcType=VARCHAR}, #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckusername,jdbcType=VARCHAR}, 
+      #{srecheckresult,jdbcType=VARCHAR}, #{srecheckopition,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="newWorkIndex" statementType="CALLABLE" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+      {
+          call generate_serial_number_by_bankcode(
+           #{sbankcode, mode=IN,jdbcType=VARCHAR},
+           #{sdepositorname, mode=IN,jdbcType=VARCHAR}, 
+           #{sbusinesscategory, mode=IN,jdbcType=VARCHAR}, 
+           #{saccounttype, mode=IN,jdbcType=VARCHAR}, 
+           #{sbankname, mode=IN,jdbcType=VARCHAR}, 
+           #{supusercode, mode=IN,jdbcType=VARCHAR}, 
+           #{supusername, mode=IN,jdbcType=VARCHAR},
+           #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
+          )
+      }
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+    update tworkindex
+    set sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
+      sApprovalState = #{sapprovalstate,jdbcType=VARCHAR},
+      sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
+      sAccountType = #{saccounttype,jdbcType=VARCHAR},
+      sBankCode = #{sbankcode,jdbcType=VARCHAR},
+      sBankName = #{sbankname,jdbcType=VARCHAR},
+      sUpUserCode = #{supusercode,jdbcType=VARCHAR},
+      sUpUserName = #{supusername,jdbcType=VARCHAR},
+      sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR},
+      sIdentifier = #{sidentifier,jdbcType=VARCHAR},
+      sStartTime = #{sstarttime,jdbcType=TIMESTAMP},
+      sEndTime = #{sendtime,jdbcType=TIMESTAMP},
+      sReviewUserCode = #{sreviewusercode,jdbcType=VARCHAR},
+      sCheckUserCode = #{scheckusercode,jdbcType=VARCHAR},
+      sRecheckUserCode = #{srecheckusercode,jdbcType=VARCHAR},
+      sRecheckUserName = #{srecheckusername,jdbcType=VARCHAR},
+      sRecheckResult = #{srecheckresult,jdbcType=VARCHAR},
+      sRecheckOpition = #{srecheckopition,jdbcType=VARCHAR},
+      sRecheckTime = #{srechecktime,jdbcType=TIMESTAMP}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select sTransactionNum, sDepositorName, sApprovalState, sBusinessCategory, sAccountType, 
+    sBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode, sIdentifier, sStartTime, 
+    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckUserName, sRecheckResult, 
+    sRecheckOpition, sRecheckTime
+    from tworkindex
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select sTransactionNum, sDepositorName, sApprovalState, sBusinessCategory, sAccountType, 
+    sBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode, sIdentifier, sStartTime, 
+    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckUserName, sRecheckResult, 
+    sRecheckOpition, sRecheckTime
+    from tworkindex
+  </select>
+</mapper>
