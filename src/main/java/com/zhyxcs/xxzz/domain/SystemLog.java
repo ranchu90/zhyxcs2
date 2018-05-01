@@ -15,20 +15,20 @@ public class SystemLog {
 
     private String sipaddress;
 
-    private String sipprixy;
+    private String smacaddress;
 
     private String scomments;
 
     private Date slogtime;
 
-    public SystemLog(Long sid, String susercode, String susename, String sbankcode, String sbankname, String sipaddress, String sipprixy, String scomments, Date slogtime) {
+    public SystemLog(Long sid, String susercode, String susename, String sbankcode, String sbankname, String sipaddress, String smacaddress, String scomments, Date slogtime) {
         this.sid = sid;
         this.susercode = susercode;
         this.susename = susename;
         this.sbankcode = sbankcode;
         this.sbankname = sbankname;
         this.sipaddress = sipaddress;
-        this.sipprixy = sipprixy;
+        this.smacaddress = smacaddress;
         this.scomments = scomments;
         this.slogtime = slogtime;
     }
@@ -85,12 +85,12 @@ public class SystemLog {
         this.sipaddress = sipaddress == null ? null : sipaddress.trim();
     }
 
-    public String getSipprixy() {
-        return sipprixy;
+    public String getSmacaddress() {
+        return smacaddress;
     }
 
-    public void setSipprixy(String sipprixy) {
-        this.sipprixy = sipprixy == null ? null : sipprixy.trim();
+    public void setSmacaddress(String smacaddress) {
+        this.smacaddress = smacaddress == null ? null : smacaddress.trim();
     }
 
     public String getScomments() {
