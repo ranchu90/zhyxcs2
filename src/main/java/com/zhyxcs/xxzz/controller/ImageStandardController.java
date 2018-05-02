@@ -11,7 +11,7 @@ import java.util.List;
 public class ImageStandardController {
     @Autowired
     private ImageStandardService imageStandardService;
-    
+
     @RequestMapping(value = "businessCategory", method = RequestMethod.GET)
     public List<String> getBusinessCategory(){
         return imageStandardService.businessCatagory();
