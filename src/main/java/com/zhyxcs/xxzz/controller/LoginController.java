@@ -1,6 +1,5 @@
 package com.zhyxcs.xxzz.controller;
 
-import com.zhyxcs.xxzz.config.WebSecurityConfig;
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.OrgaService;
@@ -19,16 +18,20 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController extends BaseController{
     @Autowired
     private UserService userService;
     @Autowired
     private OrgaService orgaService;
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public Map loginVerify(@RequestBody User user, HttpSession session){
+    public Map loginVerify(@RequestBody User user){
         User dbUser = userService.selectByPrimaryKey(user.getSusercode());
         Map result = new HashMap();
+
+        HttpSession session = super.request.getSession();
+
+        System.out.println("login: " + session.getId());
 
         if (dbUser != null){
             String md5Password = CommonUtils.MD5(user.getSpassword());
@@ -46,6 +49,19 @@ public class LoginController {
             result.put("state", "failed");
             result.put("message", "用户不存在！");
         }
+
+        result.put("code", 20000);
+
+        return result;
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public Map loginOut(HttpSession session){
+        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+
+        Map result = new HashMap();
+        result.put("state", "true");
+        result.put("code", 20000);
 
         return result;
     }

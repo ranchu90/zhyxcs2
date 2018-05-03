@@ -26,16 +26,23 @@ public class WebSecurityConfig extends WebMvcConfigurationSupport {
     public void  addInterceptors(InterceptorRegistry registry){
         InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
 
+        /*不需要登陆验证*/
         addInterceptor.excludePathPatterns("/error");
         addInterceptor.excludePathPatterns("/login**");
         addInterceptor.excludePathPatterns("/login/*");
+
+        /*需要登陆验证*/
         addInterceptor.addPathPatterns("/**");
+        addInterceptor.addPathPatterns("/images/*");
+        addInterceptor.excludePathPatterns("/login/logout");
     }
 
     private class SecurityInterceptor extends HandlerInterceptorAdapter {
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
             HttpSession session = request.getSession();
+
+            System.out.println("拦截器："+session.getId());
 
             //判断是否已有该用户登录的session
             if(session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null){
@@ -45,6 +52,8 @@ public class WebSecurityConfig extends WebMvcConfigurationSupport {
             //跳转到登录页
             Map result = new HashMap();
             result.put("state", "expired");
+            result.put("code", 8848);
+            result.put("message", "用户会话已过期");
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=utf-8");
             PrintWriter out = null;

@@ -1,23 +1,27 @@
 package com.zhyxcs.xxzz.controller;
 
 import com.zhyxcs.xxzz.service.ImageStandardService;
+import com.zhyxcs.xxzz.utils.CramsConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-public class ImageStandardController {
+@RequestMapping("/images")
+public class ImageStandardController extends BaseController {
     @Autowired
     private ImageStandardService imageStandardService;
 
-    @RequestMapping(value = "businessCategory", method = RequestMethod.GET)
+    @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
     public List<String> getBusinessCategory(){
         return imageStandardService.businessCatagory();
     }
 
-    @RequestMapping(value = "accountType", method = RequestMethod.GET)
+    @RequestMapping(value = "/accountType", method = RequestMethod.GET)
     public List<String> getAccountType(){
         return imageStandardService.accountType();
     }

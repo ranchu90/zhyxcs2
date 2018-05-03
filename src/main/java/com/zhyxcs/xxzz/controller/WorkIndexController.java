@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class WorkIndexController {
+public class WorkIndexController extends BaseController{
     @Autowired
     private WorkIndexService workIndexService;
-    
+
     @RequestMapping(value = "workIndex", method = RequestMethod.POST)
     public WorkIndex insert(@RequestBody WorkIndex workIndex){
         workIndexService.newWorkIndex(workIndex);
