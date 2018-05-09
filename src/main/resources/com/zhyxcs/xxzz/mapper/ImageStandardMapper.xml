@@ -10,15 +10,15 @@
       <arg column="sProofAmount" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
-  
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from timagestandard
     where sID = #{sid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.ImageStandard">
-    insert into timagestandard (sID, sBusineesCategory, sAccountType, 
+    insert into timagestandard (sID, sBusineesCategory, sAccountType,
       sProofName, sProofAmount)
-    values (#{sid,jdbcType=INTEGER}, #{sbusineescategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
+    values (#{sid,jdbcType=INTEGER}, #{sbusineescategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR},
       #{sproofname,jdbcType=VARCHAR}, #{sproofamount,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.ImageStandard">
@@ -45,5 +45,10 @@
   <select id="accountType" resultType="java.lang.String">
     select distinct sAccountType
     from timagestandard
+  </select>
+  <select id="certificateType" resultType="java.lang.String">
+    select sProofName
+    from timagestandard
+    where sBusineesCategory = #{businessCatagory} and sAccountType = #{accountType}
   </select>
 </mapper>

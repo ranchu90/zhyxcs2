@@ -4,4 +4,6 @@ import com.zhyxcs.xxzz.domain.User;
 
 public interface UserService {
     User selectByPrimaryKey(String susercode);
+
+    int updateByPrimaryKey(User record);
 }

@@ -17,12 +17,10 @@
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.ApprovalRecord">
-    insert into tapprovalrecord (sID, sTransactionNum, sApprovelResult, 
-      sApprovelOpinion, sApprovelUserCode, sApprovelUserName, 
-      sApprovelTime)
-    values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{sapprovelresult,jdbcType=VARCHAR}, 
-      #{sapprovelopinion,jdbcType=VARCHAR}, #{sapprovelusercode,jdbcType=VARCHAR}, #{sapprovelusername,jdbcType=VARCHAR}, 
-      #{sapproveltime,jdbcType=TIMESTAMP})
+    insert into tapprovalrecord ( sTransactionNum, sApprovelResult,
+      sApprovelOpinion, sApprovelUserCode, sApprovelUserName)
+    values (#{stransactionnum,jdbcType=VARCHAR}, #{sapprovelresult,jdbcType=VARCHAR},
+      #{sapprovelopinion,jdbcType=VARCHAR}, #{sapprovelusercode,jdbcType=VARCHAR}, #{sapprovelusername,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.ApprovalRecord">
     update tapprovalrecord
@@ -35,14 +33,20 @@
     where sID = #{sid,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sApprovelResult, sApprovelOpinion, sApprovelUserCode, 
+    select sID, sTransactionNum, sApprovelResult, sApprovelOpinion, sApprovelUserCode,
     sApprovelUserName, sApprovelTime
     from tapprovalrecord
     where sID = #{sid,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sApprovelResult, sApprovelOpinion, sApprovelUserCode, 
+    select sID, sTransactionNum, sApprovelResult, sApprovelOpinion, sApprovelUserCode,
     sApprovelUserName, sApprovelTime
     from tapprovalrecord
+  </select>
+  <select id="selectByTranID" resultType="com.zhyxcs.xxzz.domain.ApprovalRecord">
+    select sApprovelResult , sApprovelOpinion, sApprovelUserCode, sApprovelUserName
+    from tapprovalrecord
+    where sTransactionNum = #{transactioinNum}
+    order by sApprovelTime desc
   </select>
 </mapper>

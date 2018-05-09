@@ -28,22 +28,54 @@ public class LoginController extends BaseController{
     public Map loginVerify(@RequestBody User user){
         User dbUser = userService.selectByPrimaryKey(user.getSusercode());
         Map result = new HashMap();
-
         HttpSession session = super.request.getSession();
 
         System.out.println("login: " + session.getId());
 
         if (dbUser != null){
-            String md5Password = CommonUtils.MD5(user.getSpassword());
-            if (md5Password.equals(dbUser.getSpassword())){
-                Orga orga = orgaService.selectByPrimaryKey(dbUser.getSbankcode());
-                session.setAttribute(CramsConstants.SESSION_LOGIN_USER, dbUser);
-                session.setAttribute(CramsConstants.SESSION_ORGA_WITH_USER, orga);
-                result.put("state", "success");
-                result.put("token", "op");
+            if ("0".equals(dbUser.getSuserstate())) {
+                if (dbUser.getSpwderror() < 5){
+                    String md5Password = CommonUtils.MD5(user.getSpassword());
+                    if (md5Password.equals(dbUser.getSpassword())) {
+                        //获取机构信息
+                        Orga orga = orgaService.selectByPrimaryKey(dbUser.getSbankcode());
+                        //登陆成功，清楚错误密码次数
+                        dbUser.setSpwderror((byte) 0);
+                        userService.updateByPrimaryKey(dbUser);
+
+                        session.setAttribute(CramsConstants.SESSION_LOGIN_USER, dbUser);
+                        session.setAttribute(CramsConstants.SESSION_ORGA_WITH_USER, orga);
+
+                        HashMap userMap = new HashMap();
+                        userMap.put("username", dbUser.getSusername());
+                        userMap.put("usercode", dbUser.getSusercode());
+                        userMap.put("bankcode", dbUser.getSbankcode());
+                        userMap.put("userlevel", dbUser.getSuserlevel());
+                        userMap.put("telephone", dbUser.getStelephone());
+                        userMap.put("email", dbUser.getSemail());
+
+                        result.put("state", "success");
+                        result.put("token", "op");
+                        result.put("user", userMap);
+
+                    } else {
+                        //记录密码错误次数
+                        byte pwdErrorTimes = dbUser.getSpwderror();
+                        pwdErrorTimes = (byte) (pwdErrorTimes + 1);
+                        dbUser.setSpwderror(pwdErrorTimes);
+
+                        userService.updateByPrimaryKey(dbUser);
+
+                        result.put("state", "failed");
+                        result.put("message", "密码错误！");
+                    }
+                } else {
+                    result.put("state", "failed");
+                    result.put("message", "密码错误超过5次！");
+                }
             } else {
                 result.put("state", "failed");
-                result.put("message", "密码错误！");
+                result.put("message", "用户未启用！");
             }
         } else {
             result.put("state", "failed");
@@ -58,6 +90,7 @@ public class LoginController extends BaseController{
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Map loginOut(HttpSession session){
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+        session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
 
         Map result = new HashMap();
         result.put("state", "true");

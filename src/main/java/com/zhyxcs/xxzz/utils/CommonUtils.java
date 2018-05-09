@@ -1,10 +1,14 @@
 package com.zhyxcs.xxzz.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 public class CommonUtils {
     public static boolean compareString(String srcStr, String destStr) {
@@ -36,6 +40,10 @@ public class CommonUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String objectToJson(Object object) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(object);
     }
 
     public static String getIpAddress(HttpServletRequest request) {

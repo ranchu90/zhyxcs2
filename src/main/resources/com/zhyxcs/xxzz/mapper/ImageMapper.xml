@@ -18,13 +18,13 @@
     delete from timage
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.Image">
-    insert into timage (sID, sTransactionNum, sImageType, 
-      sProofName, sOriginalName, sImageName, 
+  <insert id="insert" useGeneratedKeys="true" keyProperty="sid" keyColumn="sID" parameterType="com.zhyxcs.xxzz.domain.Image">
+    insert into timage (sID, sTransactionNum, sImageType,
+      sProofName, sOriginalName, sImageName,
       sImageSN, sStorePath
       )
-    values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{simagetype,jdbcType=VARCHAR}, 
-      #{sproofname,jdbcType=VARCHAR}, #{soriginalname,jdbcType=VARCHAR}, #{simagename,jdbcType=VARCHAR}, 
+    values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{simagetype,jdbcType=VARCHAR},
+      #{sproofname,jdbcType=VARCHAR}, #{soriginalname,jdbcType=VARCHAR}, #{simagename,jdbcType=VARCHAR},
       #{simagesn,jdbcType=SMALLINT}, #{sstorepath,jdbcType=VARCHAR}
       )
   </insert>
@@ -41,14 +41,20 @@
     where sID = #{sid,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sImageType, sProofName, sOriginalName, sImageName, sImageSN, 
+    select sID, sTransactionNum, sImageType, sProofName, sOriginalName, sImageName, sImageSN,
     sStorePath, sUploadTime
     from timage
     where sID = #{sid,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sImageType, sProofName, sOriginalName, sImageName, sImageSN, 
+    select sID, sTransactionNum, sImageType, sProofName, sOriginalName, sImageName, sImageSN,
     sStorePath, sUploadTime
     from timage
+  </select>
+  <select id="selectImagesByTranID" resultType="com.zhyxcs.xxzz.domain.Image">
+    select *
+    from timage
+    where sTransactionNum = #{sTransactionNum}
+    order by sUploadTime
   </select>
 </mapper>

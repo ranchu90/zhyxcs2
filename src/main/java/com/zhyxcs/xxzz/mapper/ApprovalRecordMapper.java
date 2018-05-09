@@ -1,6 +1,9 @@
 package com.zhyxcs.xxzz.mapper;
 
 import com.zhyxcs.xxzz.domain.ApprovalRecord;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 public interface ApprovalRecordMapper {
@@ -13,4 +16,6 @@ public interface ApprovalRecordMapper {
     List<ApprovalRecord> selectAll();
 
     int updateByPrimaryKey(ApprovalRecord record);
+
+    List<ApprovalRecord> selectByTranID(@Param("transactioinNum") String transactioinNum);
 }

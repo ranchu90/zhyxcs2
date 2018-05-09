@@ -11,7 +11,7 @@ import java.util.List;
 public class ImageStandardServiceImpl implements ImageStandardService {
     @Autowired
     private ImageStandardMapper imageStandardMapper;
-    
+
     @Override
     public List<String> businessCatagory() {
         return imageStandardMapper.businessCatagory();
@@ -20,6 +20,11 @@ public class ImageStandardServiceImpl implements ImageStandardService {
     @Override
     public List<String> accountType() {
         return imageStandardMapper.accountType();
+    }
+
+    @Override
+    public List<String> certificateType(String businessCatagory, String accountType) {
+        return imageStandardMapper.certificateType(businessCatagory, accountType);
     }
 
 }
