@@ -15,4 +15,6 @@ public interface ImageMapper {
     int updateByPrimaryKey(Image record);
 
     List<Image> selectImagesByTranID(String sTransactionNum);
+
+    List<String> selectProofNameByTranID(String sTransactionNum);
 }

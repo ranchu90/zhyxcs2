@@ -26,5 +26,7 @@ public interface WorkIndexMapper {
 
     int updateDepositorNameByPrimaryKey(WorkIndex workIndex);
 
-    int updateApprovalStateNameByPrimaryKey(WorkIndex workIndex);
+    int updateApprovalStateNameByPrimaryKey(@Param("workIndex") WorkIndex workIndex, @Param("action") String action);
+
+    int updateWorkIndexByApprovalCodeAndIdentifier(WorkIndex workIndex);
 }

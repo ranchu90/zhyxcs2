@@ -24,7 +24,17 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<Image> selectImagesByTranID(String sTransactionNum) {
-        return imageMapper.selectImagesByTranID(sTransactionNum);
+    public List<Image> selectImagesByTranID(String transactionNum) {
+        return imageMapper.selectImagesByTranID(transactionNum);
+    }
+
+    @Override
+    public Image selectByPrimaryKey(Long sid) {
+        return imageMapper.selectByPrimaryKey(sid);
+    }
+
+    @Override
+    public List<String> selectProofNameByTranID(String sTransactionNum) {
+        return imageMapper.selectProofNameByTranID(sTransactionNum);
     }
 }

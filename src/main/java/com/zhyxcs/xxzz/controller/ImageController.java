@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/api/image")
 public class ImageController extends BaseController {
     @Autowired
     private ImageService imageService;
@@ -88,15 +88,24 @@ public class ImageController extends BaseController {
 
     @RequestMapping(value = "/image", method = RequestMethod.DELETE)
     public int deleteImage(@RequestParam(value = "sID") Long sID){
+        Image image = imageService.selectByPrimaryKey(sID);
 
+        if (image != null){
+            String path = image.getSstorepath();
+            String basePath = imageConfig.getBasePath();
+            File file = new File(basePath + path);
 
-        return imageService.deleteByPrimaryKey(sID);
+            if (file != null && file.delete()){
+                imageService.deleteByPrimaryKey(sID);
+                return 1;
+            }
+        }
+
+        return 0;
     }
 
     @RequestMapping(value = "/images", method = RequestMethod.GET)
     public List<Image> getImagesByTranID(@RequestParam(value = "stransactionnum") String sTransactionNum){
-
-
         return imageService.selectImagesByTranID(sTransactionNum);
     }
 

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
-@RequestMapping("/approvalRecord")
+@RequestMapping("/api/approvalRecord")
 public class ApprovalRecordController extends BaseController{
     @Autowired
     private ApprovalRecordService approvalRecordService;

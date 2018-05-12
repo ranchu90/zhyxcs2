@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class WebSecurityConfig extends WebMvcConfigurationSupport {
+public class WebSecurityConfig implements WebMvcConfigurer {
     @Autowired
     private ImageConfig imageConfig;
 
@@ -31,16 +31,11 @@ public class WebSecurityConfig extends WebMvcConfigurationSupport {
         InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
 
         /*不需要登陆验证*/
-        addInterceptor.excludePathPatterns("/error");
-        addInterceptor.excludePathPatterns("/login**");
-        addInterceptor.excludePathPatterns("/login/*");
-//        addInterceptor.excludePathPatterns("/workIndex**");
         addInterceptor.excludePathPatterns("/OTA/**");
-        addInterceptor.excludePathPatterns("/images/**");
-        addInterceptor.excludePathPatterns("/approvalRecord/**");
+        addInterceptor.excludePathPatterns("/api/login/**");
 
         /*需要登陆验证*/
-        addInterceptor.addPathPatterns("/**");
+        addInterceptor.addPathPatterns("/api/**");
     }
 
     private class SecurityInterceptor extends HandlerInterceptorAdapter {
@@ -83,17 +78,18 @@ public class WebSecurityConfig extends WebMvcConfigurationSupport {
     }
 
     @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        super.addResourceHandlers(registry);
         String basePath = imageConfig.getBasePath();
         registry.addResourceHandler("/OTA/**").addResourceLocations("file:" + basePath);
-        super.addResourceHandlers(registry);
+//        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/OTA/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST")
-                .allowCredentials(true).maxAge(3600);
-    }
+//
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/OTA/**")
+//                .allowedOrigins("*")
+//                .allowedMethods("GET", "POST")
+//                .allowCredentials(true).maxAge(3600);
+//    }
 }

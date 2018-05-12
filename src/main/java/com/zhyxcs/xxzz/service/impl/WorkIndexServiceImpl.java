@@ -40,12 +40,22 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     }
 
     @Override
-    public int updateApprovalStateNameByPrimaryKey(WorkIndex record) {
-        return workIndexMapper.updateApprovalStateNameByPrimaryKey(record);
+    public int updateApprovalStateNameByPrimaryKey(WorkIndex workIndex, String action) {
+        return workIndexMapper.updateApprovalStateNameByPrimaryKey(workIndex, action);
     }
 
     @Override
     public int deleteByPrimaryKey(String stransactionnum) {
         return workIndexMapper.deleteByPrimaryKey(stransactionnum);
+    }
+
+    @Override
+    public int updateWorkIndexByApprovalCodeAndIdentifier(WorkIndex workIndex) {
+        return workIndexMapper.updateWorkIndexByApprovalCodeAndIdentifier(workIndex);
+    }
+
+    @Override
+    public WorkIndex selectByPrimaryKey(String stransactionnum) {
+        return workIndexMapper.selectByPrimaryKey(stransactionnum);
     }
 }

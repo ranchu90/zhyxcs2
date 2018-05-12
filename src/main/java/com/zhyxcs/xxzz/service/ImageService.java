@@ -10,4 +10,8 @@ public interface ImageService {
     int insert(Image record);
 
     List<Image> selectImagesByTranID(String sTransactionNum);
+
+    Image selectByPrimaryKey(Long sid);
+
+    List<String> selectProofNameByTranID(String sTransactionNum);
 }

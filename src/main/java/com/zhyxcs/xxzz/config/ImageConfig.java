@@ -6,9 +6,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "image")
-@PropertySource(value = "classpath:config.properties")
+@PropertySource(value = "classpath:application.properties")
 public class ImageConfig {
     private String basePath;
+    private String licenceBasePath;
+
+    public String getLicenceBasePath() {
+        return licenceBasePath;
+    }
+
+    public void setLicenceBasePath(String licenceBasePath) {
+        this.licenceBasePath = licenceBasePath;
+    }
 
     public void setBasePath(String basePath) {
         this.basePath = basePath;

@@ -1,21 +1,36 @@
 package com.zhyxcs.xxzz.controller;
 
+import com.zhyxcs.xxzz.config.WordConfig;
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.domain.WorkIndex;
+import com.zhyxcs.xxzz.service.ImageService;
 import com.zhyxcs.xxzz.service.WorkIndexService;
 import com.zhyxcs.xxzz.utils.CramsConstants;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
+import java.awt.*;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api/workIndex")
 public class WorkIndexController extends BaseController{
     @Autowired
     private WorkIndexService workIndexService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private WordConfig wordConfig;
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.POST)
     public WorkIndex insert(@RequestBody WorkIndex workIndex){
@@ -52,16 +67,77 @@ public class WorkIndexController extends BaseController{
         return workIndexService.deleteByPrimaryKey(stransactionnum);
     }
 
-    @RequestMapping(value = "/workIndex/Depositor", method = RequestMethod.PUT)
+    @RequestMapping(value = "/Depositor", method = RequestMethod.PUT)
     public int updateWorkIndexByDepositor(@RequestBody WorkIndex workIndex){
 
         return workIndexService.updateDepositorNameByPrimaryKey(workIndex);
     }
 
-    @RequestMapping(value = "/workIndex/ApprovalState", method = RequestMethod.PUT)
-    public int updateWorkIndexByApprovalState(@RequestBody WorkIndex workIndex){
+    @RequestMapping(value = "/ApprovalState", method = RequestMethod.PUT)
+    public int updateWorkIndexByApprovalState(@RequestBody WorkIndex workIndex,
+                                              @RequestParam(value = "action") String action){
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userCode = user.getSusercode();
+        String userName = user.getSusername();
 
-        return workIndexService.updateApprovalStateNameByPrimaryKey(workIndex);
+        switch (action){
+            case "commit": break;
+            case "callback": break;
+            case "sendback": break;
+            case "review": workIndex.setSreviewusercode(userCode);break;
+            case "check": workIndex.setScheckusercode(userCode);break;
+            case "recheck":
+                workIndex.setSrecheckusercode(userCode);
+                workIndex.setSrecheckusername(userName);
+                break;
+            case "uploadlicence":break;
+        }
+
+        return workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
+    }
+
+    @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
+    public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
+        int code = workIndexService.updateWorkIndexByApprovalCodeAndIdentifier(workIndex);
+
+        if (code >0){
+            WorkIndex result =workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+            List<String> fileList = imageService.selectProofNameByTranID(workIndex.getStransactionnum());
+
+            String bankName = result.getSbankname();
+            String checkBankName = result.getScheckusercode();
+            String transactionNum = result.getStransactionnum();
+            Calendar calendar = Calendar.getInstance();
+            String year = String.valueOf(calendar.get(Calendar.YEAR));
+            String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+            String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+            Map map = new HashMap<String, Object>();
+            map.put("bankName", bankName!=null? bankName : "(空)");
+            map.put("checkBankName", "中国人民银行长沙中心支行");
+            map.put("transactionNum", transactionNum);
+            map.put("unitName", result.getSdepositorname());
+            map.put("accountType", result.getSaccounttype());
+            map.put("businessCategory", result.getSbusinesscategory());
+            map.put("approvalCode", result.getSapprovalcode());
+            map.put("identifier", result.getSidentifier());
+            map.put("year", year);
+            map.put("month", month);
+            map.put("day", day);
+            map.put("fileList", fileList != null? fileList : "(空)");
+
+            String baseDirectory = wordConfig.getBaseDirectory();
+            String basePath = wordConfig.getBasePath();
+
+            this.createWord(map, "reback.ftl", baseDirectory,
+                    basePath + transactionNum, transactionNum+ ".doc");
+
+        } else {
+            return 0;
+        }
+
+        return 1;
     }
 
     @RequestMapping(value = "/workIndexes", method = RequestMethod.GET)
@@ -128,4 +204,37 @@ public class WorkIndexController extends BaseController{
         }
         return null;
     }
+
+    private void createWord(Map<?, ?> dataMap, String templateName, String templateDirectory,
+                                  String filePath, String fileName) {
+        try {
+            Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
+
+            configuration.setDefaultEncoding("UTF-8");
+
+            // ftl模板文件统一放至 test.ftl包下面
+            configuration.setDirectoryForTemplateLoading(ResourceUtils.getFile(templateDirectory));
+
+            // 获取模板
+            Template template = configuration.getTemplate(templateName);
+
+            File outFile = new File(filePath + File.separator + fileName);
+            if (!outFile.getParentFile().exists()) {
+                outFile.getParentFile().mkdirs();
+            }
+
+            // 将模板和数据模型合并生成文件
+            Writer out = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(outFile), "UTF-8"));
+            // 生成文件
+            template.process(dataMap, out);
+
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -91,7 +91,25 @@
   </update>
   <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
-    set sApprovalState = #{sapprovalstate,jdbcType=VARCHAR}
+    set sApprovalState = #{workIndex.sapprovalstate,jdbcType=VARCHAR}
+    <if test="action == 'review'">
+      , sReviewUserCode = #{workIndex.sreviewusercode,jdbcType=VARCHAR}
+    </if>
+    <if test="action == 'check'">
+      , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+    </if>
+    <if test="action == 'recheck'">
+      , sRecheckUserCode = #{workIndex.srecheckusercode,jdbcType=VARCHAR}
+      , sRecheckUserName = #{workIndex.srecheckusername,jdbcType=VARCHAR}
+      , sRecheckResult = #{workIndex.srecheckresult,jdbcType=VARCHAR}
+      , sRecheckOpition = #{workIndex.srecheckopinion,jdbcType=VARCHAR}
+      , sRecheckTime = #{workIndex.srechecktime,jdbcType=TIMESTAMP}
+    </if>
+    where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
+  </update>
+  <update id="updateWorkIndexByApprovalCodeAndIdentifier" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+    update tworkindex
+    set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">

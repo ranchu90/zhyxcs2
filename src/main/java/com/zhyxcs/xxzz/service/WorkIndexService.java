@@ -19,7 +19,11 @@ public interface WorkIndexService {
 
     int updateDepositorNameByPrimaryKey(WorkIndex record);
 
-    int updateApprovalStateNameByPrimaryKey(WorkIndex record);
+    int updateApprovalStateNameByPrimaryKey(WorkIndex workIndex, String action);
 
     int deleteByPrimaryKey(String stransactionnum);
+
+    int updateWorkIndexByApprovalCodeAndIdentifier(WorkIndex workIndex);
+
+    WorkIndex selectByPrimaryKey(String stransactionnum);
 }
