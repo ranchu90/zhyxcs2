@@ -5,23 +5,27 @@ import com.zhyxcs.xxzz.domain.WorkIndex;
 import java.util.List;
 
 public interface WorkIndexService {
-    int newWorkIndex(WorkIndex record);
-
     List<WorkIndex> selectAll();
 
-    int queryRecordTotalNum(String userCode, String approvalState);
+    int deleteByPrimaryKey(String stransactionnum);
+
+    int newWorkIndex(WorkIndex record);
+
+    int queryRecordTotalNum(String userCode,
+                            String approvalState,
+                            String businessEmergency);
 
     List<WorkIndex> queryRecordByPageAndUserCode(String pageSize,
                                                  String currentPage,
                                                  String userCode,
                                                  String approvalState,
-                                                 String userLevel);
+                                                 String userLevel,
+                                                 String businessEmergency);
 
     int updateDepositorNameByPrimaryKey(WorkIndex record);
 
     int updateApprovalStateNameByPrimaryKey(WorkIndex workIndex, String action);
 
-    int deleteByPrimaryKey(String stransactionnum);
 
     int updateWorkIndexByApprovalCodeAndIdentifier(WorkIndex workIndex);
 

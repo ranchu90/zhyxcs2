@@ -24,14 +24,20 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     }
 
     @Override
-    public int queryRecordTotalNum(String userCode, String approvalState) {
-        return workIndexMapper.queryRecordTotalNum(userCode, approvalState);
+    public int queryRecordTotalNum(String userCode,
+                                   String approvalState,
+                                   String businessEmergency) {
+        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCode(String pageSize, String currentPage, String userCode,
-                                                        String approvalState, String userLevel) {
-        return workIndexMapper.queryRecordByPageAndUserCode(pageSize, currentPage, userCode, approvalState, userLevel);
+    public List<WorkIndex> queryRecordByPageAndUserCode(String pageSize,
+                                                        String currentPage,
+                                                        String userCode,
+                                                        String approvalState,
+                                                        String userLevel,
+                                                        String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCode(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
     }
 
     @Override

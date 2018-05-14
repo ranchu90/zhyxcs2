@@ -9,6 +9,10 @@ public class WorkIndex {
 
     private String sapprovalstate;
 
+    private String sbusinessemergency;
+
+    private Integer sreturntimes;
+
     private String sbusinesscategory;
 
     private String saccounttype;
@@ -39,14 +43,16 @@ public class WorkIndex {
 
     private String srecheckresult;
 
-    private String srecheckopition;
+    private String srecheckopinion;
 
     private Date srechecktime;
 
-    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinesscategory, String saccounttype, String sbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopition, Date srechecktime) {
+    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Integer sreturntimes, String sbusinesscategory, String saccounttype, String sbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime) {
         this.stransactionnum = stransactionnum;
         this.sdepositorname = sdepositorname;
         this.sapprovalstate = sapprovalstate;
+        this.sbusinessemergency = sbusinessemergency;
+        this.sreturntimes = sreturntimes;
         this.sbusinesscategory = sbusinesscategory;
         this.saccounttype = saccounttype;
         this.sbankcode = sbankcode;
@@ -62,7 +68,7 @@ public class WorkIndex {
         this.srecheckusercode = srecheckusercode;
         this.srecheckusername = srecheckusername;
         this.srecheckresult = srecheckresult;
-        this.srecheckopition = srecheckopition;
+        this.srecheckopinion = srecheckopinion;
         this.srechecktime = srechecktime;
     }
 
@@ -92,6 +98,22 @@ public class WorkIndex {
 
     public void setSapprovalstate(String sapprovalstate) {
         this.sapprovalstate = sapprovalstate == null ? null : sapprovalstate.trim();
+    }
+
+    public String getSbusinessemergency() {
+        return sbusinessemergency;
+    }
+
+    public void setSbusinessemergency(String sbusinessemergency) {
+        this.sbusinessemergency = sbusinessemergency == null ? null : sbusinessemergency.trim();
+    }
+
+    public Integer getSreturntimes() {
+        return sreturntimes;
+    }
+
+    public void setSreturntimes(Integer sreturntimes) {
+        this.sreturntimes = sreturntimes;
     }
 
     public String getSbusinesscategory() {
@@ -214,12 +236,12 @@ public class WorkIndex {
         this.srecheckresult = srecheckresult == null ? null : srecheckresult.trim();
     }
 
-    public String getSrecheckopition() {
-        return srecheckopition;
+    public String getSrecheckopinion() {
+        return srecheckopinion;
     }
 
-    public void setSrecheckopition(String srecheckopition) {
-        this.srecheckopition = srecheckopition == null ? null : srecheckopition.trim();
+    public void setSrecheckopinion(String srecheckopinion) {
+        this.srecheckopinion = srecheckopinion == null ? null : srecheckopinion.trim();
     }
 
     public Date getSrechecktime() {

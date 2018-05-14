@@ -6,12 +6,15 @@ import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.domain.WorkIndex;
 import com.zhyxcs.xxzz.service.ImageService;
 import com.zhyxcs.xxzz.service.WorkIndexService;
+import com.zhyxcs.xxzz.utils.ActionType;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.awt.*;
@@ -82,16 +85,21 @@ public class WorkIndexController extends BaseController{
         String userName = user.getSusername();
 
         switch (action){
-            case "commit": break;
-            case "callback": break;
-            case "sendback": break;
-            case "review": workIndex.setSreviewusercode(userCode);break;
-            case "check": workIndex.setScheckusercode(userCode);break;
-            case "recheck":
+            case ActionType.COMMIT: break;
+            case ActionType.CALL_BACK: break;
+            case ActionType.SEND_BACK: break;
+            case ActionType.REVIEW:
+                workIndex.setSreviewusercode(userCode);break;
+            case ActionType.CHECK:
+                workIndex.setScheckusercode(userCode);
+                workIndex.setSendtime(new Date());
+                break;
+            case ActionType.RECHECK:
                 workIndex.setSrecheckusercode(userCode);
                 workIndex.setSrecheckusername(userName);
+                workIndex.setSrechecktime(new Date());
                 break;
-            case "uploadlicence":break;
+            case ActionType.UPLOAD_LICENCE:break;
         }
 
         return workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
@@ -101,39 +109,7 @@ public class WorkIndexController extends BaseController{
     public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
         int code = workIndexService.updateWorkIndexByApprovalCodeAndIdentifier(workIndex);
 
-        if (code >0){
-            WorkIndex result =workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
-            List<String> fileList = imageService.selectProofNameByTranID(workIndex.getStransactionnum());
-
-            String bankName = result.getSbankname();
-            String checkBankName = result.getScheckusercode();
-            String transactionNum = result.getStransactionnum();
-            Calendar calendar = Calendar.getInstance();
-            String year = String.valueOf(calendar.get(Calendar.YEAR));
-            String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
-            String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-
-            Map map = new HashMap<String, Object>();
-            map.put("bankName", bankName!=null? bankName : "(空)");
-            map.put("checkBankName", "中国人民银行长沙中心支行");
-            map.put("transactionNum", transactionNum);
-            map.put("unitName", result.getSdepositorname());
-            map.put("accountType", result.getSaccounttype());
-            map.put("businessCategory", result.getSbusinesscategory());
-            map.put("approvalCode", result.getSapprovalcode());
-            map.put("identifier", result.getSidentifier());
-            map.put("year", year);
-            map.put("month", month);
-            map.put("day", day);
-            map.put("fileList", fileList != null? fileList : "(空)");
-
-            String baseDirectory = wordConfig.getBaseDirectory();
-            String basePath = wordConfig.getBasePath();
-
-            this.createWord(map, "reback.ftl", baseDirectory,
-                    basePath + transactionNum, transactionNum+ ".doc");
-
-        } else {
+        if (code <= 0){
             return 0;
         }
 
@@ -142,15 +118,18 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/workIndexes", method = RequestMethod.GET)
     public HashMap<String, Object> getWorkIndexesByPage(@RequestParam(value = "pageSize") String pageSize,
-                                                    @RequestParam(value = "currentPage") String currentPage,
-                                                        @RequestParam(value = "approvalState") String approvalState){
+                                                        @RequestParam(value = "currentPage") String currentPage,
+                                                        @RequestParam(value = "approvalState") String approvalState,
+                                                        @RequestParam(value = "businessEmergency") String businessEmergency){
 
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String userLevel = user.getSuserlevel();
-        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState);
+        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState, businessEmergency);
+
         List<WorkIndex> workIndexList = workIndexService.queryRecordByPageAndUserCode(pageSize,
-                currentPage, user.getSusercode(), approvalState, userLevel);
+                currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+
         List<Object> newWorkIndexList = new ArrayList<Object>();
 
         for (WorkIndex workIndex : workIndexList){
@@ -175,7 +154,7 @@ public class WorkIndexController extends BaseController{
             workTemp.put("sdepositorname", workIndex.getSdepositorname());
             workTemp.put("sendtime", workIndex.getSendtime());
             workTemp.put("sidentifier", workIndex.getSidentifier());
-            workTemp.put("srecheckopition", workIndex.getSrecheckopition());
+            workTemp.put("srecheckopinion", workIndex.getSrecheckopinion());
             workTemp.put("srecheckresult", workIndex.getSrecheckresult());
             workTemp.put("srecheckusercode", workIndex.getSrecheckusercode());
             workTemp.put("srecheckusername", workIndex.getSrecheckusername());
@@ -194,6 +173,39 @@ public class WorkIndexController extends BaseController{
         return map;
     }
 
+    @RequestMapping(value = "/receipt", method = RequestMethod.GET)
+    public void downloadReceipt(@RequestParam(value = "transactionNum") String transactionNum, HttpServletResponse response){
+        WorkIndex result =workIndexService.selectByPrimaryKey(transactionNum);
+        List<String> fileList = imageService.selectProofNameByTranID(transactionNum);
+
+        String bankName = result.getSbankname();
+        String checkBankName = result.getScheckusercode();
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
+        String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+        String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+        Map map = new HashMap<String, Object>();
+        map.put("bankName", bankName!=null? bankName : "(空)");
+        map.put("checkBankName", "中国人民银行长沙中心支行");
+        map.put("transactionNum", transactionNum);
+        map.put("unitName", result.getSdepositorname());
+        map.put("accountType", result.getSaccounttype());
+        map.put("businessCategory", result.getSbusinesscategory());
+        map.put("approvalCode", result.getSapprovalcode());
+        map.put("identifier", result.getSidentifier());
+        map.put("year", year);
+        map.put("month", month);
+        map.put("day", day);
+        map.put("fileList", fileList != null? fileList : "(空)");
+
+        String baseDirectory = wordConfig.getBaseDirectory();
+        String basePath = wordConfig.getBasePath();
+
+        this.createWord(map, "receipt.ftl", baseDirectory,
+                basePath + transactionNum, transactionNum+ ".doc", response);
+    }
+
     private String approvalState(String code){
         switch (code){
             case "1": return "待编辑";
@@ -206,7 +218,11 @@ public class WorkIndexController extends BaseController{
     }
 
     private void createWord(Map<?, ?> dataMap, String templateName, String templateDirectory,
-                                  String filePath, String fileName) {
+                                  String filePath, String fileName, HttpServletResponse response) {
+        response.setHeader("content-type", "application/octet-stream");
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+
         try {
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
 
@@ -218,14 +234,16 @@ public class WorkIndexController extends BaseController{
             // 获取模板
             Template template = configuration.getTemplate(templateName);
 
-            File outFile = new File(filePath + File.separator + fileName);
-            if (!outFile.getParentFile().exists()) {
-                outFile.getParentFile().mkdirs();
-            }
+//            File outFile = new File(filePath + File.separator + fileName);
+//            if (!outFile.getParentFile().exists()) {
+//                outFile.getParentFile().mkdirs();
+//            }
+
+            OutputStream ops = response.getOutputStream();
 
             // 将模板和数据模型合并生成文件
             Writer out = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(outFile), "UTF-8"));
+                    ops, "UTF-8"));
             // 生成文件
             template.process(dataMap, out);
 

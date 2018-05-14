@@ -6,6 +6,8 @@
       <idArg column="sTransactionNum" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sApprovalState" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sBusinessEmergency" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sReturnTimes" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="sBusinessCategory" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -21,7 +23,7 @@
       <arg column="sRecheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sRecheckUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sRecheckResult" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sRecheckOpition" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRecheckOpinion" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sRecheckTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
@@ -31,40 +33,28 @@
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     insert into tworkindex (sTransactionNum, sDepositorName,
-      sApprovalState, sBusinessCategory, sAccountType,
-      sBankCode, sBankName, sUpUserCode,
-      sUpUserName, sApprovalCode, sIdentifier,
-      sStartTime, sEndTime, sReviewUserCode,
-      sCheckUserCode, sRecheckUserCode, sRecheckUserName,
-      sRecheckResult, sRecheckOpition, sRecheckTime
-      )
+      sApprovalState, sBusinessEmergency, sReturnTimes,
+      sBusinessCategory, sAccountType, sBankCode,
+      sBankName, sUpUserCode, sUpUserName,
+      sApprovalCode, sIdentifier, sStartTime,
+      sEndTime, sReviewUserCode, sCheckUserCode,
+      sRecheckUserCode, sRecheckUserName, sRecheckResult,
+      sRecheckOpinion, sRecheckTime)
     values (#{stransactionnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR},
-      #{sapprovalstate,jdbcType=VARCHAR}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR},
-      #{sbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR},
-      #{supusername,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR},
-      #{sstarttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR},
-      #{scheckusercode,jdbcType=VARCHAR}, #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckusername,jdbcType=VARCHAR},
-      #{srecheckresult,jdbcType=VARCHAR}, #{srecheckopition,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="newWorkIndex" statementType="CALLABLE" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
-      {
-          call generate_serial_number_by_bankcode(
-           #{sbankcode, mode=IN,jdbcType=VARCHAR},
-           #{sdepositorname, mode=IN,jdbcType=VARCHAR},
-           #{sbusinesscategory, mode=IN,jdbcType=VARCHAR},
-           #{saccounttype, mode=IN,jdbcType=VARCHAR},
-           #{sbankname, mode=IN,jdbcType=VARCHAR},
-           #{supusercode, mode=IN,jdbcType=VARCHAR},
-           #{supusername, mode=IN,jdbcType=VARCHAR},
-           #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
-          )
-      }
+      #{sapprovalstate,jdbcType=VARCHAR}, #{sbusinessemergency,jdbcType=VARCHAR}, #{sreturntimes,jdbcType=INTEGER},
+      #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR},
+      #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR}, #{supusername,jdbcType=VARCHAR},
+      #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP},
+      #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR},
+      #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckusername,jdbcType=VARCHAR}, #{srecheckresult,jdbcType=VARCHAR},
+      #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
       sApprovalState = #{sapprovalstate,jdbcType=VARCHAR},
+      sBusinessEmergency = #{sbusinessemergency,jdbcType=VARCHAR},
+      sReturnTimes = #{sreturntimes,jdbcType=INTEGER},
       sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
       sAccountType = #{saccounttype,jdbcType=VARCHAR},
       sBankCode = #{sbankcode,jdbcType=VARCHAR},
@@ -80,10 +70,41 @@
       sRecheckUserCode = #{srecheckusercode,jdbcType=VARCHAR},
       sRecheckUserName = #{srecheckusername,jdbcType=VARCHAR},
       sRecheckResult = #{srecheckresult,jdbcType=VARCHAR},
-      sRecheckOpition = #{srecheckopition,jdbcType=VARCHAR},
+      sRecheckOpinion = #{srecheckopinion,jdbcType=VARCHAR},
       sRecheckTime = #{srechecktime,jdbcType=TIMESTAMP}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sReturnTimes,
+    sBusinessCategory, sAccountType, sBankCode, sBankName, sUpUserCode, sUpUserName,
+    sApprovalCode, sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode,
+    sRecheckUserCode, sRecheckUserName, sRecheckResult, sRecheckOpinion, sRecheckTime
+    from tworkindex
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sReturnTimes,
+    sBusinessCategory, sAccountType, sBankCode, sBankName, sUpUserCode, sUpUserName,
+    sApprovalCode, sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode,
+    sRecheckUserCode, sRecheckUserName, sRecheckResult, sRecheckOpinion, sRecheckTime
+    from tworkindex
+  </select>
+
+  <insert id="newWorkIndex" parameterType="com.zhyxcs.xxzz.domain.WorkIndex" statementType="CALLABLE">
+      {
+          call generate_serial_number_by_bankcode(
+           #{sbankcode, mode=IN,jdbcType=VARCHAR},
+           #{sdepositorname, mode=IN,jdbcType=VARCHAR},
+           #{sbusinesscategory, mode=IN,jdbcType=VARCHAR},
+           #{saccounttype, mode=IN,jdbcType=VARCHAR},
+           #{sbankname, mode=IN,jdbcType=VARCHAR},
+           #{supusercode, mode=IN,jdbcType=VARCHAR},
+           #{supusername, mode=IN,jdbcType=VARCHAR},
+           #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
+          )
+      }
+  </insert>
+
   <update id="updateDepositorNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sDepositorName = #{sdepositorname,jdbcType=VARCHAR}
@@ -97,12 +118,13 @@
     </if>
     <if test="action == 'check'">
       , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+      , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
     </if>
     <if test="action == 'recheck'">
       , sRecheckUserCode = #{workIndex.srecheckusercode,jdbcType=VARCHAR}
       , sRecheckUserName = #{workIndex.srecheckusername,jdbcType=VARCHAR}
       , sRecheckResult = #{workIndex.srecheckresult,jdbcType=VARCHAR}
-      , sRecheckOpition = #{workIndex.srecheckopinion,jdbcType=VARCHAR}
+      , sRecheckOpinion = #{workIndex.srecheckopinion,jdbcType=VARCHAR}
       , sRecheckTime = #{workIndex.srechecktime,jdbcType=TIMESTAMP}
     </if>
     where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
@@ -112,25 +134,13 @@
     set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select sTransactionNum, sDepositorName, sApprovalState, sBusinessCategory, sAccountType,
-    sBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode, sIdentifier, sStartTime,
-    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckUserName, sRecheckResult,
-    sRecheckOpition, sRecheckTime
-    from tworkindex
-    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select sTransactionNum, sDepositorName, sApprovalState, sBusinessCategory, sAccountType,
-    sBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode, sIdentifier, sStartTime,
-    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckUserName, sRecheckResult,
-    sRecheckOpition, sRecheckTime
-    from tworkindex
-  </select>
   <select id="queryRecordTotalNum" resultType="int">
     select count(sTransactionNum)
     from tworkindex
     where sUpUserCode = #{userCode} and sApprovalState = #{approvalState}
+    <if test="businessEmergency != null">
+      and sBusinessEmergency = #{businessEmergency}
+    </if>
   </select>
   <select id="queryRecordByPageAndUserCode" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
@@ -138,6 +148,9 @@
     where sUpUserCode = #{userCode} and sApprovalState = #{approvalState}
     <if test="approvalState == 2 and userLevel == 1">
       and sReviewUserCode is null
+    </if>
+    <if test="businessEmergency != null">
+      and sBusinessEmergency = #{businessEmergency}
     </if>
     order by sStartTime
     limit ${currentPage}, ${pageSize}
