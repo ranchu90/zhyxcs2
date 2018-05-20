@@ -1,7 +1,6 @@
 package com.zhyxcs.xxzz.controller;
 
 import com.zhyxcs.xxzz.config.ImageConfig;
-import com.zhyxcs.xxzz.domain.Image;
 import com.zhyxcs.xxzz.domain.LicenceImage;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.LicenceImageService;

@@ -29,4 +29,9 @@
     select sBankTypeCode, sTypeName
     from tbanktype
   </select>
+  <select id="selectAllBusinessBank" resultType="com.zhyxcs.xxzz.domain.BankType">
+    select sBankTypeCode, sTypeName
+    from tbanktype
+    where sBankTypeCode != '001' and sBankTypeCode != '011'
+  </select>
 </mapper>

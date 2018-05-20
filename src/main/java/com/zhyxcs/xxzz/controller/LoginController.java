@@ -50,6 +50,7 @@ public class LoginController extends BaseController{
                         userMap.put("username", dbUser.getSusername());
                         userMap.put("usercode", dbUser.getSusercode());
                         userMap.put("bankcode", dbUser.getSbankcode());
+                        userMap.put("userstate", dbUser.getSuserstate());
                         userMap.put("userlevel", dbUser.getSuserlevel());
                         userMap.put("telephone", dbUser.getStelephone());
                         userMap.put("email", dbUser.getSemail());
@@ -57,6 +58,8 @@ public class LoginController extends BaseController{
                         result.put("state", "success");
                         result.put("token", "op");
                         result.put("user", userMap);
+
+                        this.writeLog("用户登陆成功");
 
                     } else {
                         //记录密码错误次数

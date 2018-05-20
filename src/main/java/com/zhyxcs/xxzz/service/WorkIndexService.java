@@ -13,14 +13,43 @@ public interface WorkIndexService {
 
     int queryRecordTotalNum(String userCode,
                             String approvalState,
-                            String businessEmergency);
+                            String businessEmergency,
+                            String userLevel);
 
-    List<WorkIndex> queryRecordByPageAndUserCode(String pageSize,
-                                                 String currentPage,
-                                                 String userCode,
-                                                 String approvalState,
-                                                 String userLevel,
-                                                 String businessEmergency);
+    List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(String pageSize,
+                                                          String currentPage,
+                                                          String userCode,
+                                                          String approvalState,
+                                                          String userLevel,
+                                                          String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(String pageSize,
+                                                           String currentPage,
+                                                           String userCode,
+                                                           String approvalState,
+                                                           String userLevel,
+                                                           String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(String pageSize,
+                                                         String currentPage,
+                                                         String userCode,
+                                                         String approvalState,
+                                                         String userLevel,
+                                                         String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(String pageSize,
+                                                          String currentPage,
+                                                          String userCode,
+                                                          String approvalState,
+                                                          String userLevel,
+                                                          String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(String pageSize,
+                                                         String currentPage,
+                                                         String userCode,
+                                                         String approvalState,
+                                                         String userLevel,
+                                                         String businessEmergency);
 
     int updateDepositorNameByPrimaryKey(WorkIndex record);
 
@@ -30,4 +59,6 @@ public interface WorkIndexService {
     int updateWorkIndexByApprovalCodeAndIdentifier(WorkIndex workIndex);
 
     WorkIndex selectByPrimaryKey(String stransactionnum);
+
+    int updateWorkIndexBusinessEmergency(WorkIndex workIndex);
 }

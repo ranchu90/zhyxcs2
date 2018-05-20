@@ -113,12 +113,14 @@
   <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sApprovalState = #{workIndex.sapprovalstate,jdbcType=VARCHAR}
+    <if test="action == 'commit'">
+      , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
+    </if>
     <if test="action == 'review'">
       , sReviewUserCode = #{workIndex.sreviewusercode,jdbcType=VARCHAR}
     </if>
     <if test="action == 'check'">
       , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
-      , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
     </if>
     <if test="action == 'recheck'">
       , sRecheckUserCode = #{workIndex.srecheckusercode,jdbcType=VARCHAR}
@@ -127,6 +129,9 @@
       , sRecheckOpinion = #{workIndex.srecheckopinion,jdbcType=VARCHAR}
       , sRecheckTime = #{workIndex.srechecktime,jdbcType=TIMESTAMP}
     </if>
+    <if test="action == 'send_back'">
+      , sReturnTimes = #{workIndex.sreturntimes,jdbcType=INTEGER}
+    </if>
     where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
   </update>
   <update id="updateWorkIndexByApprovalCodeAndIdentifier" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
@@ -134,25 +139,160 @@
     set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
+    <update id="updateWorkIndexBusinessEmergency" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+    update tworkindex
+    set sBusinessEmergency = #{sbusinessemergency,jdbcType=VARCHAR}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </update>
   <select id="queryRecordTotalNum" resultType="int">
     select count(sTransactionNum)
     from tworkindex
-    where sUpUserCode = #{userCode} and sApprovalState = #{approvalState}
-    <if test="businessEmergency != null">
+    where sApprovalState = #{approvalState}
+      <if test="userLevel == 1">
+          and sUpUserCode = #{userCode}
+      </if>
+      <if test="userLevel == 2">
+          <choose>
+              <when test="approvalState == 2">
+                  and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
+              </when>
+              <otherwise>
+                  and sReviewUserCode = #{userCode}
+              </otherwise>
+          </choose>
+      </if>
+      <if test="userLevel == 4">
+          <choose>
+              <when test="approvalState == 3">
+                  and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
+              </when>
+              <otherwise>
+                  and sCheckUserCode = #{userCode}
+              </otherwise>
+          </choose>
+      </if>
+      <if test="userLevel == 5">
+         <choose>
+             <when test="approvalState != 6">
+                 and (sReCheckUserCode = #{userCode} or sReCheckUserCode is null)
+             </when>
+             <otherwise>
+                 and sReCheckUserCode = #{userCode}
+             </otherwise>
+         </choose>
+      </if>
+
+    <if test="businessEmergency != null and businessEmergency != ''">
       and sBusinessEmergency = #{businessEmergency}
     </if>
   </select>
-  <select id="queryRecordByPageAndUserCode" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+  <!--<select id="queryRecordTotalNum" resultType="int">-->
+    <!--select count(sTransactionNum)-->
+    <!--from tworkindex-->
+    <!--where sUpUserCode = #{userCode} and sApprovalState = #{approvalState}-->
+    <!--<if test="businessEmergency != null">-->
+      <!--and sBusinessEmergency = #{businessEmergency}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
     from tworkindex
-    where sUpUserCode = #{userCode} and sApprovalState = #{approvalState}
-    <if test="approvalState == 2 and userLevel == 1">
-      and sReviewUserCode is null
-    </if>
-    <if test="businessEmergency != null">
+    where sApprovalState = #{approvalState}
+    --     人民银行录入员
+    <choose>
+        <when test="approvalState == 3">
+            and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
+        </when>
+        <otherwise>
+            and (sCheckUserCode = #{userCode})
+        </otherwise>
+    </choose>
+    <if test="businessEmergency != null and businessEmergency != ''">
       and sBusinessEmergency = #{businessEmergency}
     </if>
-    order by sStartTime
+    order by sEndTime
     limit ${currentPage}, ${pageSize}
   </select>
+  <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+    select *
+    from tworkindex
+    where sApprovalState = #{approvalState}
+    --     人民银行复审员
+    <choose>
+        <when test="approvalState != 6">
+            and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
+        </when>
+        <otherwise>
+            and (sRecheckUserCode = #{userCode})
+        </otherwise>
+    </choose>
+    <if test="businessEmergency != null and businessEmergency !=''">
+      and sBusinessEmergency = #{businessEmergency}
+    </if>
+    order by sEndTime
+    limit ${currentPage}, ${pageSize}
+  </select>
+  <select id="queryRecordByPageAndUserCodeRenAdmin" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+    select *
+    from tworkindex
+    where
+    <if test="approvalState != null and approvalState != ''">
+      sApprovalState = #{approvalState}
+    </if>
+    <if test="approvalState == ''">
+      sApprovalState = 4 or  sApprovalState = 5 or sApprovalState = 6
+    </if>
+    --     人民银行超级管理员
+    <if test="approvalState != null and businessEmergency != null and businessEmergency != ''">
+        and
+    </if>
+    <if test="businessEmergency != null and businessEmergency !=''">
+      sBusinessEmergency = #{businessEmergency}
+    </if>
+    order by sEndTime
+    limit ${currentPage}, ${pageSize}
+  </select>
+    <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+        select *
+        from tworkindex
+        where
+        <if test="approvalState != null and approvalState != '' and approvalState != 4">
+            sApprovalState = #{approvalState}
+        </if>
+        --     商业银行录入员
+        <if test="approvalState == 4">
+            (sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)
+        </if>
+            and (sUpUserCode = #{userCode})
+        <if test="businessEmergency != null and businessEmergency != ''">
+            and sBusinessEmergency = #{businessEmergency}
+        </if>
+        order by sEndTime
+        limit ${currentPage}, ${pageSize}
+    </select>
+    <select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+        select *
+        from tworkindex
+        where
+        <if test="approvalState != null and approvalState != '' and approvalState != 4">
+            sApprovalState = #{approvalState}
+        </if>
+        --     商业银行复核员
+        <if test="approvalState == 4">
+            (sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)
+        </if>
+        <choose>
+            <when test="approvalState == 2">
+                and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
+            </when>
+            <otherwise>
+                and sReviewUserCode = #{userCode}
+            </otherwise>
+        </choose>
+        <if test="businessEmergency != null and businessEmergency != ''">
+            and sBusinessEmergency = #{businessEmergency}
+        </if>
+        order by sEndTime
+        limit ${currentPage}, ${pageSize}
+    </select>
 </mapper>

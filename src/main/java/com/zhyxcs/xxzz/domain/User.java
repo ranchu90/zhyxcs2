@@ -23,7 +23,9 @@ public class User {
 
     private String semail;
 
-    public User(String susercode, String sbankcode, String susername, String spassword, String suserstate, String suserlevel, Date suserontime, Byte spwderror, String stelephone, String semail) {
+    private String saddusercode;
+
+    public User(String susercode, String sbankcode, String susername, String spassword, String suserstate, String suserlevel, Date suserontime, Byte spwderror, String stelephone, String semail, String saddusercode) {
         this.susercode = susercode;
         this.sbankcode = sbankcode;
         this.susername = susername;
@@ -34,6 +36,7 @@ public class User {
         this.spwderror = spwderror;
         this.stelephone = stelephone;
         this.semail = semail;
+        this.saddusercode = saddusercode;
     }
 
     public User() {
@@ -118,5 +121,13 @@ public class User {
 
     public void setSemail(String semail) {
         this.semail = semail == null ? null : semail.trim();
+    }
+
+    public String getSaddusercode() {
+        return saddusercode;
+    }
+
+    public void setSaddusercode(String saddusercode) {
+        this.saddusercode = saddusercode == null ? null : saddusercode.trim();
     }
 }
