@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhyxcs.xxzz.mapper.SystemLogMapper">
-  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.SystemLog">
-    <constructor>
-      <idArg column="sID" javaType="java.lang.Long" jdbcType="BIGINT" />
-      <arg column="sUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUseName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sBankName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sIPAddress" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sMACAddress" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sComments" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sLogTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-    </constructor>
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.SystemLog">
+        <constructor>
+            <idArg column="sID" javaType="java.lang.Long" jdbcType="BIGINT"/>
+            <arg column="sUserCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sUseName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sBankName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sIPAddress" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sMACAddress" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sComments" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sLogTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tsystemlog
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.SystemLog">
+    <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.SystemLog">
     insert into tsystemlog (sID, sUserCode, sUseName,
       sBankCode, sBankName, sIPAddress,
       sMACAddress, sComments, sLogTime
@@ -28,7 +28,7 @@
       #{smacaddress,jdbcType=VARCHAR}, #{scomments,jdbcType=VARCHAR}, #{slogtime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.SystemLog">
+    <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.SystemLog">
     update tsystemlog
     set sUserCode = #{susercode,jdbcType=VARCHAR},
       sUseName = #{susename,jdbcType=VARCHAR},
@@ -40,15 +40,74 @@
       sLogTime = #{slogtime,jdbcType=TIMESTAMP}
     where sID = #{sid,jdbcType=BIGINT}
   </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select sID, sUserCode, sUseName, sBankCode, sBankName, sIPAddress, sMACAddress, sComments,
     sLogTime
     from tsystemlog
     where sID = #{sid,jdbcType=BIGINT}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
     select sID, sUserCode, sUseName, sBankCode, sBankName, sIPAddress, sMACAddress, sComments,
     sLogTime
     from tsystemlog
   </select>
+    <sql id="querySegment">
+        <trim prefix="where" prefixOverrides=" AND ">
+            <if test="${paramUserCode} != null">
+                sUserCode = ${paramUserCode}
+            </if>
+            <if test="${paramUserName} != null">
+                sUseName = ${paramUserName}
+            </if>
+            <if test="${paramBankCode} != null">
+                sBankCode = ${paramBankCode}
+            </if>
+            <if test="${paramBankName} != null">
+                sBankName like CONCAT('%',${paramBankName}, '%')
+            </if>
+            <if test="${paramIpAddress} != null">
+                sIPAddress like CONCAT('%',${paramIpAddress} ,'%')
+            </if>
+            <if test="${paramComments} != null">
+                sComments like CONCAT('%',${paramComments},'%')
+            </if>
+            <if test="${paramStartTime} != null">
+                sLogTime <![CDATA[ >= ]]> date(${paramStartTime})
+            </if>
+            <if test="${paramEndTime} != null">
+                sLogTime <![CDATA[ <= ]]> date(${paramEndTime})
+            </if>
+        </trim>
+    </sql>
+    <select id="queryCountWithConditions" resultType="int">
+        select count(*)
+        from tsystemlog
+        <include refid="querySegment">
+            <property name="paramUserCode" value="#{userCode}"/>
+            <property name="paramUserName" value="#{userName}"/>
+            <property name="paramBankCode" value="#{bankCode}"/>
+            <property name="paramBankName" value="#{bankName}"/>
+            <property name="paramIpAddress" value="#{ipAddress}"/>
+            <property name="paramComments" value="#{comments}"/>
+            <property name="paramStartTime" value="#{startTime}"/>
+            <property name="paramEndTime" value="#{endTime}"/>
+        </include>
+    </select>
+    <select id="querySystemLogByPageWithConditions" resultMap="BaseResultMap">
+        select sID, sUserCode, sUseName, sBankCode, sBankName, sIPAddress, sMACAddress, sComments,
+        sLogTime
+        from tsystemlog
+        <include refid="querySegment">
+            <property name="paramUserCode" value="#{userCode}"/>
+            <property name="paramUserName" value="#{userName}"/>
+            <property name="paramBankCode" value="#{bankCode}"/>
+            <property name="paramBankName" value="#{bankName}"/>
+            <property name="paramIpAddress" value="#{ipAddress}"/>
+            <property name="paramComments" value="#{comments}"/>
+            <property name="paramStartTime" value="#{startTime}"/>
+            <property name="paramEndTime" value="#{endTime}"/>
+        </include>
+        order by sLogTime desc
+        limit ${currentPage}, ${pageSize}
+    </select>
 </mapper>

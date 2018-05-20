@@ -1,6 +1,9 @@
 package com.zhyxcs.xxzz.mapper;
 
 import com.zhyxcs.xxzz.domain.SystemLog;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 import java.util.List;
 
 public interface SystemLogMapper {
@@ -13,4 +16,24 @@ public interface SystemLogMapper {
     List<SystemLog> selectAll();
 
     int updateByPrimaryKey(SystemLog record);
+
+    int queryCountWithConditions(@Param("userCode") String userCode,
+                                 @Param("userName") String userName,
+                                 @Param("bankCode") String bankCode,
+                                 @Param("bankName") String bankName,
+                                 @Param("ipAddress") String ipAddress,
+                                 @Param("comments") String comments,
+                                 @Param("startTime") Date startTime,
+                                 @Param("endTime") Date endTime);
+
+    List<SystemLog> querySystemLogByPageWithConditions(@Param("pageSize") String pageSize,
+                                                       @Param("currentPage") String currentPage,
+                                                       @Param("userCode") String userCode,
+                                                       @Param("userName") String userName,
+                                                       @Param("bankCode") String bankCode,
+                                                       @Param("bankName") String bankName,
+                                                       @Param("ipAddress") String ipAddress,
+                                                       @Param("comments") String comments,
+                                                       @Param("startTime") Date startTime,
+                                                       @Param("endTime") Date endTime);
 }
