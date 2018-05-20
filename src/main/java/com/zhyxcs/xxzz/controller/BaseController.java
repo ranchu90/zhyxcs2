@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 public class BaseController {
     @Autowired
@@ -35,6 +36,7 @@ public class BaseController {
             systemLog.setSbankname(orga.getSbankname());
             systemLog.setSipaddress(ipAddress);
             systemLog.setSmacaddress(macAddress);
+            systemLog.setSlogtime(new Date());
             systemLog.setScomments(comments);
             systemLogService.insert(systemLog);
         }catch (Exception e){
