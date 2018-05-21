@@ -1,5 +1,6 @@
 package com.zhyxcs.xxzz.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.domain.SystemLog;
 import com.zhyxcs.xxzz.service.SystemLogService;
@@ -43,9 +44,9 @@ public class SystemLogContoller extends BaseController {
         comments = (comments == null || "".equals(comments.trim())) ? null : comments;
         startTime = (startTime == null) ? null : startTime;
         endTime = (endTime == null) ? null : endTime;
+        PageHelper.startPage(Integer.parseInt(currentPage),Integer.parseInt(pageSize));
         List<SystemLog> systemLogs = systemLogService.querySystemLogByPageWithConditions(userCode, userName, bankCode, bankName, ipAddress, comments, startTime, endTime);
-        PageInfo<SystemLog> pageInfo = new PageInfo<SystemLog>();
-        pageInfo.setList(systemLogs);
+        PageInfo<SystemLog> pageInfo = new PageInfo<SystemLog>(systemLogs);
         map.put("pageInfo", pageInfo);
         return map;
     }
