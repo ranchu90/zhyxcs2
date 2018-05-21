@@ -51,63 +51,36 @@
     sLogTime
     from tsystemlog
   </select>
-    <sql id="querySegment">
-        <trim prefix="where" prefixOverrides=" AND ">
-            <if test="${paramUserCode} != null">
-                sUserCode = ${paramUserCode}
-            </if>
-            <if test="${paramUserName} != null">
-                sUseName = ${paramUserName}
-            </if>
-            <if test="${paramBankCode} != null">
-                sBankCode = ${paramBankCode}
-            </if>
-            <if test="${paramBankName} != null">
-                sBankName like CONCAT('%',${paramBankName}, '%')
-            </if>
-            <if test="${paramIpAddress} != null">
-                sIPAddress like CONCAT('%',${paramIpAddress} ,'%')
-            </if>
-            <if test="${paramComments} != null">
-                sComments like CONCAT('%',${paramComments},'%')
-            </if>
-            <if test="${paramStartTime} != null">
-                sLogTime <![CDATA[ >= ]]> date(${paramStartTime})
-            </if>
-            <if test="${paramEndTime} != null">
-                sLogTime <![CDATA[ <= ]]> date(${paramEndTime})
-            </if>
-        </trim>
-    </sql>
-    <select id="queryCountWithConditions" resultType="int">
-        select count(*)
-        from tsystemlog
-        <include refid="querySegment">
-            <property name="paramUserCode" value="#{userCode}"/>
-            <property name="paramUserName" value="#{userName}"/>
-            <property name="paramBankCode" value="#{bankCode}"/>
-            <property name="paramBankName" value="#{bankName}"/>
-            <property name="paramIpAddress" value="#{ipAddress}"/>
-            <property name="paramComments" value="#{comments}"/>
-            <property name="paramStartTime" value="#{startTime}"/>
-            <property name="paramEndTime" value="#{endTime}"/>
-        </include>
-    </select>
     <select id="querySystemLogByPageWithConditions" resultMap="BaseResultMap">
         select sID, sUserCode, sUseName, sBankCode, sBankName, sIPAddress, sMACAddress, sComments,
         sLogTime
         from tsystemlog
-        <include refid="querySegment">
-            <property name="paramUserCode" value="#{userCode}"/>
-            <property name="paramUserName" value="#{userName}"/>
-            <property name="paramBankCode" value="#{bankCode}"/>
-            <property name="paramBankName" value="#{bankName}"/>
-            <property name="paramIpAddress" value="#{ipAddress}"/>
-            <property name="paramComments" value="#{comments}"/>
-            <property name="paramStartTime" value="#{startTime}"/>
-            <property name="paramEndTime" value="#{endTime}"/>
-        </include>
+        <trim prefix="where" prefixOverrides=" AND ">
+            <if test="#{userCode} != null">
+                sUserCode = #{userCode}
+            </if>
+            <if test="#{userName} != null">
+                and sUseName = #{userName}
+            </if>
+            <if test="#{bankCode} != null">
+                and sBankCode = #{bankCode}
+            </if>
+            <if test="#{bankName} != null">
+                and sBankName like CONCAT('%',#{bankName}, '%')
+            </if>
+            <if test="#{ipAddress} != null">
+                and sIPAddress like CONCAT('%',#{ipAddress} ,'%')
+            </if>
+            <if test="#{comments} != null">
+                and sComments like CONCAT('%',#{comments},'%')
+            </if>
+            <if test="#{startTime} != null">
+                and sLogTime <![CDATA[ >= ]]> date(#{startTime})
+            </if>
+            <if test="#{endTime} != null">
+                and sLogTime <![CDATA[ <= ]]> date(#{endTime})
+            </if>
+        </trim>
         order by sLogTime desc
-        limit ${currentPage}, ${pageSize}
     </select>
 </mapper>
