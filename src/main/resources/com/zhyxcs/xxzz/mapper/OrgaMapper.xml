@@ -19,12 +19,12 @@
     where sBankCode = #{sbankcode,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.Orga">
-    insert into torga (sBankCode, sBankTypeCode, sBankKind, 
-      sBankName, sTopBankCode, sPBCode, 
+    insert into torga (sBankCode, sBankTypeCode, sBankKind,
+      sBankName, sTopBankCode, sPBCode,
       sBankAreaCode, sBankCityCode, sBankState
       )
-    values (#{sbankcode,jdbcType=VARCHAR}, #{sbanktypecode,jdbcType=VARCHAR}, #{sbankkind,jdbcType=VARCHAR}, 
-      #{sbankname,jdbcType=VARCHAR}, #{stopbankcode,jdbcType=VARCHAR}, #{spbcode,jdbcType=VARCHAR}, 
+    values (#{sbankcode,jdbcType=VARCHAR}, #{sbanktypecode,jdbcType=VARCHAR}, #{sbankkind,jdbcType=VARCHAR},
+      #{sbankname,jdbcType=VARCHAR}, #{stopbankcode,jdbcType=VARCHAR}, #{spbcode,jdbcType=VARCHAR},
       #{sbankareacode,jdbcType=VARCHAR}, #{sbankcitycode,jdbcType=VARCHAR}, #{sbankstate,jdbcType=VARCHAR}
       )
   </insert>
@@ -41,14 +41,19 @@
     where sBankCode = #{sbankcode,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode, 
+    select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
     sBankCityCode, sBankState
     from torga
     where sBankCode = #{sbankcode,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode, 
+    select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
     sBankCityCode, sBankState
     from torga
+  </select>
+  <select id="selectByBankKindAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
+    select *
+    from torga
+    where sPBCode = #{pbcCode} and sBankTypeCode = #{bankTypeCode}
   </select>
 </mapper>

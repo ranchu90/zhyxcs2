@@ -26,18 +26,34 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     @Override
     public int queryRecordTotalNum(String userCode,
                                    String approvalState,
-                                   String businessEmergency) {
-        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency);
+                                   String businessEmergency,
+                                   String userLevel) {
+        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency, userLevel);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCode(String pageSize,
-                                                        String currentPage,
-                                                        String userCode,
-                                                        String approvalState,
-                                                        String userLevel,
-                                                        String businessEmergency) {
-        return workIndexMapper.queryRecordByPageAndUserCode(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    public List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    }
+
+    @Override
+    public List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    }
+
+    @Override
+    public List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    }
+
+    @Override
+    public List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    }
+
+    @Override
+    public List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCodeRenAdmin(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
     }
 
     @Override
@@ -64,4 +80,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     public WorkIndex selectByPrimaryKey(String stransactionnum) {
         return workIndexMapper.selectByPrimaryKey(stransactionnum);
     }
+
+    @Override
+    public int updateWorkIndexBusinessEmergency(WorkIndex workIndex) {
+        return workIndexMapper.updateWorkIndexBusinessEmergency(workIndex);
+    }
+
 }

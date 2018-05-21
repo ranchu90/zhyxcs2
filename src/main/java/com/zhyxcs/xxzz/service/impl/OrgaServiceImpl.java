@@ -6,6 +6,8 @@ import com.zhyxcs.xxzz.service.OrgaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrgaServiceImpl implements OrgaService {
     @Autowired
@@ -14,5 +16,10 @@ public class OrgaServiceImpl implements OrgaService {
     @Override
     public Orga selectByPrimaryKey(String sbankcode) {
         return orgaMapper.selectByPrimaryKey(sbankcode);
+    }
+
+    @Override
+    public List<Orga> selectByBankKindAndPbcCode(String pbcCode, String bankTypeCode) {
+        return orgaMapper.selectByBankKindAndPbcCode(pbcCode, bankTypeCode);
     }
 }

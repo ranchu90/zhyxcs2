@@ -1,35 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhyxcs.xxzz.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.User">
-    <constructor>
-      <idArg column="sUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sPassword" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUserState" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUserLevel" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUserOnTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sPWDError" javaType="java.lang.Byte" jdbcType="TINYINT" />
-      <arg column="sTelephone" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sEmail" javaType="java.lang.String" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhyxcs.xxzz.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.User" >
+    <constructor >
+      <idArg column="sUserCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sBankCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUserName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sPassword" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUserState" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUserLevel" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUserOnTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sPWDError" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="sTelephone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sEmail" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sAddUserCode" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tuser
     where sUserCode = #{susercode,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.User">
-    insert into tuser (sUserCode, sBankCode, sUserName, 
-      sPassword, sUserState, sUserLevel, 
-      sUserOnTime, sPWDError, sTelephone, 
-      sEmail)
-    values (#{susercode,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR}, #{susername,jdbcType=VARCHAR}, 
-      #{spassword,jdbcType=VARCHAR}, #{suserstate,jdbcType=VARCHAR}, #{suserlevel,jdbcType=VARCHAR}, 
-      #{suserontime,jdbcType=TIMESTAMP}, #{spwderror,jdbcType=TINYINT}, #{stelephone,jdbcType=VARCHAR}, 
-      #{semail,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.User" >
+    insert into tuser (sUserCode, sBankCode, sUserName,
+      sPassword, sUserState, sUserLevel, sTelephone,
+      sEmail, sAddUserCode)
+    values (#{susercode,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR}, #{susername,jdbcType=VARCHAR},
+      #{spassword,jdbcType=VARCHAR}, #{suserstate,jdbcType=VARCHAR}, #{suserlevel,jdbcType=VARCHAR},
+      #{stelephone,jdbcType=VARCHAR}, #{semail,jdbcType=VARCHAR}, #{saddusercode,jdbcType=VARCHAR})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.User">
+  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.User" >
     update tuser
     set sBankCode = #{sbankcode,jdbcType=VARCHAR},
       sUserName = #{susername,jdbcType=VARCHAR},
@@ -39,18 +38,47 @@
       sUserOnTime = #{suserontime,jdbcType=TIMESTAMP},
       sPWDError = #{spwderror,jdbcType=TINYINT},
       sTelephone = #{stelephone,jdbcType=VARCHAR},
+      sEmail = #{semail,jdbcType=VARCHAR},
+      sAddUserCode = #{saddusercode,jdbcType=VARCHAR}
+    where sUserCode = #{susercode,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sUserCode, sBankCode, sUserName, sPassword, sUserState, sUserLevel, sUserOnTime,
+    sPWDError, sTelephone, sEmail, sAddUserCode
+    from tuser
+    where sUserCode = #{susercode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select sUserCode, sBankCode, sUserName, sPassword, sUserState, sUserLevel, sUserOnTime,
+    sPWDError, sTelephone, sEmail, sAddUserCode
+    from tuser
+  </select>
+  <resultMap id="selectResultMap" type="HashMap" >
+      <id column="sUserCode" jdbcType="VARCHAR" property="susercode" />
+      <result column="sBankCode" jdbcType="VARCHAR" property="sbankcode" />
+      <result column="sUserName" jdbcType="VARCHAR" property="susername" />
+      <result column="sBankName" jdbcType="VARCHAR" property="sbankname" />
+      <result column="sUserState" jdbcType="VARCHAR" property="suserstate" />
+      <result column="sUserLevel" jdbcType="VARCHAR" property="suserlevel" />
+      <result column="sUserOnTime" jdbcType="TIMESTAMP" property="suserontime" />
+      <result column="sPWDError" jdbcType="TINYINT" property="spwderror" />
+      <result column="sTelephone" jdbcType="VARCHAR" property="stelephone" />
+      <result column="sEmail" jdbcType="VARCHAR" property="semail" />
+      <result column="sAddUserCode" jdbcType="VARCHAR" property="saddusercode" />
+  </resultMap>
+  <select id="selectBysAddUserCode" resultMap="selectResultMap" parameterType="java.lang.String" >
+    select a.sUserCode, a.sBankCode, a.sUserName, b.sBankName, a.sUserState, a.sUserLevel, a.sUserOnTime,
+    a.sPWDError, a.sTelephone, a.sEmail, a.sAddUserCode
+    from tuser as a, torga as b
+    where a.sAddUserCode = #{addUserCode,jdbcType=VARCHAR}
+    and a.sBankCode = b.sBankCode
+  </select>
+  <update id="updateBasicByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.User" >
+    update tuser
+    set sUserName = #{susername,jdbcType=VARCHAR},
+      sUserState = #{suserstate,jdbcType=VARCHAR},
+      sTelephone = #{stelephone,jdbcType=VARCHAR},
       sEmail = #{semail,jdbcType=VARCHAR}
     where sUserCode = #{susercode,jdbcType=VARCHAR}
   </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select sUserCode, sBankCode, sUserName, sPassword, sUserState, sUserLevel, sUserOnTime, 
-    sPWDError, sTelephone, sEmail
-    from tuser
-    where sUserCode = #{susercode,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select sUserCode, sBankCode, sUserName, sPassword, sUserState, sUserLevel, sUserOnTime, 
-    sPWDError, sTelephone, sEmail
-    from tuser
-  </select>
 </mapper>

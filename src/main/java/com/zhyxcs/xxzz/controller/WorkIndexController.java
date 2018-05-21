@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -83,16 +82,25 @@ public class WorkIndexController extends BaseController{
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String userCode = user.getSusercode();
         String userName = user.getSusername();
+        String level = user.getSuserlevel();
 
         switch (action){
-            case ActionType.COMMIT: break;
-            case ActionType.CALL_BACK: break;
-            case ActionType.SEND_BACK: break;
+            case ActionType.COMMIT:
+                workIndex.setSendtime(new Date());
+                break;
+            case ActionType.CALL_BACK:
+                break;
+            case ActionType.SEND_BACK:
+                if (Integer.valueOf(level) >= 4){
+                    int time = workIndex.getSreturntimes() + 1;
+                    workIndex.setSreturntimes(time);
+                }
+                break;
             case ActionType.REVIEW:
-                workIndex.setSreviewusercode(userCode);break;
+                workIndex.setSreviewusercode(userCode);
+                break;
             case ActionType.CHECK:
                 workIndex.setScheckusercode(userCode);
-                workIndex.setSendtime(new Date());
                 break;
             case ActionType.RECHECK:
                 workIndex.setSrecheckusercode(userCode);
@@ -125,10 +133,34 @@ public class WorkIndexController extends BaseController{
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String userLevel = user.getSuserlevel();
-        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState, businessEmergency);
+        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState, businessEmergency, userLevel);
 
-        List<WorkIndex> workIndexList = workIndexService.queryRecordByPageAndUserCode(pageSize,
-                currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+        List<WorkIndex> workIndexList = null;
+
+        //判断用户的查询权限，根据用户级别
+        switch (userLevel){
+            case "1":
+                workIndexList = workIndexService.queryRecordByPageAndUserCodeBankEntry(pageSize,
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                break;
+            case "2":
+                workIndexList = workIndexService.queryRecordByPageAndUserCodeBankCharge(pageSize,
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                break;
+            case "4":
+                workIndexList = workIndexService.queryRecordByPageAndUserCodeRenEntry(pageSize,
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                break;
+            case "5":
+                workIndexList = workIndexService.queryRecordByPageAndUserCodeRenCharge(pageSize,
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                break;
+            case "7":
+                workIndexList = workIndexService.queryRecordByPageAndUserCodeRenAdmin(pageSize,
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                break;
+        }
+
 
         List<Object> newWorkIndexList = new ArrayList<Object>();
 
@@ -162,6 +194,8 @@ public class WorkIndexController extends BaseController{
             workTemp.put("stransactionnum", workIndex.getStransactionnum());
             workTemp.put("supusercode", workIndex.getSupusercode());
             workTemp.put("supusername", workIndex.getSupusername());
+            workTemp.put("sreturntimes", workIndex.getSreturntimes());
+            workTemp.put("sbusinessemergency", workIndex.getSbusinessemergency());
 
             newWorkIndexList.add(workTemp);
         }
@@ -171,6 +205,16 @@ public class WorkIndexController extends BaseController{
         map.put("workIndexList", newWorkIndexList);
 
         return map;
+    }
+
+    @RequestMapping(value = "/workIndexNum", method = RequestMethod.GET)
+    public int queryRecordTotalNum(@RequestParam(value = "approvalState") String approvalState,
+                                   @RequestParam(value = "businessEmergency") String businessEmergency){
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userLevel = user.getSuserlevel();
+
+        return workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState, businessEmergency, userLevel);
     }
 
     @RequestMapping(value = "/receipt", method = RequestMethod.GET)
@@ -206,8 +250,14 @@ public class WorkIndexController extends BaseController{
                 basePath + transactionNum, transactionNum+ ".doc", response);
     }
 
+    @RequestMapping(value = "/businessEmergency", method = RequestMethod.POST)
+    public int updateBusinessEmergency(@RequestBody WorkIndex workIndex){
+        return workIndexService.updateWorkIndexBusinessEmergency(workIndex);
+    }
+
     private String approvalState(String code){
         switch (code){
+            case "0": return "被退回";
             case "1": return "待编辑";
             case "2": return "待复核";
             case "3": return "待审核";

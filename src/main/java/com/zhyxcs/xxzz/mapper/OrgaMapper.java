@@ -1,6 +1,8 @@
 package com.zhyxcs.xxzz.mapper;
 
 import com.zhyxcs.xxzz.domain.Orga;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface OrgaMapper {
@@ -13,4 +15,8 @@ public interface OrgaMapper {
     List<Orga> selectAll();
 
     int updateByPrimaryKey(Orga record);
+
+    List<Orga> selectByBankKindAndPbcCode(
+                                          @Param("pbcCode") String pbcCode,
+                                          @Param("bankTypeCode") String bankTypeCode);
 }

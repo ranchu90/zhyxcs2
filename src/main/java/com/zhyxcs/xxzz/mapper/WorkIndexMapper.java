@@ -20,19 +20,50 @@ public interface WorkIndexMapper {
 
     int queryRecordTotalNum(@Param("userCode") String userCode,
                             @Param("approvalState") String approvalState,
-                            @Param("businessEmergency") String businessEmergency);
+                            @Param("businessEmergency") String businessEmergency,
+                            @Param("userLevel") String userLevel);
 
-    List<WorkIndex> queryRecordByPageAndUserCode(@Param("pageSize") String pageSize,
+    List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(@Param("pageSize") String pageSize,
                                                  @Param("currentPage") String currentPage,
                                                  @Param("userCode") String userCode,
                                                  @Param("approvalState") String approvalState,
                                                  @Param("userLevel") String userLevel,
                                                  @Param("businessEmergency") String businessEmergency);
 
+    List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(@Param("pageSize") String pageSize,
+                                                          @Param("currentPage") String currentPage,
+                                                          @Param("userCode") String userCode,
+                                                          @Param("approvalState") String approvalState,
+                                                          @Param("userLevel") String userLevel,
+                                                          @Param("businessEmergency") String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(@Param("pageSize") String pageSize,
+                                                           @Param("currentPage") String currentPage,
+                                                           @Param("userCode") String userCode,
+                                                           @Param("approvalState") String approvalState,
+                                                           @Param("userLevel") String userLevel,
+                                                           @Param("businessEmergency") String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(@Param("pageSize") String pageSize,
+                                                           @Param("currentPage") String currentPage,
+                                                           @Param("userCode") String userCode,
+                                                           @Param("approvalState") String approvalState,
+                                                           @Param("userLevel") String userLevel,
+                                                           @Param("businessEmergency") String businessEmergency);
+
+    List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(@Param("pageSize") String pageSize,
+                                                           @Param("currentPage") String currentPage,
+                                                           @Param("userCode") String userCode,
+                                                           @Param("approvalState") String approvalState,
+                                                           @Param("userLevel") String userLevel,
+                                                           @Param("businessEmergency") String businessEmergency);
+
     int updateDepositorNameByPrimaryKey(WorkIndex record);
 
     int updateApprovalStateNameByPrimaryKey(@Param("workIndex") WorkIndex workIndex, @Param("action") String action);
 
     int updateWorkIndexByApprovalCodeAndIdentifier(WorkIndex workIndex);
+
+    int updateWorkIndexBusinessEmergency(WorkIndex workIndex);
 
 }
