@@ -20,4 +20,7 @@ public interface UserMapper {
     int updateBasicByPrimaryKey(User record);
 
     List<HashMap> selectBysAddUserCode(@Param("addUserCode") String addUserCode);
+
+    List<HashMap> selectBysAddUserCodeAndBankType(@Param("addUserCode") String addUserCode,
+                                                  @Param("bankTypeCode") String bankTypeCode);
 }

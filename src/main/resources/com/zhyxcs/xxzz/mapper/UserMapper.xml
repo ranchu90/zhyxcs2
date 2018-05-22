@@ -53,14 +53,14 @@
     sPWDError, sTelephone, sEmail, sAddUserCode
     from tuser
   </select>
-  <resultMap id="selectResultMap" type="HashMap" >
+  <resultMap id="selectResultMap" type="java.util.HashMap" >
       <id column="sUserCode" jdbcType="VARCHAR" property="susercode" />
       <result column="sBankCode" jdbcType="VARCHAR" property="sbankcode" />
       <result column="sUserName" jdbcType="VARCHAR" property="susername" />
       <result column="sBankName" jdbcType="VARCHAR" property="sbankname" />
       <result column="sUserState" jdbcType="VARCHAR" property="suserstate" />
       <result column="sUserLevel" jdbcType="VARCHAR" property="suserlevel" />
-      <result column="sUserOnTime" jdbcType="TIMESTAMP" property="suserontime" />
+      <result column="sUserOnTime" jdbcType="TIMESTAMP" javaType="java.util.Date" property="suserontime" />
       <result column="sPWDError" jdbcType="TINYINT" property="spwderror" />
       <result column="sTelephone" jdbcType="VARCHAR" property="stelephone" />
       <result column="sEmail" jdbcType="VARCHAR" property="semail" />
@@ -72,6 +72,13 @@
     from tuser as a, torga as b
     where a.sAddUserCode = #{addUserCode,jdbcType=VARCHAR}
     and a.sBankCode = b.sBankCode
+  </select>
+  <select id="selectBysAddUserCodeAndBankType" resultMap="selectResultMap" parameterType="java.lang.String" >
+    select a.sUserCode, a.sBankCode, a.sUserName, b.sBankName, a.sUserState, a.sUserLevel, a.sUserOnTime,
+    a.sPWDError, a.sTelephone, a.sEmail, a.sAddUserCode
+    from tuser as a, torga as b
+    where a.sAddUserCode = #{addUserCode,jdbcType=VARCHAR}
+    and a.sBankCode = b.sBankCode and b.sBankTypeCode = #{bankTypeCode}
   </select>
   <update id="updateBasicByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.User" >
     update tuser

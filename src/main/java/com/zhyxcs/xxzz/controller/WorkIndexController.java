@@ -132,8 +132,10 @@ public class WorkIndexController extends BaseController{
 
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
-        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState, businessEmergency, userLevel);
+        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState,
+                businessEmergency, userLevel, currentBankCode);
 
         List<WorkIndex> workIndexList = null;
 
@@ -141,19 +143,19 @@ public class WorkIndexController extends BaseController{
         switch (userLevel){
             case "1":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeBankEntry(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
                 break;
             case "2":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeBankCharge(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
                 break;
             case "4":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeRenEntry(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
                 break;
             case "5":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeRenCharge(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
                 break;
             case "7":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeRenAdmin(pageSize,
@@ -212,9 +214,11 @@ public class WorkIndexController extends BaseController{
                                    @RequestParam(value = "businessEmergency") String businessEmergency){
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
 
-        return workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState, businessEmergency, userLevel);
+        return workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState,
+                businessEmergency, userLevel, currentBankCode);
     }
 
     @RequestMapping(value = "/receipt", method = RequestMethod.GET)

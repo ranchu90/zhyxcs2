@@ -8,7 +8,7 @@ import java.util.List;
 public interface SystemLogService {
     int insert(SystemLog record);
 
-    public int queryCountWithConditions(String userCode, String userName, String bankCode, String bankName, String ipAddress, String comments, Date startTime, Date endTime);
+    int queryCountWithConditions(String userCode, String userName, String bankCode, String bankName, String ipAddress, String comments, Date startTime, Date endTime);
 
     List<SystemLog> querySystemLogByPageWithConditions(String pageSize, String currentPage, String userCode, String userName, String bankCode, String bankName, String ipAddress, String comments, Date startTime, Date endTime);
 }

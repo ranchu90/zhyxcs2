@@ -19,6 +19,8 @@ public class WorkIndex {
 
     private String sbankcode;
 
+    private String spbcbankcode;
+
     private String sbankname;
 
     private String supusercode;
@@ -47,7 +49,7 @@ public class WorkIndex {
 
     private Date srechecktime;
 
-    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Integer sreturntimes, String sbusinesscategory, String saccounttype, String sbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime) {
+    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Integer sreturntimes, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime) {
         this.stransactionnum = stransactionnum;
         this.sdepositorname = sdepositorname;
         this.sapprovalstate = sapprovalstate;
@@ -56,6 +58,7 @@ public class WorkIndex {
         this.sbusinesscategory = sbusinesscategory;
         this.saccounttype = saccounttype;
         this.sbankcode = sbankcode;
+        this.spbcbankcode = spbcbankcode;
         this.sbankname = sbankname;
         this.supusercode = supusercode;
         this.supusername = supusername;
@@ -138,6 +141,14 @@ public class WorkIndex {
 
     public void setSbankcode(String sbankcode) {
         this.sbankcode = sbankcode == null ? null : sbankcode.trim();
+    }
+
+    public String getSpbcbankcode() {
+        return spbcbankcode;
+    }
+
+    public void setSpbcbankcode(String spbcbankcode) {
+        this.spbcbankcode = spbcbankcode == null ? null : spbcbankcode.trim();
     }
 
     public String getSbankname() {

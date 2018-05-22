@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<HashMap> selectBysAddUserCodeAndBankType(String addUserCode, String bankTypeCode) {
+        return userMapper.selectBysAddUserCodeAndBankType(addUserCode, bankTypeCode);
+    }
+
+    @Override
     public int insert(User record) {
         return userMapper.insert(record);
     }

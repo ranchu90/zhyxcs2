@@ -17,4 +17,9 @@ public class BankTypeServiceImpl implements BankTypeService {
     public List<BankType> selectAllBusinessBank() {
         return bankTypeMapper.selectAllBusinessBank();
     }
+
+    @Override
+    public List<BankType> selectAll() {
+        return bankTypeMapper.selectAll();
+    }
 }
