@@ -1,5 +1,6 @@
 package com.zhyxcs.xxzz.controller;
 
+import com.zhyxcs.xxzz.config.PageConfig;
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.SystemLog;
 import com.zhyxcs.xxzz.domain.User;
@@ -18,6 +19,14 @@ public class BaseController {
     protected HttpServletRequest request;
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private PageConfig pageConfig;
+
+
+    public String getDisplayCount(){
+        return pageConfig.getDisplayCount();
+    }
+
 
     protected void writeLog(String comments){
         HttpSession session=request.getSession();
