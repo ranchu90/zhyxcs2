@@ -75,10 +75,10 @@
                 and sComments like CONCAT('%',#{comments,jdbcType=VARCHAR},'%')
             </if>
             <if test="startTime != null">
-                and date(sLogTime) <![CDATA[ >= ]]> #{startTime,jdbcType=java.sql.Date}
+                and date(sLogTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
             </if>
             <if test="endTime != null">
-                and date(sLogTime) <![CDATA[ <= ]]> #{endTime,jdbcType=java.sql.Date}
+                and date(sLogTime) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
             </if>
         </trim>
         order by sLogTime desc
