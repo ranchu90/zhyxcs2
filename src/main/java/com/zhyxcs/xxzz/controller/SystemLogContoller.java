@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/systemlog")
 public class SystemLogContoller extends BaseController {
     @Autowired
     private SystemLogService systemLogService;
@@ -46,7 +46,7 @@ public class SystemLogContoller extends BaseController {
         endTime = (endTime == null) ? null : endTime;
         PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
         List<SystemLog> systemLogs = systemLogService.querySystemLogByPageWithConditions(userCode, userName, bankCode, bankName, ipAddress, comments, startTime, endTime);
-        PageInfo<SystemLog> pageInfo = new PageInfo<SystemLog>(systemLogs);
+        PageInfo<SystemLog> pageInfo = new PageInfo(systemLogs);
         map.put("pageInfo", pageInfo);
         return map;
     }

@@ -211,6 +211,9 @@
     </if>
       and sPBCBankCode = #{pbcCode}
     order by sEndTime
+    <if test="approvalState == 6">
+        desc
+    </if>
     limit ${currentPage}, ${pageSize}
     </select>
     <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
@@ -231,6 +234,9 @@
     </if>
       and sPBCBankCode = #{pbcCode}
     order by sEndTime
+    <if test="approvalState == 6">
+        desc
+    </if>
     limit ${currentPage}, ${pageSize}
     </select>
     <select id="queryRecordByPageAndUserCodeRenAdmin" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
@@ -251,6 +257,9 @@
       sBusinessEmergency = #{businessEmergency}
     </if>
     order by sEndTime
+    <if test="approvalState == 6">
+        desc
+    </if>
     limit ${currentPage}, ${pageSize}
   </select>
     <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
@@ -270,6 +279,9 @@
         </if>
         and sBankCode = #{bankCode}
         order by sEndTime
+        <if test="approvalState == 6">
+            desc
+        </if>
         limit ${currentPage}, ${pageSize}
     </select>
     <select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
@@ -296,6 +308,9 @@
         </if>
         and sBankCode = #{bankCode}
         order by sEndTime
+        <if test="approvalState == 6">
+            desc
+        </if>
         limit ${currentPage}, ${pageSize}
     </select>
 </mapper>

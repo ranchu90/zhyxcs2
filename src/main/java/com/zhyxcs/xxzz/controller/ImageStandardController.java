@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -17,19 +19,38 @@ public class ImageStandardController extends BaseController {
     @Autowired
     private ImageStandardService imageStandardService;
 
-    @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
-    public List<String> getBusinessCategory(){
-        return imageStandardService.businessCatagory();
-    }
+//    @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
+//    public List<String> getBusinessCategory(){
+//        return imageStandardService.businessCategory();
+//    }
 
-    @RequestMapping(value = "/accountType", method = RequestMethod.GET)
-    public List<String> getAccountType(){
-        return imageStandardService.accountType();
-    }
+//    @RequestMapping(value = "/accountType", method = RequestMethod.GET)
+//    public List<String> getAccountType(){
+//        return imageStandardService.accountType();
+//    }
 
     @RequestMapping(value = "/certificateType", method = RequestMethod.GET)
-    public List<String> getCertificateType(@RequestParam(value = "businessCatagory") String businessCatagory,
+    public List<String> getCertificateType(@RequestParam(value = "businessCategory") String businessCategory,
                                            @RequestParam(value = "accountType") String accountType){
-        return imageStandardService.certificateType(businessCatagory, accountType);
+        return imageStandardService.certificateType(businessCategory, accountType);
+    }
+
+    @RequestMapping(value = "/basicCategory", method = RequestMethod.GET)
+    public List<HashMap> getBasicCategory(){
+        List <HashMap> resultList = new ArrayList();
+        List <String> businessCategoryList = imageStandardService.businessCategory();
+
+        for (String businessCategory : businessCategoryList){
+            List<String> accountType = imageStandardService.accountType(businessCategory);
+
+            HashMap map = new HashMap();
+            map.put("businessCategory", businessCategory);
+            map.put("accountType", accountType);
+
+            resultList.add(map);
+        }
+
+
+        return resultList;
     }
 }

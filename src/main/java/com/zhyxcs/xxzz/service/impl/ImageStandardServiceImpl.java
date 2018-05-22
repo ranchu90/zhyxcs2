@@ -13,18 +13,18 @@ public class ImageStandardServiceImpl implements ImageStandardService {
     private ImageStandardMapper imageStandardMapper;
 
     @Override
-    public List<String> businessCatagory() {
-        return imageStandardMapper.businessCatagory();
+    public List<String> businessCategory() {
+        return imageStandardMapper.businessCategory();
     }
 
     @Override
-    public List<String> accountType() {
-        return imageStandardMapper.accountType();
+    public List<String> accountType(String businessCategory) {
+        return imageStandardMapper.accountType(businessCategory);
     }
 
     @Override
-    public List<String> certificateType(String businessCatagory, String accountType) {
-        return imageStandardMapper.certificateType(businessCatagory, accountType);
+    public List<String> certificateType(String businessCategory, String accountType) {
+        return imageStandardMapper.certificateType(businessCategory, accountType);
     }
 
 }

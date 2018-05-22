@@ -16,9 +16,9 @@ public interface ImageStandardMapper {
 
     int updateByPrimaryKey(ImageStandard record);
 
-    List<String> businessCatagory();
+    List<String> businessCategory();
 
-    List<String> accountType();
+    List<String> accountType(@Param("businessCategory") String businessCategory);
 
-    List<String> certificateType(@Param("businessCatagory") String businessCatagory, @Param("accountType") String accountType);
+    List<String> certificateType(@Param("businessCategory") String businessCategory, @Param("accountType") String accountType);
 }

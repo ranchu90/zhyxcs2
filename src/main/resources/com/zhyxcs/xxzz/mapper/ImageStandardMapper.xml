@@ -38,17 +38,18 @@
     select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount
     from timagestandard
   </select>
-  <select id="businessCatagory" resultType="java.lang.String">
+  <select id="businessCategory" resultType="java.lang.String">
     select distinct sBusineesCategory
     from timagestandard
   </select>
   <select id="accountType" resultType="java.lang.String">
     select distinct sAccountType
     from timagestandard
+    where sBusineesCategory = #{businessCategory}
   </select>
   <select id="certificateType" resultType="java.lang.String">
     select sProofName
     from timagestandard
-    where sBusineesCategory = #{businessCatagory} and sAccountType = #{accountType}
+    where sBusineesCategory = #{businessCategory} and sAccountType = #{accountType}
   </select>
 </mapper>
