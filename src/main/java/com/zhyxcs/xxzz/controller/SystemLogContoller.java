@@ -24,7 +24,7 @@ public class SystemLogContoller extends BaseController {
     @RequestMapping(value = "/systemlog", method = RequestMethod.GET)
     public Map<String, Object> querySystemLogByPageWithConditions(
             @RequestParam(value = "pageSize", required = false) String pageSize,
-            @RequestParam(value = "currentPage", required = false) String currentPage,
+            @RequestParam(value = "pageNum", required = false) String pageNum,
             @RequestParam(value = "userCode", required = false) String userCode,
             @RequestParam(value = "userName", required = false) String userName,
             @RequestParam(value = "bankCode", required = false) String bankCode,
@@ -35,7 +35,7 @@ public class SystemLogContoller extends BaseController {
             @RequestParam(value = "endTime", required = false) Date endTime) {
         Map<String, Object> map = new HashMap<String, Object>();
         pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
-        currentPage = (currentPage == null || "".equals(currentPage.trim())) ? "1" : currentPage;
+        pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
         userCode = (userCode == null || "".equals(userCode.trim())) ? null : userCode;
         userName = (userName == null || "".equals(userName.trim())) ? null : userName;
         bankCode = (bankCode == null || "".equals(bankCode.trim())) ? null : bankCode;
@@ -44,7 +44,7 @@ public class SystemLogContoller extends BaseController {
         comments = (comments == null || "".equals(comments.trim())) ? null : comments;
         startTime = (startTime == null) ? null : startTime;
         endTime = (endTime == null) ? null : endTime;
-        PageHelper.startPage(Integer.parseInt(currentPage),Integer.parseInt(pageSize));
+        PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
         List<SystemLog> systemLogs = systemLogService.querySystemLogByPageWithConditions(userCode, userName, bankCode, bankName, ipAddress, comments, startTime, endTime);
         PageInfo<SystemLog> pageInfo = new PageInfo<SystemLog>(systemLogs);
         map.put("pageInfo", pageInfo);
