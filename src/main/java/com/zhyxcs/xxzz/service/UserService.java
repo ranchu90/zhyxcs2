@@ -12,6 +12,9 @@ public interface UserService {
 
     List<HashMap> selectBysAddUserCode(String addUserCode);
 
+    List<HashMap> selectBysAddUserCodeAndBankType(String addUserCode,
+                                                  String bankTypeCode);
+
     int insert(User record);
 
     int updateBasicByPrimaryKey(User record);

@@ -21,4 +21,10 @@ public class BankTypeController {
 
         return bankTypeService.selectAllBusinessBank();
     }
+
+    @RequestMapping(value = "/businesses", method = RequestMethod.GET)
+    public List<BankType> getAllBankKind(){
+
+        return bankTypeService.selectAll();
+    }
 }

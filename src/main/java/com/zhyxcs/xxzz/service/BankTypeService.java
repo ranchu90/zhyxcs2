@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BankTypeService {
     List<BankType> selectAllBusinessBank();
+
+    List<BankType> selectAll();
 }

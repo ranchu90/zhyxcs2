@@ -71,9 +71,9 @@
         <!--</table>-->
         <!--<table tableName="tsystemlog" domainObjectName="SystemLog">-->
         <!--</table>-->
-        <table tableName="tuser" domainObjectName="User">
+        <!--<table tableName="tuser" domainObjectName="User">-->
         <!--</table>-->
-        <!--<table tableName="tworkindex" domainObjectName="WorkIndex">-->
+        <table tableName="tworkindex" domainObjectName="WorkIndex">
         <!--</table>-->
         <!--<table tableName="tlicenceimage" domainObjectName="LicenceImage">-->
         </table>

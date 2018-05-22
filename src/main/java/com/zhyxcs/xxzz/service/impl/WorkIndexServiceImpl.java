@@ -27,33 +27,68 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     public int queryRecordTotalNum(String userCode,
                                    String approvalState,
                                    String businessEmergency,
-                                   String userLevel) {
-        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency, userLevel);
+                                   String userLevel,
+                                   String bankCode) {
+        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency, userLevel, bankCode);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
-        return workIndexMapper.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    public List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(String pageSize,
+                                                                 String currentPage,
+                                                                 String userCode,
+                                                                 String approvalState,
+                                                                 String userLevel,
+                                                                 String businessEmergency,
+                                                                 String bankCode) {
+        return workIndexMapper.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage, userCode, approvalState,
+                userLevel, businessEmergency, bankCode);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
-        return workIndexMapper.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    public List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(String pageSize,
+                                                                  String currentPage,
+                                                                  String userCode,
+                                                                  String approvalState,
+                                                                  String userLevel,
+                                                                  String businessEmergency,
+                                                                  String bankCode) {
+        return workIndexMapper.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage, userCode, approvalState,
+                userLevel, businessEmergency, bankCode);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
-        return workIndexMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    public List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(String pageSize,
+                                                                String currentPage,
+                                                                String userCode,
+                                                                String approvalState,
+                                                                String userLevel,
+                                                                String businessEmergency,
+                                                                String pbcCode) {
+        return workIndexMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState,
+                userLevel, businessEmergency, pbcCode);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
-        return workIndexMapper.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    public List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(String pageSize,
+                                                                 String currentPage,
+                                                                 String userCode,
+                                                                 String approvalState,
+                                                                 String userLevel,
+                                                                 String businessEmergency,
+                                                                 String pbcCode) {
+        return workIndexMapper.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage, userCode, approvalState,
+                userLevel, businessEmergency, pbcCode);
     }
 
     @Override
-    public List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
-        return workIndexMapper.queryRecordByPageAndUserCodeRenAdmin(pageSize, currentPage, userCode, approvalState, userLevel, businessEmergency);
+    public List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(String pageSize,
+                                                                String currentPage,
+                                                                String userCode,
+                                                                String approvalState,
+                                                                String userLevel,
+                                                                String businessEmergency) {
+        return workIndexMapper.queryRecordByPageAndUserCodeRenAdmin(pageSize, currentPage, userCode, approvalState,
+                userLevel, businessEmergency);
     }
 
     @Override

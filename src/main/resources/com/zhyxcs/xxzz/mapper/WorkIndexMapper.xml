@@ -11,6 +11,7 @@
       <arg column="sBusinessCategory" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sPBCBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sBankName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sUpUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sUpUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -35,19 +36,21 @@
     insert into tworkindex (sTransactionNum, sDepositorName,
       sApprovalState, sBusinessEmergency, sReturnTimes,
       sBusinessCategory, sAccountType, sBankCode,
-      sBankName, sUpUserCode, sUpUserName,
-      sApprovalCode, sIdentifier, sStartTime,
-      sEndTime, sReviewUserCode, sCheckUserCode,
-      sRecheckUserCode, sRecheckUserName, sRecheckResult,
-      sRecheckOpinion, sRecheckTime)
+      sPBCBankCode, sBankName, sUpUserCode,
+      sUpUserName, sApprovalCode, sIdentifier,
+      sStartTime, sEndTime, sReviewUserCode,
+      sCheckUserCode, sRecheckUserCode, sRecheckUserName,
+      sRecheckResult, sRecheckOpinion, sRecheckTime
+      )
     values (#{stransactionnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR},
       #{sapprovalstate,jdbcType=VARCHAR}, #{sbusinessemergency,jdbcType=VARCHAR}, #{sreturntimes,jdbcType=INTEGER},
       #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR},
-      #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR}, #{supusername,jdbcType=VARCHAR},
-      #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP},
-      #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR},
-      #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckusername,jdbcType=VARCHAR}, #{srecheckresult,jdbcType=VARCHAR},
-      #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP})
+      #{spbcbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR},
+      #{supusername,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR},
+      #{sstarttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR},
+      #{scheckusercode,jdbcType=VARCHAR}, #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckusername,jdbcType=VARCHAR},
+      #{srecheckresult,jdbcType=VARCHAR}, #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
@@ -58,6 +61,7 @@
       sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
       sAccountType = #{saccounttype,jdbcType=VARCHAR},
       sBankCode = #{sbankcode,jdbcType=VARCHAR},
+      sPBCBankCode = #{spbcbankcode,jdbcType=VARCHAR},
       sBankName = #{sbankname,jdbcType=VARCHAR},
       sUpUserCode = #{supusercode,jdbcType=VARCHAR},
       sUpUserName = #{supusername,jdbcType=VARCHAR},
@@ -76,20 +80,12 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sReturnTimes,
-    sBusinessCategory, sAccountType, sBankCode, sBankName, sUpUserCode, sUpUserName,
-    sApprovalCode, sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode,
+    sBusinessCategory, sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode,
+    sUpUserName, sApprovalCode, sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode,
     sRecheckUserCode, sRecheckUserName, sRecheckResult, sRecheckOpinion, sRecheckTime
     from tworkindex
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sReturnTimes,
-    sBusinessCategory, sAccountType, sBankCode, sBankName, sUpUserCode, sUpUserName,
-    sApprovalCode, sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode,
-    sRecheckUserCode, sRecheckUserName, sRecheckResult, sRecheckOpinion, sRecheckTime
-    from tworkindex
-  </select>
-
   <insert id="newWorkIndex" parameterType="com.zhyxcs.xxzz.domain.WorkIndex" statementType="CALLABLE">
       {
           call generate_serial_number_by_bankcode(
@@ -149,7 +145,7 @@
     from tworkindex
     where sApprovalState = #{approvalState}
       <if test="userLevel == 1">
-          and sUpUserCode = #{userCode}
+          and sUpUserCode = #{userCode} and sBankCode = #{bankCode}
       </if>
       <if test="userLevel == 2">
           <choose>
@@ -160,6 +156,7 @@
                   and sReviewUserCode = #{userCode}
               </otherwise>
           </choose>
+          and sBankCode = #{bankCode}
       </if>
       <if test="userLevel == 4">
           <choose>
@@ -170,6 +167,7 @@
                   and sCheckUserCode = #{userCode}
               </otherwise>
           </choose>
+          and sPBCBankCode = #{bankCode}
       </if>
       <if test="userLevel == 5">
          <choose>
@@ -180,6 +178,7 @@
                  and sReCheckUserCode = #{userCode}
              </otherwise>
          </choose>
+          and sPBCBankCode = #{bankCode}
       </if>
 
     <if test="businessEmergency != null and businessEmergency != ''">
@@ -194,7 +193,7 @@
       <!--and sBusinessEmergency = #{businessEmergency}-->
     <!--</if>-->
   <!--</select>-->
-  <select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+    <select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
     from tworkindex
     where sApprovalState = #{approvalState}
@@ -210,10 +209,11 @@
     <if test="businessEmergency != null and businessEmergency != ''">
       and sBusinessEmergency = #{businessEmergency}
     </if>
+      and sPBCBankCode = #{pbcCode}
     order by sEndTime
     limit ${currentPage}, ${pageSize}
-  </select>
-  <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+    </select>
+    <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
     from tworkindex
     where sApprovalState = #{approvalState}
@@ -229,10 +229,11 @@
     <if test="businessEmergency != null and businessEmergency !=''">
       and sBusinessEmergency = #{businessEmergency}
     </if>
+      and sPBCBankCode = #{pbcCode}
     order by sEndTime
     limit ${currentPage}, ${pageSize}
-  </select>
-  <select id="queryRecordByPageAndUserCodeRenAdmin" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
+    </select>
+    <select id="queryRecordByPageAndUserCodeRenAdmin" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
     from tworkindex
     where
@@ -267,6 +268,7 @@
         <if test="businessEmergency != null and businessEmergency != ''">
             and sBusinessEmergency = #{businessEmergency}
         </if>
+        and sBankCode = #{bankCode}
         order by sEndTime
         limit ${currentPage}, ${pageSize}
     </select>
@@ -292,6 +294,7 @@
         <if test="businessEmergency != null and businessEmergency != ''">
             and sBusinessEmergency = #{businessEmergency}
         </if>
+        and sBankCode = #{bankCode}
         order by sEndTime
         limit ${currentPage}, ${pageSize}
     </select>
