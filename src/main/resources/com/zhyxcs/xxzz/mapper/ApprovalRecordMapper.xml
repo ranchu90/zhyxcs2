@@ -49,4 +49,11 @@
     where sTransactionNum = #{transactioinNum}
     order by sApprovelTime desc
   </select>
+  <select id="selectByUserCodeAndOpinion" resultMap="BaseResultMap">
+    select sID, sTransactionNum, sApprovelResult, sApprovelOpinion, sApprovelUserCode,
+    sApprovelUserName, sApprovelTime
+    from tapprovalrecord
+    where sTransactionNum = #{transactionNum} and sApprovelUserCode = #{approvelUserCode}
+    and sApprovelResult = #{approvelOpinion}
+  </select>
 </mapper>

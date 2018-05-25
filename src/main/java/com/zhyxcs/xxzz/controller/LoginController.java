@@ -59,7 +59,7 @@ public class LoginController extends BaseController{
                         result.put("token", "op");
                         result.put("user", userMap);
 
-                        this.writeLog("用户登陆成功");
+//                        this.writeLog("用户登陆成功");
 
                     } else {
                         //记录密码错误次数

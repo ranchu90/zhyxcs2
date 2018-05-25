@@ -12,5 +12,7 @@ public interface BankCityMapper {
 
     List<BankCity> selectAll();
 
+    List<BankCity> selectByArea(String bankAreaCode);
+
     int updateByPrimaryKey(BankCity record);
 }

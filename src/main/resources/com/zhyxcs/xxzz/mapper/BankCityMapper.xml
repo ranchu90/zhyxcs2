@@ -33,4 +33,10 @@
     select sBankCityCode, sCityName, sBankAreaCode
     from tbankcity
   </select>
+  <select id="selectByArea" resultMap="BaseResultMap">
+    select sBankCityCode, sCityName, sBankAreaCode
+    from tbankcity
+    where
+    sBankAreaCode = #{bankAreaCode}
+  </select>
 </mapper>

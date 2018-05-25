@@ -22,4 +22,9 @@ public class ApprovalRecordImpl implements ApprovalRecordService {
     public List<ApprovalRecord> selectByTranID(String transactioinNum) {
         return approvalRecordMapper.selectByTranID(transactioinNum);
     }
+
+    @Override
+    public ApprovalRecord selectByUserCodeAndOpinion(String transactionNum, String approvelUserCode, String approvelOpinion) {
+        return approvalRecordMapper.selectByUserCodeAndOpinion(transactionNum,approvelUserCode, approvelOpinion);
+    }
 }

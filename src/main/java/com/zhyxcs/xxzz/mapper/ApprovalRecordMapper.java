@@ -13,6 +13,10 @@ public interface ApprovalRecordMapper {
 
     ApprovalRecord selectByPrimaryKey(Long sid);
 
+    ApprovalRecord selectByUserCodeAndOpinion(@Param("transactionNum") String transactionNum,
+                                              @Param("approvelUserCode") String approvelUserCode,
+                                              @Param("approvelOpinion") String approvelOpinion);
+
     List<ApprovalRecord> selectAll();
 
     int updateByPrimaryKey(ApprovalRecord record);

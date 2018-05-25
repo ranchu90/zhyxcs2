@@ -1,0 +1,22 @@
+package com.zhyxcs.xxzz.controller;
+
+import com.zhyxcs.xxzz.domain.BankArea;
+import com.zhyxcs.xxzz.service.BankAreaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/bankArea")
+public class BankAreaController {
+    @Autowired
+    private BankAreaService bankAreaService;
+
+    @RequestMapping(value = "/bankArea", method = RequestMethod.GET)
+    public List<BankArea> getAll(){
+        return bankAreaService.selectAll();
+    }
+}

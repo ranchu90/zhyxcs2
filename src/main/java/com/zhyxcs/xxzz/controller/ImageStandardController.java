@@ -19,15 +19,15 @@ public class ImageStandardController extends BaseController {
     @Autowired
     private ImageStandardService imageStandardService;
 
-//    @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
-//    public List<String> getBusinessCategory(){
-//        return imageStandardService.businessCategory();
-//    }
+    @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
+    public List<String> getBusinessCategory(){
+        return imageStandardService.businessCategory();
+    }
 
-//    @RequestMapping(value = "/accountType", method = RequestMethod.GET)
-//    public List<String> getAccountType(){
-//        return imageStandardService.accountType();
-//    }
+    @RequestMapping(value = "/accountType", method = RequestMethod.GET)
+    public List<String> getAccountType(@RequestParam(value = "businessCategory") String businessCategory){
+        return imageStandardService.accountType(businessCategory);
+    }
 
     @RequestMapping(value = "/certificateType", method = RequestMethod.GET)
     public List<String> getCertificateType(@RequestParam(value = "businessCategory") String businessCategory,

@@ -66,4 +66,21 @@ public interface WorkIndexService {
     WorkIndex selectByPrimaryKey(String stransactionnum);
 
     int updateWorkIndexBusinessEmergency(WorkIndex workIndex);
+
+    List<WorkIndex> queryRecordByConditions(String currentBankArea,
+                                            String currentCity,
+                                            String bankKind,
+                                            String bankType,
+                                            String businessCategory,
+                                            String accountType,
+                                            String orgaCode,
+                                            String bankEntryUserCode,
+                                            String bankReviewUserCode,
+                                            String renEntryUserCode,
+                                            String renRecheckUserCode,
+                                            String transactionNum,
+                                            String approvalCode,
+                                            String identifier,
+                                            String startTime,
+                                            String endTime);
 }

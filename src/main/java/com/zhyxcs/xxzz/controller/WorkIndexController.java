@@ -1,10 +1,12 @@
 package com.zhyxcs.xxzz.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.config.WordConfig;
-import com.zhyxcs.xxzz.domain.Orga;
-import com.zhyxcs.xxzz.domain.User;
-import com.zhyxcs.xxzz.domain.WorkIndex;
+import com.zhyxcs.xxzz.domain.*;
+import com.zhyxcs.xxzz.service.ApprovalRecordService;
 import com.zhyxcs.xxzz.service.ImageService;
+import com.zhyxcs.xxzz.service.OrgaService;
 import com.zhyxcs.xxzz.service.WorkIndexService;
 import com.zhyxcs.xxzz.utils.ActionType;
 import com.zhyxcs.xxzz.utils.CramsConstants;
@@ -27,6 +29,12 @@ import java.util.List;
 public class WorkIndexController extends BaseController{
     @Autowired
     private WorkIndexService workIndexService;
+
+    @Autowired
+    private OrgaService orgaService;
+
+    @Autowired
+    private ApprovalRecordService approvalRecordService;
 
     @Autowired
     private ImageService imageService;
@@ -58,9 +66,52 @@ public class WorkIndexController extends BaseController{
     }
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.GET)
-    public List<WorkIndex> getWorkIndexes(){
+    public Map<String,Object> getWorkIndexes(@RequestParam(value = "pageSize", required = false) String pageSize,
+                                          @RequestParam(value = "pageNum", required = false) String pageNum,
+                                          @RequestParam(value = "currentBankArea", required = false) String currentBankArea,
+                                          @RequestParam(value = "currentCity", required = false) String currentCity,
+                                          @RequestParam(value = "bankKind", required = false) String bankKind,
+                                          @RequestParam(value = "bankType", required = false) String bankType,
+                                          @RequestParam(value = "businessCategory", required = false) String businessCategory,
+                                          @RequestParam(value = "accountType", required = false) String accountType,
+                                          @RequestParam(value = "orgaCode", required = false) String orgaCode,
+                                          @RequestParam(value = "bankEntryUserCode", required = false) String bankEntryUserCode,
+                                          @RequestParam(value = "bankReviewUserCode", required = false) String bankReviewUserCode,
+                                          @RequestParam(value = "renEntryUserCode", required = false) String renEntryUserCode,
+                                          @RequestParam(value = "renRecheckUserCode", required = false) String renRecheckUserCode,
+                                          @RequestParam(value = "transactionNum", required = false) String transactionNum,
+                                          @RequestParam(value = "approvalCode", required = false) String approvalCode,
+                                          @RequestParam(value = "identifier", required = false) String identifier,
+                                          @RequestParam(value = "startTime", required = false) String startTime,
+                                          @RequestParam(value = "endTime", required = false) String endTime){
+        pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
+        pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
+        currentBankArea = (currentBankArea == null || "".equals(currentBankArea)) ? null : currentBankArea;
+        currentCity = (currentCity == null || "".equals(currentCity)) ? null : currentCity;
+        bankKind = (bankKind == null || "".equals(bankKind)) ? null : bankKind;
+        bankType = (bankType == null || "".equals(bankType)) ? null : bankType;
+        businessCategory = (businessCategory == null || "".equals(businessCategory)) ? null : businessCategory;
+        accountType = (accountType == null || "".equals(accountType)) ? null : accountType;
+        orgaCode = (orgaCode == null || "".equals(orgaCode)) ? null : orgaCode;
+        bankEntryUserCode = (bankEntryUserCode == null || "".equals(bankEntryUserCode)) ? null : bankEntryUserCode;
+        bankReviewUserCode = (bankReviewUserCode == null || "".equals(bankReviewUserCode)) ? null : bankReviewUserCode;
+        renEntryUserCode = (renEntryUserCode == null || "".equals(renEntryUserCode)) ? null : renEntryUserCode;
+        renRecheckUserCode = (renRecheckUserCode == null || "".equals(renRecheckUserCode)) ? null : renRecheckUserCode;
+        transactionNum = (transactionNum == null || "".equals(transactionNum)) ? null : transactionNum;
+        approvalCode = (approvalCode == null || "".equals(approvalCode)) ? null : approvalCode;
+        identifier = (identifier == null || "".equals(identifier)) ? null : identifier;
+        startTime = (startTime == null || "".equals(startTime)) ? null : startTime;
+        endTime = (endTime == null || "".equals(endTime)) ? null : endTime;
 
-        return workIndexService.selectAll();
+        Map<String, Object> map = new HashMap();
+        PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+        List<WorkIndex> list = workIndexService.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType, businessCategory,
+                accountType, orgaCode, bankEntryUserCode, bankReviewUserCode, renEntryUserCode, renRecheckUserCode, transactionNum,
+                approvalCode, identifier, startTime, endTime);
+        PageInfo<WorkIndex> workIndexPageInfo = new PageInfo(list);
+        map.put("pageInfo", workIndexPageInfo);
+
+        return map;
     }
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.DELETE)
@@ -226,31 +277,60 @@ public class WorkIndexController extends BaseController{
         WorkIndex result =workIndexService.selectByPrimaryKey(transactionNum);
         List<String> fileList = imageService.selectProofNameByTranID(transactionNum);
 
+        //商业银行行名
         String bankName = result.getSbankname();
-        String checkBankName = result.getScheckusercode();
+        //提交的日期
+        Date date = result.getSendtime();
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
         String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-
+        String hour = String.valueOf(calendar.get(Calendar.HOUR));
+        String minute = String.valueOf(calendar.get(Calendar.MINUTE));
+        //人行名称
+        String pbcBankCode = result.getSpbcbankcode();
+        Orga orga = orgaService.selectByPrimaryKey(pbcBankCode);
+        String pbcBankName = orga.getSbankname();
+        //开户人名称
+        String unitName = result.getSdepositorname();
+        //开户性质
+        String accountType = result.getSaccounttype();
+        //核准号
+        String approvalCode = result.getSapprovalcode();
+        //证书编号
+        String identifier = result.getSidentifier();
+        //通过的日期
+        String checkUserCode = result.getScheckusercode();
+        ApprovalRecord approvalRecord = approvalRecordService.selectByUserCodeAndOpinion(transactionNum,
+                checkUserCode, "审核已通过");
+        Date newDate = approvalRecord.getSapproveltime();
+        calendar.setTime(newDate);
+        String newYear = String.valueOf(calendar.get(Calendar.YEAR));
+        String newMonth = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+        String newDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
         Map map = new HashMap<String, Object>();
-        map.put("bankName", bankName!=null? bankName : "(空)");
-        map.put("checkBankName", "中国人民银行长沙中心支行");
+
         map.put("transactionNum", transactionNum);
-        map.put("unitName", result.getSdepositorname());
-        map.put("accountType", result.getSaccounttype());
-        map.put("businessCategory", result.getSbusinesscategory());
-        map.put("approvalCode", result.getSapprovalcode());
-        map.put("identifier", result.getSidentifier());
+        map.put("bankName", bankName!=null? bankName : "(空)");
         map.put("year", year);
         map.put("month", month);
         map.put("day", day);
-        map.put("fileList", fileList != null? fileList : "(空)");
+        map.put("hour", hour);
+        map.put("minute", minute);
+        map.put("pbcBankName", pbcBankName);
+        map.put("unitName", unitName);
+        map.put("accountType", accountType);
+        map.put("approvalCode", approvalCode);
+        map.put("identifier", identifier);
+        map.put("newYear", newYear);
+        map.put("newMonth", newMonth);
+        map.put("newDay", newDay);
 
         String baseDirectory = wordConfig.getBaseDirectory();
         String basePath = wordConfig.getBasePath();
 
-        this.createWord(map, "receipt.ftl", baseDirectory,
+        this.createWord(map, "shu.ftl", baseDirectory,
                 basePath + transactionNum, transactionNum+ ".doc", response);
     }
 

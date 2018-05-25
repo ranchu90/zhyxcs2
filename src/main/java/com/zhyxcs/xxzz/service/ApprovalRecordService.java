@@ -9,4 +9,8 @@ public interface ApprovalRecordService {
     int insert(ApprovalRecord record);
 
     List<ApprovalRecord> selectByTranID( String transactioinNum);
+
+    ApprovalRecord selectByUserCodeAndOpinion(String transactionNum,
+                                                    String approvelUserCode,
+                                                    String approvelOpinion);
 }
