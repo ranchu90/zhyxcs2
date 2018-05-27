@@ -19,15 +19,18 @@
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
     <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.SystemLog">
-    insert into tsystemlog (sID, sUserCode, sUseName,
-      sBankCode, sBankName, sIPAddress,
-      sMACAddress, sComments
-      )
-    values (#{sid,jdbcType=BIGINT}, #{susercode,jdbcType=VARCHAR}, #{susename,jdbcType=VARCHAR},
-      #{sbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{sipaddress,jdbcType=VARCHAR},
-      #{smacaddress,jdbcType=VARCHAR}, #{scomments,jdbcType=VARCHAR}
-      )
-  </insert>
+        <selectKey resultType="java.lang.Long" keyProperty="sid"  keyColumn="sID" order="BEFORE">
+            select getSequenceNextVal('log_seq');
+        </selectKey>
+        insert into tsystemlog (sID, sUserCode, sUseName,
+        sBankCode, sBankName, sIPAddress,
+        sMACAddress, sComments
+        )
+        values (#{sid,jdbcType=BIGINT}, #{susercode,jdbcType=VARCHAR}, #{susename,jdbcType=VARCHAR},
+        #{sbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{sipaddress,jdbcType=VARCHAR},
+        #{smacaddress,jdbcType=VARCHAR}, #{scomments,jdbcType=VARCHAR}
+        )
+    </insert>
     <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.SystemLog">
     update tsystemlog
     set sUserCode = #{susercode,jdbcType=VARCHAR},
