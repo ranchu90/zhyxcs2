@@ -76,7 +76,30 @@ public class CommonUtils {
         return ip;
     }
 
+
+    public static String getBankKindCode(String transactionNum){
+        if(transactionNum==null||transactionNum.length()!=24){
+            return null;
+        }
+        return transactionNum.substring(0,1);
+    }
+
+    public static String getBankTypeCode(String transactionNum){
+        if(transactionNum==null||transactionNum.length()!=24){
+            return null;
+        }
+        return transactionNum.substring(0,3);
+    }
+
+    public static String getBankCode(String transactionNum){
+        if(transactionNum==null||transactionNum.length()!=24){
+            return null;
+        }
+        return transactionNum.substring(0,12);
+    }
+
     public static void main(String[] args) {
-        System.out.println(MD5("crams888"));
+        //System.out.println(MD5("crams888"));
+        System.out.println(getBankCode("104569018015201805210001"));
     }
 }

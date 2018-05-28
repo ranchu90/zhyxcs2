@@ -1,6 +1,8 @@
 package com.zhyxcs.xxzz.mapper;
 
 import com.zhyxcs.xxzz.domain.BusinessStatistics;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface BusinessStatisticsMapper {
@@ -13,4 +15,6 @@ public interface BusinessStatisticsMapper {
     List<BusinessStatistics> selectAll();
 
     int updateByPrimaryKey(BusinessStatistics record);
+
+    int getCountByTransactionNum(@Param("transactionNum")String transactionNum);
 }

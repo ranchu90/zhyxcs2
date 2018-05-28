@@ -1,6 +1,6 @@
 package com.zhyxcs.xxzz.utils;
 
-/*用于统计业务的状态
+/*用于统计业务的是否被退回状态
 APPROVAL，表示业务被人民银行审核通过
 SENDBACK,表示业务未被审核通过，并被人民银行退回
  */
@@ -30,5 +30,13 @@ public enum AuditStatus {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "AuditStatus{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }
