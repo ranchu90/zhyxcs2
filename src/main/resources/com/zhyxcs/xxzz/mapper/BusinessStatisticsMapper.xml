@@ -64,67 +64,6 @@
     sBusinessCategory, sAccountType, sPass, sOverTime, sErrorType, sHappenTimes
     from tbusinessstatistics
   </select>
-    <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.BusinessStatistics">
-        <constructor>
-            <idArg column="sID" javaType="java.lang.Long" jdbcType="BIGINT"/>
-            <arg column="sTransactionNum" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sPBCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sBankAreaCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sBankCityCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sBankKind" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sBankTypeCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sBusinessCategory" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sPass" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sErrorType" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <arg column="sHappenTimes" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
-        </constructor>
-    </resultMap>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from tbusinessstatistics
-    where sID = #{sid,jdbcType=BIGINT}
-  </delete>
-    <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.BusinessStatistics">
-        <selectKey keyColumn="sID" keyProperty="sid" order="BEFORE" resultType="java.lang.Long">
-            select getSequenceNextVal('statistics_seq');
-        </selectKey>
-        insert into tbusinessstatistics (sID, sTransactionNum, sPBCode,
-        sBankAreaCode, sBankCityCode, sBankKind,
-        sBankTypeCode, sBusinessCategory, sAccountType,
-        sPass, sErrorType, sHappenTimes
-        )
-        values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{spbcode,jdbcType=VARCHAR},
-        #{sbankareacode,jdbcType=VARCHAR}, #{sbankcitycode,jdbcType=VARCHAR}, #{sbankkind,jdbcType=VARCHAR},
-        #{sbanktypecode,jdbcType=VARCHAR}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR},
-        #{spass,jdbcType=VARCHAR}, #{serrortype,jdbcType=VARCHAR}, #{shappentimes,jdbcType=TIMESTAMP}
-        )
-    </insert>
-    <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.BusinessStatistics">
-    update tbusinessstatistics
-    set sTransactionNum = #{stransactionnum,jdbcType=VARCHAR},
-      sPBCode = #{spbcode,jdbcType=VARCHAR},
-      sBankAreaCode = #{sbankareacode,jdbcType=VARCHAR},
-      sBankCityCode = #{sbankcitycode,jdbcType=VARCHAR},
-      sBankKind = #{sbankkind,jdbcType=VARCHAR},
-      sBankTypeCode = #{sbanktypecode,jdbcType=VARCHAR},
-      sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
-      sAccountType = #{saccounttype,jdbcType=VARCHAR},
-      sPass = #{spass,jdbcType=VARCHAR},
-      sErrorType = #{serrortype,jdbcType=VARCHAR},
-      sHappenTimes = #{shappentimes,jdbcType=TIMESTAMP}
-    where sID = #{sid,jdbcType=BIGINT}
-  </update>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sPBCode, sBankAreaCode, sBankCityCode, sBankKind, sBankTypeCode, 
-    sBusinessCategory, sAccountType, sPass, sErrorType, sHappenTimes
-    from tbusinessstatistics
-    where sID = #{sid,jdbcType=BIGINT}
-  </select>
-    <select id="selectAll" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sPBCode, sBankAreaCode, sBankCityCode, sBankKind, sBankTypeCode, 
-    sBusinessCategory, sAccountType, sPass, sErrorType, sHappenTimes
-    from tbusinessstatistics
-  </select>
 
     <select id="getCountByTransactionNum" resultType="int">
         select count(*) from tbusinessstatistics where sTransactionNum = #{transactionNum}

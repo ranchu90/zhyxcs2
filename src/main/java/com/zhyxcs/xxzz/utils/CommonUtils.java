@@ -25,6 +25,11 @@ public class CommonUtils {
         }
     }
 
+    public static boolean isEmpty(String stringValue) {
+        return stringValue == null || ("null").equals(stringValue)
+                || stringValue.trim().length() == 0;
+    }
+
     public static String MD5(String source) {
         StringBuilder sb = new StringBuilder();
         MessageDigest md5 = null;
@@ -47,55 +52,57 @@ public class CommonUtils {
     }
 
     public static String getIpAddress(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
+        String ip = null;
+        //X-Forwarded-For：Squid 服务代理
+        String ipAddresses = request.getHeader("X-Forwarded-For");
+        if (isEmpty(ipAddresses) || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //Proxy-Client-IP：apache 服务代理
+            ipAddresses = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
+        if (isEmpty(ipAddresses) || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //WL-Proxy-Client-IP：weblogic 服务代理
+            ipAddresses = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (isEmpty(ipAddresses) || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //HTTP_CLIENT_IP：有些代理服务器
+            ipAddresses = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (isEmpty(ipAddresses) || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //X-Real-IP：nginx服务代理
+            ipAddresses = request.getHeader("X-Real-IP");
+        }
+
+        //有些网络通过多层代理，那么获取到的ip就会有多个，一般都是通过逗号（,）分割开来，并且第一个ip为客户端的真实IP
+        if (!isEmpty(ipAddresses)) {
+            ip = ipAddresses.split(",")[0];
+        }
+        //还是不能获取到，最后再通过request.getRemoteAddr();获取
+        if (isEmpty(ipAddresses) || "unknown".equalsIgnoreCase(ipAddresses)) {
             ip = request.getRemoteAddr();
-            if (ip.equals("127.0.0.1")) {
-                //根据网卡取本机配置的IP
-                InetAddress inet = null;
-                try {
-                    inet = InetAddress.getLocalHost();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                ip = inet.getHostAddress();
-            }
         }
-        // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (ip != null && ip.length() > 15) {
-            if (ip.indexOf(",") > 0) {
-                ip = ip.substring(0, ip.indexOf(","));
-            }
-        }
-        return ip;
+        return ip.equals("0:0:0:0:0:0:0:1")?"127.0.0.1":ip;
     }
 
 
-    public static String getBankKindCode(String transactionNum){
-        if(transactionNum==null||transactionNum.length()!=24){
+    public static String getBankKindCode(String transactionNum) {
+        if (transactionNum == null || transactionNum.length() != 24) {
             return null;
         }
-        return transactionNum.substring(0,1);
+        return transactionNum.substring(0, 1);
     }
 
-    public static String getBankTypeCode(String transactionNum){
-        if(transactionNum==null||transactionNum.length()!=24){
+    public static String getBankTypeCode(String transactionNum) {
+        if (transactionNum == null || transactionNum.length() != 24) {
             return null;
         }
-        return transactionNum.substring(0,3);
+        return transactionNum.substring(0, 3);
     }
 
-    public static String getBankCode(String transactionNum){
-        if(transactionNum==null||transactionNum.length()!=24){
+    public static String getBankCode(String transactionNum) {
+        if (transactionNum == null || transactionNum.length() != 24) {
             return null;
         }
-        return transactionNum.substring(0,12);
+        return transactionNum.substring(0, 12);
     }
 
     public static void main(String[] args) {

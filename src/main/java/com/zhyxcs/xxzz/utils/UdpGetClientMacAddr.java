@@ -1,14 +1,9 @@
 package com.zhyxcs.xxzz.utils;
 
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.*;
 
 /**
@@ -23,10 +18,10 @@ public class UdpGetClientMacAddr {
 
     private static Log log = LogFactory.getLog(UdpGetClientMacAddr.class);
 
-    private String         remoteAddr;
-    private int            remotePort = 137;
-    private byte[]         buffer      = new byte[1024];
-    private DatagramSocket ds          = null;
+    private String remoteAddr;
+    private int remotePort = 137;
+    private byte[] buffer = new byte[1024];
+    private DatagramSocket ds = null;
 
     public UdpGetClientMacAddr(String strAddr) throws Exception {
         remoteAddr = strAddr;
@@ -39,20 +34,21 @@ public class UdpGetClientMacAddr {
         ds.send(dp);
         return dp;
     }
+
     //接收数据包
     protected final DatagramPacket receive() {
         DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
         try {
             ds.setSoTimeout(3000);
             ds.receive(dp);
-        }catch(SocketTimeoutException  ex) {
-           log.info("接收数据超时...,不能获取客户端MAC地址");
-          //  throw new SocketTimeoutException("连接超时");
-        }  catch (SocketException e1) {
-            log.error("发生Sorcket异常..."+e1.getMessage());
+        } catch (SocketTimeoutException ex) {
+            log.info("接收数据超时...,不能获取客户端MAC地址");
+            //  throw new SocketTimeoutException("连接超时");
+        } catch (SocketException e1) {
+            log.error("发生Sorcket异常..." + e1.getMessage());
             e1.printStackTrace();
-        }catch (IOException e2) {
-            log.error("发生IO异常..."+e2.getMessage());
+        } catch (IOException e2) {
+            log.error("发生IO异常..." + e2.getMessage());
         }
         return dp;
     }
@@ -116,9 +112,9 @@ public class UdpGetClientMacAddr {
 
     protected final String getMacAddr(byte[] brevdata) throws Exception {
         // 获取计算机名
-     //   System.out.println(new String(brevdata, 57, 18));
-     //   System.out.println(new String(brevdata, 75, 18));
-     //   System.out.println(new String(brevdata, 93, 18));
+        //   System.out.println(new String(brevdata, 57, 18));
+        //   System.out.println(new String(brevdata, 75, 18));
+        //   System.out.println(new String(brevdata, 93, 18));
         int i = brevdata[56] * 18 + 56;
         String sAddr = "";
         StringBuffer sb = new StringBuffer(17);
@@ -145,6 +141,7 @@ public class UdpGetClientMacAddr {
 
     /**
      * 获取远程主机的mac地址
+     *
      * @return
      * @throws Exception
      */
@@ -152,57 +149,52 @@ public class UdpGetClientMacAddr {
         byte[] bqcmd = getQueryCmd();
         this.send(bqcmd);
         DatagramPacket dp = receive();
-        String smac ="";
+        String smac = "";
         smac = getMacAddr(dp.getData());
         this.close();
         return smac;
     }
-   public static void  main(String[] args) throws Exception
-   {
-       UdpGetClientMacAddr  udpGetClientMacAddr = new UdpGetClientMacAddr("192.168.2.102");
-       System.out.println(udpGetClientMacAddr.getRemoteMacAddr());
-   }
 
-   public static String getMac(String ip) throws Exception{
-	   String mac = "";
-	   if (CommonUtils.compareString(ip, "127.0.0.1")){
-		   mac = getLocalMAc();
-	   }
-	   else {
-		   UdpGetClientMacAddr  add = new UdpGetClientMacAddr(ip);
-		   mac = add.getRemoteMacAddr();
-	   }
-	   return mac;
+    public static String getMac(String ip) throws Exception {
+        String mac = "";
+        if (CommonUtils.compareString(ip, "127.0.0.1")) {
+            mac = getLocalMAc();
+        } else {
+            UdpGetClientMacAddr add = new UdpGetClientMacAddr(ip);
+            mac = add.getRemoteMacAddr();
+        }
+        return mac;
+    }
 
-   }
-
-public static String getLocalMAc(){
-	String command="ipconfig /all";
-
-	String res = "";
-
-	try{
-	Process process=Runtime.getRuntime().exec(command);
-	InputStream inputStream=process.getInputStream();
-	BufferedReader br=new BufferedReader(new InputStreamReader(inputStream));
-	String str=null;
-	while((str=br.readLine())!=null)
-	{
-		if(str.contains("Physical Address"))
-		{
-			res = str.substring(str.indexOf(":")+2);
-		}
-	}
-	inputStream.close();
-	br.close();
-	}
-	catch( Exception e){}
-
-	return res;
-
+    public static String getLocalMAc() {
+        InetAddress ia = null;
+        try {
+            ia = InetAddress.getLocalHost();
+            byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();
+            StringBuffer sb = new StringBuffer("");
+            for (int i = 0; i < mac.length; i++) {
+                if (i != 0) {
+                    sb.append("-");
+                }
+                int temp = mac[i] & 0xff;
+                String str = Integer.toHexString(temp);
+                if (str.length() == 1) {
+                    sb.append("0" + str);
+                } else {
+                    sb.append(str);
+                }
+            }
+            return sb.toString().toUpperCase();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return "00-00-00-00-00-00";
+    }
 }
 
 
-}
+
 
 
