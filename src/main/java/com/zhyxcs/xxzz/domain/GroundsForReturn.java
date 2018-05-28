@@ -1,19 +1,19 @@
 package com.zhyxcs.xxzz.domain;
 
-public class TGroundsForReturn {
+public class GroundsForReturn {
     private Long sid;
 
     private String sgrounds;
 
     private String sgroundstate;
 
-    public TGroundsForReturn(Long sid, String sgrounds, String sgroundstate) {
+    public GroundsForReturn(Long sid, String sgrounds, String sgroundstate) {
         this.sid = sid;
         this.sgrounds = sgrounds;
         this.sgroundstate = sgroundstate;
     }
 
-    public TGroundsForReturn() {
+    public GroundsForReturn() {
         super();
     }
 

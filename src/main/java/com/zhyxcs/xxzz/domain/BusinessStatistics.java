@@ -2,7 +2,7 @@ package com.zhyxcs.xxzz.domain;
 
 import java.util.Date;
 
-public class TBusinessStatistics {
+public class BusinessStatistics {
     private Long sid;
 
     private String stransactionnum;
@@ -23,11 +23,13 @@ public class TBusinessStatistics {
 
     private String spass;
 
+    private String sovertime;
+
     private String serrortype;
 
     private Date shappentimes;
 
-    public TBusinessStatistics(Long sid, String stransactionnum, String spbcode, String sbankareacode, String sbankcitycode, String sbankkind, String sbanktypecode, String sbusinesscategory, String saccounttype, String spass, String serrortype, Date shappentimes) {
+    public BusinessStatistics(Long sid, String stransactionnum, String spbcode, String sbankareacode, String sbankcitycode, String sbankkind, String sbanktypecode, String sbusinesscategory, String saccounttype, String spass, String sovertime, String serrortype, Date shappentimes) {
         this.sid = sid;
         this.stransactionnum = stransactionnum;
         this.spbcode = spbcode;
@@ -38,11 +40,12 @@ public class TBusinessStatistics {
         this.sbusinesscategory = sbusinesscategory;
         this.saccounttype = saccounttype;
         this.spass = spass;
+        this.sovertime = sovertime;
         this.serrortype = serrortype;
         this.shappentimes = shappentimes;
     }
 
-    public TBusinessStatistics() {
+    public BusinessStatistics() {
         super();
     }
 
@@ -124,6 +127,14 @@ public class TBusinessStatistics {
 
     public void setSpass(String spass) {
         this.spass = spass == null ? null : spass.trim();
+    }
+
+    public String getSovertime() {
+        return sovertime;
+    }
+
+    public void setSovertime(String sovertime) {
+        this.sovertime = sovertime == null ? null : sovertime.trim();
     }
 
     public String getSerrortype() {
