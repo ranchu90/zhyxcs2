@@ -7,7 +7,11 @@ import java.util.List;
 public interface OrgaService {
     Orga selectByPrimaryKey(String sbankcode);
 
-    List<Orga> selectByBankKindAndPbcCode(
+    List<Orga> selectByBankTypeAndPbcCode(
                                           String pbcCode,
                                           String bankTypeCode);
+
+    List<Orga> selectByBankKindAndPbcCode(
+            String pbcCode,
+            String bankKind);
 }

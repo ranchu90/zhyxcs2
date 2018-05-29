@@ -19,7 +19,12 @@ public class OrgaServiceImpl implements OrgaService {
     }
 
     @Override
-    public List<Orga> selectByBankKindAndPbcCode(String pbcCode, String bankTypeCode) {
-        return orgaMapper.selectByBankKindAndPbcCode(pbcCode, bankTypeCode);
+    public List<Orga> selectByBankTypeAndPbcCode(String pbcCode, String bankTypeCode) {
+        return orgaMapper.selectByBankTypeAndPbcCode(pbcCode, bankTypeCode);
+    }
+
+    @Override
+    public List<Orga> selectByBankKindAndPbcCode(String pbcCode, String bankKind) {
+        return orgaMapper.selectByBankKindAndPbcCode(pbcCode, bankKind);
     }
 }

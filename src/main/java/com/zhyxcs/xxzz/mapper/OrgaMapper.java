@@ -16,7 +16,11 @@ public interface OrgaMapper {
 
     int updateByPrimaryKey(Orga record);
 
-    List<Orga> selectByBankKindAndPbcCode(
+    List<Orga> selectByBankTypeAndPbcCode(
                                           @Param("pbcCode") String pbcCode,
                                           @Param("bankTypeCode") String bankTypeCode);
+
+    List<Orga> selectByBankKindAndPbcCode(
+            @Param("pbcCode") String pbcCode,
+            @Param("bankKind") String bankKind);
 }

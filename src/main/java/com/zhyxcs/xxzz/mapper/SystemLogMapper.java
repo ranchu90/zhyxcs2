@@ -17,8 +17,6 @@ public interface SystemLogMapper {
 
     int updateByPrimaryKey(SystemLog record);
 
-
-
     List<SystemLog> querySystemLogByPageWithConditions(@Param("userCode") String userCode,
                                                        @Param("userName") String userName,
                                                        @Param("bankCode") String bankCode,

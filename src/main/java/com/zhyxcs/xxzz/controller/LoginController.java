@@ -54,6 +54,9 @@ public class LoginController extends BaseController{
                         userMap.put("userlevel", dbUser.getSuserlevel());
                         userMap.put("telephone", dbUser.getStelephone());
                         userMap.put("email", dbUser.getSemail());
+                        userMap.put("bankAreaCode", orga.getSbankareacode());
+                        userMap.put("bankCityCode", orga.getSbankcitycode());
+                        userMap.put("userBankName", orga.getSbankname());
 
                         result.put("state", "success");
                         result.put("token", "op");

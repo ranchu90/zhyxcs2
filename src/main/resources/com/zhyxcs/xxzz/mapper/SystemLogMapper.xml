@@ -68,37 +68,37 @@
             <if test="userName != null">
                 sUseName = #{userName,jdbcType=VARCHAR}
             </if>
-            <if test="userName != null and bankCode != null">
+            <if test="(userCode != null || userName != null) and bankCode != null">
                 and
             </if>
             <if test="bankCode != null">
                 sBankCode = #{bankCode,jdbcType=VARCHAR}
             </if>
-            <if test="bankCode != null and bankName != null">
+            <if test="(userCode != null || userName != null || bankCode != null) and bankName != null">
                 and
             </if>
             <if test="bankName != null">
                 sBankName like CONCAT('%',#{bankName,jdbcType=VARCHAR}, '%')
             </if>
-            <if test="bankName != null and ipAddress != null">
+            <if test="(userCode != null || userName != null || bankCode != null || bankName != null) and ipAddress != null">
                 and
             </if>
             <if test="ipAddress != null">
                 sIPAddress like CONCAT('%',#{ipAddress,jdbcType=VARCHAR} ,'%')
             </if>
-            <if test="ipAddress != null and comments != null">
+            <if test="(userCode != null || userName != null || bankCode != null || bankName != null || ipAddress != null) and comments != null">
                 and
             </if>
             <if test="comments != null">
                 sComments like CONCAT('%',#{comments,jdbcType=VARCHAR},'%')
             </if>
-            <if test="comments != null and startTime != null">
+            <if test="(userCode != null || userName != null || bankCode != null || bankName != null || ipAddress != null || comments != null) and startTime != null">
                 and
             </if>
             <if test="startTime != null">
                 date(sLogTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
             </if>
-            <if test="startTime != null and endTime != null">
+            <if test="(userCode != null || userName != null || bankCode != null || bankName != null || ipAddress != null || comments != null || startTime != null) and endTime != null">
                 and
             </if>
             <if test="endTime != null">

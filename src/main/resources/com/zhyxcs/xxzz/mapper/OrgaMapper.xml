@@ -51,9 +51,14 @@
     sBankCityCode, sBankState
     from torga
   </select>
-  <select id="selectByBankKindAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
+  <select id="selectByBankTypeAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
     select *
     from torga
     where sPBCode = #{pbcCode} and sBankTypeCode = #{bankTypeCode}
+  </select>
+  <select id="selectByBankKindAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
+    select *
+    from torga
+    where sPBCode = #{pbcCode} and sBankKind = #{bankKind}
   </select>
 </mapper>

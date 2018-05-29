@@ -103,6 +103,33 @@ public class WorkIndexController extends BaseController{
         startTime = (startTime == null || "".equals(startTime)) ? null : startTime;
         endTime = (endTime == null || "".equals(endTime)) ? null : endTime;
 
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+
+        if (!"7".equals(user.getSuserlevel()) &&
+                !"4".equals(user.getSuserlevel()) &&
+                !"5".equals(user.getSuserlevel())){
+            String bankCode = orga.getSbankcode();
+            orgaCode = bankCode;
+        }
+
+        if ("1".equals(user.getSuserlevel())){
+            bankEntryUserCode = user.getSusercode();
+        }
+
+        if ("2".equals(user.getSuserlevel())){
+            bankReviewUserCode = user.getSusercode();
+        }
+
+        if ("4".equals(user.getSuserlevel())){
+            renEntryUserCode = user.getSusercode();
+        }
+
+        if ("5".equals(user.getSuserlevel())){
+            renRecheckUserCode = user.getSusercode();
+        }
+
         Map<String, Object> map = new HashMap();
         PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
         List<WorkIndex> list = workIndexService.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType, businessCategory,
@@ -139,16 +166,21 @@ public class WorkIndexController extends BaseController{
             case ActionType.COMMIT:
                 workIndex.setSendtime(new Date());
                 break;
+            case ActionType.COMMIT_REN:
+                workIndex.setSendtime(new Date());
+                workIndex.setScommittimes(new Date());
+                break;
             case ActionType.CALL_BACK:
                 break;
             case ActionType.SEND_BACK:
-                if (Integer.valueOf(level) >= 4){
-                    int time = workIndex.getSreturntimes() + 1;
-                    workIndex.setSreturntimes(time);
-                }
+                workIndex.setSreturntimes(new Date());
+                break;
+            case ActionType.SEND_BACK_REN:
+                workIndex.setSpbcreturntimes(new Date());
                 break;
             case ActionType.REVIEW:
                 workIndex.setSreviewusercode(userCode);
+                workIndex.setScommittimes(new Date());
                 break;
             case ActionType.CHECK:
                 workIndex.setScheckusercode(userCode);
@@ -158,7 +190,11 @@ public class WorkIndexController extends BaseController{
                 workIndex.setSrecheckusername(userName);
                 workIndex.setSrechecktime(new Date());
                 break;
-            case ActionType.UPLOAD_LICENCE:break;
+            case ActionType.UPLOAD_LICENCE:
+                break;
+            case ActionType.END:
+                workIndex.setScompletetimes(new Date());
+                break;
         }
 
         return workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
@@ -166,6 +202,7 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
     public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
+        workIndex.setScompletetimes(new Date());
         int code = workIndexService.updateWorkIndexByApprovalCodeAndIdentifier(workIndex);
 
         if (code <= 0){

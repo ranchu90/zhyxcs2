@@ -2,13 +2,16 @@ package com.zhyxcs.xxzz.utils;
 
 public class ActionType {
     public static final String COMMIT = "commit";
+    public static final String COMMIT_REN = "commit_ren";
     public static final String CALL_BACK = "call_back";
     public static final String SEND_BACK = "send_back";
+    public static final String SEND_BACK_REN = "send_back_ren";
     public static final String REVIEW = "review";
     public static final String CHECK = "check";
     public static final String RECHECK = "recheck";
     public static final String UPLOAD_LICENCE = "upload_licence";
     public static final String ACCELERATE = "accelerate";
+    public static final String END = "end";
 
     //商业银行录入员新增任务，没有提交给商业银行复核员或没有提交给人民银行审核员之前
     public static final String APPROVAL_STATE_COMMERCE_NEW="0";
