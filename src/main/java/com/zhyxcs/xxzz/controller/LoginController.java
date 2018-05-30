@@ -6,6 +6,7 @@ import com.zhyxcs.xxzz.service.OrgaService;
 import com.zhyxcs.xxzz.service.UserService;
 import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
+import com.zhyxcs.xxzz.utils.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,7 +63,7 @@ public class LoginController extends BaseController{
                         result.put("token", "op");
                         result.put("user", userMap);
 
-//                        this.writeLog("用户登陆成功");
+                        this.writeLog(Logs.LOGIN_SUCCESS);
 
                     } else {
                         //记录密码错误次数
@@ -74,18 +75,23 @@ public class LoginController extends BaseController{
 
                         result.put("state", "failed");
                         result.put("message", "密码错误！");
+
+                        this.writeLog(Logs.LOGIN_FAILED);
                     }
                 } else {
                     result.put("state", "failed");
                     result.put("message", "密码错误超过5次！");
+                    this.writeLog(Logs.LOGIN_FAILED);
                 }
             } else {
                 result.put("state", "failed");
                 result.put("message", "用户未启用！");
+                this.writeLog(Logs.LOGIN_FAILED);
             }
         } else {
             result.put("state", "failed");
             result.put("message", "用户不存在！");
+            this.writeLog(Logs.LOGIN_FAILED);
         }
 
         result.put("code", 20000);
@@ -101,6 +107,8 @@ public class LoginController extends BaseController{
         Map result = new HashMap();
         result.put("state", "true");
         result.put("code", 20000);
+
+        this.writeLog(Logs.LOGIN_LOGOUT);
 
         return result;
     }

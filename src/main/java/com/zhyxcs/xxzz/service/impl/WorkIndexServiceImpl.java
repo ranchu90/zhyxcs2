@@ -28,8 +28,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                    String approvalState,
                                    String businessEmergency,
                                    String userLevel,
-                                   String bankCode) {
-        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency, userLevel, bankCode);
+                                   String bankCode,
+                                   String ifUploadLicense,
+                                   String ifRecheck) {
+        return workIndexMapper.queryRecordTotalNum(userCode, approvalState, businessEmergency, userLevel, bankCode, ifUploadLicense, ifRecheck);
     }
 
     @Override
@@ -63,9 +65,11 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                                 String approvalState,
                                                                 String userLevel,
                                                                 String businessEmergency,
-                                                                String pbcCode) {
+                                                                String pbcCode,
+                                                                String ifUploadLicense,
+                                                                String ifRecheck) {
         return workIndexMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState,
-                userLevel, businessEmergency, pbcCode);
+                userLevel, businessEmergency, pbcCode, ifUploadLicense, ifRecheck);
     }
 
     @Override
@@ -75,9 +79,11 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                                  String approvalState,
                                                                  String userLevel,
                                                                  String businessEmergency,
-                                                                 String pbcCode) {
+                                                                 String pbcCode,
+                                                                 String ifUploadLicense,
+                                                                 String ifRecheck) {
         return workIndexMapper.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage, userCode, approvalState,
-                userLevel, businessEmergency, pbcCode);
+                userLevel, businessEmergency, pbcCode, ifUploadLicense, ifRecheck);
     }
 
     @Override

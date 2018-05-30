@@ -10,6 +10,7 @@ import com.zhyxcs.xxzz.service.OrgaService;
 import com.zhyxcs.xxzz.service.WorkIndexService;
 import com.zhyxcs.xxzz.utils.ActionType;
 import com.zhyxcs.xxzz.utils.CramsConstants;
+import com.zhyxcs.xxzz.utils.Logs;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +56,13 @@ public class WorkIndexController extends BaseController{
             workIndex.setSupusername(user.getSusername());
             workIndex.setSupusercode(user.getSusercode());
             workIndexService.newWorkIndex(workIndex);
+
+            this.writeLog(Logs.TRANS_NEW_SUCCESS);
             return workIndex;
         } else {
             System.out.println("orga:" + orga);
             System.out.println("user:" + user);
+            this.writeLog(Logs.TRANS_NEW_FAILED);
         }
 
 
@@ -138,18 +142,20 @@ public class WorkIndexController extends BaseController{
         PageInfo<WorkIndex> workIndexPageInfo = new PageInfo(list);
         map.put("pageInfo", workIndexPageInfo);
 
+        this.writeLog(Logs.TRANS_QUERY);
+
         return map;
     }
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.DELETE)
     public int deleteWorkIndexByTranID(@RequestParam(value = "stransactionnum") String stransactionnum){
-
+        this.writeLog(Logs.TRANS_DELETE);
         return workIndexService.deleteByPrimaryKey(stransactionnum);
     }
 
     @RequestMapping(value = "/Depositor", method = RequestMethod.PUT)
     public int updateWorkIndexByDepositor(@RequestBody WorkIndex workIndex){
-
+        this.writeLog(Logs.TRANS_UPDATE_DEPOSITOR);
         return workIndexService.updateDepositorNameByPrimaryKey(workIndex);
     }
 
@@ -191,11 +197,14 @@ public class WorkIndexController extends BaseController{
                 workIndex.setSrechecktime(new Date());
                 break;
             case ActionType.UPLOAD_LICENCE:
+                workIndex.setSuploadlicense(1);
                 break;
             case ActionType.END:
                 workIndex.setScompletetimes(new Date());
                 break;
         }
+
+        this.writeLog(Logs.TRANS_UPDATE_APPROVALSTATE + ":" + action);
 
         return workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
     }
@@ -209,6 +218,7 @@ public class WorkIndexController extends BaseController{
             return 0;
         }
 
+        this.writeLog(Logs.TRANS_UPDATE_APPROVALCODE_IDENTIFIER);
         return 1;
     }
 
@@ -216,16 +226,24 @@ public class WorkIndexController extends BaseController{
     public HashMap<String, Object> getWorkIndexesByPage(@RequestParam(value = "pageSize") String pageSize,
                                                         @RequestParam(value = "currentPage") String currentPage,
                                                         @RequestParam(value = "approvalState") String approvalState,
-                                                        @RequestParam(value = "businessEmergency") String businessEmergency){
+                                                        @RequestParam(value = "businessEmergency") String businessEmergency,
+                                                        @RequestParam(value = "ifUploadLicense", required = false) String ifUploadLicense,
+                                                        @RequestParam(value = "ifRecheck", required = false) String ifRecheck){
 
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
-        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState,
-                businessEmergency, userLevel, currentBankCode);
+//        int totalPages = workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState,
+//                businessEmergency, userLevel, currentBankCode, ifUploadLicense, ifRecheck);
 
         List<WorkIndex> workIndexList = null;
+
+        pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
+        currentPage = (currentPage == null || "".equals(currentPage.trim())) ? "1" : currentPage;
+
+        Map<String, Object> mapTest = new HashMap();
+        PageHelper.startPage(Integer.parseInt(currentPage), Integer.parseInt(pageSize));
 
         //判断用户的查询权限，根据用户级别
         switch (userLevel){
@@ -239,11 +257,11 @@ public class WorkIndexController extends BaseController{
                 break;
             case "4":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeRenEntry(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
                 break;
             case "5":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeRenCharge(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
+                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
                 break;
             case "7":
                 workIndexList = workIndexService.queryRecordByPageAndUserCodeRenAdmin(pageSize,
@@ -251,10 +269,14 @@ public class WorkIndexController extends BaseController{
                 break;
         }
 
+        PageInfo<WorkIndex> pageInfo = new PageInfo(workIndexList);
+        mapTest.put("pageInfo", pageInfo);
+
+        List<WorkIndex> tempList = pageInfo.getList();
 
         List<Object> newWorkIndexList = new ArrayList<Object>();
 
-        for (WorkIndex workIndex : workIndexList){
+        for (WorkIndex workIndex : tempList){
             String approvelState = workIndex.getSapprovalstate();
             Date startDate = workIndex.getSstarttime();
             Date checkDate = workIndex.getSrechecktime();
@@ -286,12 +308,15 @@ public class WorkIndexController extends BaseController{
             workTemp.put("supusername", workIndex.getSupusername());
             workTemp.put("sreturntimes", workIndex.getSreturntimes());
             workTemp.put("sbusinessemergency", workIndex.getSbusinessemergency());
+            workTemp.put("suploadlicence", workIndex.getSuploadlicense());
 
             newWorkIndexList.add(workTemp);
         }
 
+        this.writeLog(Logs.TRANS_QUERY_PAGES);
+
         HashMap<String,Object> map = new HashMap<String, Object>();
-        map.put("totalPages", Integer.valueOf(totalPages));
+        map.put("totalPages", pageInfo.getTotal());
         map.put("workIndexList", newWorkIndexList);
 
         return map;
@@ -299,14 +324,16 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/workIndexNum", method = RequestMethod.GET)
     public int queryRecordTotalNum(@RequestParam(value = "approvalState") String approvalState,
-                                   @RequestParam(value = "businessEmergency") String businessEmergency){
+                                   @RequestParam(value = "businessEmergency") String businessEmergency,
+                                   @RequestParam(value = "ifUploadLicense", required = false) String ifUploadLicense,
+                                   @RequestParam(value = "ifRecheck", required = false) String ifRecheck){
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
 
         return workIndexService.queryRecordTotalNum(user.getSusercode(), approvalState,
-                businessEmergency, userLevel, currentBankCode);
+                businessEmergency, userLevel, currentBankCode, ifUploadLicense, ifRecheck);
     }
 
     @RequestMapping(value = "/receipt", method = RequestMethod.GET)
@@ -369,21 +396,25 @@ public class WorkIndexController extends BaseController{
 
         this.createWord(map, "shu.ftl", baseDirectory,
                 basePath + transactionNum, transactionNum+ ".doc", response);
+
+        this.writeLog(Logs.TRANS_RECIEPT_DOWNLOAD);
     }
 
     @RequestMapping(value = "/businessEmergency", method = RequestMethod.POST)
     public int updateBusinessEmergency(@RequestBody WorkIndex workIndex){
+        this.writeLog(Logs.TRANS_UPDATE_EMERGENCY);
         return workIndexService.updateWorkIndexBusinessEmergency(workIndex);
     }
 
     private String approvalState(String code){
         switch (code){
-            case "0": return "被退回";
-            case "1": return "待编辑";
-            case "2": return "待复核";
-            case "3": return "待审核";
+            case "0": return "待编辑";
+            case "1": return "待复核";
+            case "2": return "待审核";
 //            case "4": return "待通过";
-            case "4": return "已通过";
+            case "3": return "已通过";
+            case "4": return "被退回";
+            case "5": return "业务中止";
         }
         return null;
     }

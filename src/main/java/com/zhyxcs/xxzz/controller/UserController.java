@@ -1,17 +1,21 @@
 package com.zhyxcs.xxzz.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.mapper.OrgaMapper;
 import com.zhyxcs.xxzz.service.UserService;
 import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
+import com.zhyxcs.xxzz.utils.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -20,9 +24,19 @@ public class UserController extends BaseController{
     private UserService userService;
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public List<HashMap> getUsersByAddUserCode(@RequestParam(value = "addUserCode") String addUserCode){
+    public Map<String, Object> getUsersByAddUserCode(@RequestParam(value = "pageSize", required = false) String pageSize,
+                                               @RequestParam(value = "pageNum", required = false) String pageNum,
+                                               @RequestParam(value = "addUserCode") String addUserCode){
+        pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
+        pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
 
-        return userService.selectBysAddUserCode(addUserCode);
+        Map<String, Object> map = new HashMap();
+        PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+        List<HashMap> mapList = userService.selectBysAddUserCode(addUserCode);
+        PageInfo<HashMap> pageInfo = new PageInfo(mapList);
+        map.put("pageInfo", pageInfo);
+
+        return map;
     }
 
     @RequestMapping(value = "/userWithBankType", method = RequestMethod.GET)
@@ -43,12 +57,13 @@ public class UserController extends BaseController{
 
         user.setSaddusercode(cur_user.getSusercode() );
 
+        this.writeLog(Logs.USER_NEW);
         return userService.insert(user);
     }
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST)
     public int updateBasicByPrimaryKey(@RequestBody User user){
-
+        this.writeLog(Logs.USER_UPDATE);
         return userService.updateBasicByPrimaryKey(user);
     }
 
@@ -71,6 +86,8 @@ public class UserController extends BaseController{
 
                 map.put("status", "success");
                 map.put("message", "密码修改成功");
+
+                this.writeLog(Logs.USER_UPDATE_PASSWORD);
             } else {
                 map.put("status", "failed");
                 map.put("message", "旧密码不正确！");
@@ -105,6 +122,8 @@ public class UserController extends BaseController{
 
                 map.put("status", "success");
                 map.put("message", "密码重置成功！！");
+
+                this.writeLog(Logs.USER_UPDATE_PASSWORD_RESET);
             } else {
                 map.put("status", "failed");
                 map.put("message", "没有权限操作该用户！！");

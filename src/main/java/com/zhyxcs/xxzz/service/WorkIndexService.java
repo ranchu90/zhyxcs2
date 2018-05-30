@@ -15,7 +15,9 @@ public interface WorkIndexService {
                             String approvalState,
                             String businessEmergency,
                             String userLevel,
-                            String bankCode);
+                            String bankCode,
+                            String ifUploadLicense,
+                            String ifRecheck);
 
     List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(String pageSize,
                                                           String currentPage,
@@ -39,7 +41,9 @@ public interface WorkIndexService {
                                                          String approvalState,
                                                          String userLevel,
                                                          String businessEmergency,
-                                                         String pbcCode);
+                                                         String pbcCode,
+                                                         String ifUploadLicense,
+                                                         String ifRecheck);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(String pageSize,
                                                           String currentPage,
@@ -47,7 +51,9 @@ public interface WorkIndexService {
                                                           String approvalState,
                                                           String userLevel,
                                                           String businessEmergency,
-                                                          String pbcCode);
+                                                          String pbcCode,
+                                                          String ifUploadLicense,
+                                                          String ifRecheck);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(String pageSize,
                                                          String currentPage,

@@ -5,6 +5,7 @@ import com.zhyxcs.xxzz.domain.Image;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.ImageService;
 import com.zhyxcs.xxzz.utils.CramsConstants;
+import com.zhyxcs.xxzz.utils.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,6 +76,7 @@ public class ImageController extends BaseController {
 
                 imageService.insert(image);
 
+                this.writeLog(Logs.IMAGE_UPLOAD);
                 return image.getSid();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
@@ -97,6 +99,7 @@ public class ImageController extends BaseController {
 
             if (file != null && file.delete()){
                 imageService.deleteByPrimaryKey(sID);
+                this.writeLog(Logs.IMAGE_DELETE);
                 return 1;
             }
         }

@@ -154,12 +154,15 @@
     <if test="action == 'send_back_ren'">
         , sPBCReturnTimes = #{workIndex.spbcreturntimes,jdbcType=TIMESTAMP}
     </if>
+    <if test="action == 'upload_licence'">
+        , sUploadLicense = #{workIndex.suploadlicense,jdbcType=INTEGER}
+    </if>
     where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
     </update>
     <update id="updateWorkIndexByApprovalCodeAndIdentifier" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
-    , sCompleteTimes = #{scompleteTimes, jdbcType=TIMESTAMP}
+    , sCompleteTimes = #{scompletetimes, jdbcType=TIMESTAMP}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
     <update id="updateWorkIndexBusinessEmergency" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
@@ -176,7 +179,7 @@
       </if>
       <if test="userLevel == 2">
           <choose>
-              <when test="approvalState == 2">
+              <when test="approvalState == 1">
                   and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
               </when>
               <otherwise>
@@ -187,24 +190,60 @@
       </if>
       <if test="userLevel == 4">
           <choose>
-              <when test="approvalState == 3">
+              <when test="approvalState == 2">
                   and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
               </when>
               <otherwise>
                   and sCheckUserCode = #{userCode}
               </otherwise>
           </choose>
+          <if test="approvalState == 3">
+              <choose>
+                  <when test="ifUploadLicense != null">
+                      and sUploadLicense != 0
+                  </when>
+                  <otherwise>
+                      and sUploadLicense = 0
+                  </otherwise>
+              </choose>
+              <choose>
+                  <when test="ifRecheck != null">
+                      and sRecheckTime is not null
+                  </when>
+                  <otherwise>
+                      and sRecheckTime is null
+                  </otherwise>
+              </choose>
+          </if>
           and sPBCBankCode = #{bankCode}
       </if>
       <if test="userLevel == 5">
          <choose>
-             <when test="approvalState != 6">
+             <when test="approvalState != 3">
                  and (sReCheckUserCode = #{userCode} or sReCheckUserCode is null)
              </when>
              <otherwise>
                  and sReCheckUserCode = #{userCode}
              </otherwise>
          </choose>
+          <if test="approvalState == 3">
+              <choose>
+                  <when test="ifUploadLicense != null">
+                      and sUploadLicense != 0
+                  </when>
+                  <otherwise>
+                      and sUploadLicense = 0
+                  </otherwise>
+              </choose>
+              <choose>
+                  <when test="ifRecheck != null">
+                      and sRecheckTime is not null
+                  </when>
+                  <otherwise>
+                      and sRecheckTime is null
+                  </otherwise>
+              </choose>
+          </if>
           and sPBCBankCode = #{bankCode}
       </if>
 
@@ -218,7 +257,7 @@
     where sApprovalState = #{approvalState}
     --     人民银行录入员
     <choose>
-        <when test="approvalState == 3">
+        <when test="approvalState == 2">
             and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
         </when>
         <otherwise>
@@ -229,11 +268,28 @@
       and sBusinessEmergency = #{businessEmergency}
     </if>
       and sPBCBankCode = #{pbcCode}
+    <if test="approvalState == 3">
+        <choose>
+            <when test="ifUploadLicense != null">
+                and sUploadLicense != 0
+            </when>
+            <otherwise>
+                and sUploadLicense = 0
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="ifRecheck != null">
+                and sRecheckTime is not null
+            </when>
+            <otherwise>
+                and sRecheckTime is null
+            </otherwise>
+        </choose>
+    </if>
     order by sEndTime
-    <if test="approvalState == 6">
+    <if test="approvalState >= 3">
         desc
     </if>
-    limit ${currentPage}, ${pageSize}
     </select>
     <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
@@ -241,7 +297,7 @@
     where sApprovalState = #{approvalState}
     --     人民银行复审员
     <choose>
-        <when test="approvalState != 6">
+        <when test="approvalState == 3">
             and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
         </when>
         <otherwise>
@@ -252,11 +308,28 @@
       and sBusinessEmergency = #{businessEmergency}
     </if>
       and sPBCBankCode = #{pbcCode}
+    <if test="approvalState == 3">
+        <choose>
+            <when test="ifUploadLicense != null">
+                and sUploadLicense != 0
+            </when>
+            <otherwise>
+                and sUploadLicense = 0
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="ifRecheck != null">
+                and sRecheckTime is not null
+            </when>
+            <otherwise>
+                and sRecheckTime is null
+            </otherwise>
+        </choose>
+    </if>
     order by sEndTime
-    <if test="approvalState == 6">
+    <if test="approvalState >= 3">
         desc
     </if>
-    limit ${currentPage}, ${pageSize}
     </select>
     <select id="queryRecordByPageAndUserCodeRenAdmin" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
     select *
@@ -276,32 +349,31 @@
       sBusinessEmergency = #{businessEmergency}
     </if>
     order by sEndTime
-    <if test="approvalState == 6">
+    <if test="approvalState >= 3">
         desc
     </if>
-    limit ${currentPage}, ${pageSize}
   </select>
     <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
         select *
         from tworkindex
         where
-        <if test="approvalState != null and approvalState != '' and approvalState != 4">
+        <if test="approvalState != null and approvalState != ''">
             sApprovalState = #{approvalState}
         </if>
         --     商业银行录入员
-        <if test="approvalState == 4">
-            (sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)
-        </if>
+        <!--<if test="approvalState == 4">-->
+            <!--(sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)-->
+        <!--</if>-->
             and (sUpUserCode = #{userCode})
         <if test="businessEmergency != null and businessEmergency != ''">
             and sBusinessEmergency = #{businessEmergency}
         </if>
         and sBankCode = #{bankCode}
         order by sEndTime
-        <if test="approvalState == 6">
+        <if test="approvalState >= 3">
             desc
         </if>
-        limit ${currentPage}, ${pageSize}
+
     </select>
     <select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
         select *
@@ -310,12 +382,12 @@
         <if test="approvalState != null and approvalState != '' and approvalState != 4">
             sApprovalState = #{approvalState}
         </if>
-        --     商业银行复核员
-        <if test="approvalState == 4">
-            (sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)
-        </if>
+--             商业银行复核员
+        <!--<if test="approvalState == 4">-->
+            <!--(sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)-->
+        <!--</if>-->
         <choose>
-            <when test="approvalState == 2">
+            <when test="approvalState == 1">
                 and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
             </when>
             <otherwise>
@@ -327,10 +399,9 @@
         </if>
         and sBankCode = #{bankCode}
         order by sEndTime
-        <if test="approvalState == 6">
+        <if test="approvalState >= 3">
             desc
         </if>
-        limit ${currentPage}, ${pageSize}
     </select>
     <select id="queryRecordByConditions" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
         select * from tworkindex

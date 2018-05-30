@@ -22,7 +22,9 @@ public interface WorkIndexMapper {
                             @Param("approvalState") String approvalState,
                             @Param("businessEmergency") String businessEmergency,
                             @Param("userLevel") String userLevel,
-                            @Param("bankCode") String bankCode);
+                            @Param("bankCode") String bankCode,
+                            @Param("ifUploadLicense") String ifUploadLicense,
+                            @Param("ifRecheck") String ifRecheck);
 
     List<WorkIndex> queryRecordByPageAndUserCodeBankEntry(@Param("pageSize") String pageSize,
                                                           @Param("currentPage") String currentPage,
@@ -46,7 +48,9 @@ public interface WorkIndexMapper {
                                                          @Param("approvalState") String approvalState,
                                                          @Param("userLevel") String userLevel,
                                                          @Param("businessEmergency") String businessEmergency,
-                                                         @Param("pbcCode") String pbcCode);
+                                                         @Param("pbcCode") String pbcCode,
+                                                         @Param("ifUploadLicense") String ifUploadLicense,
+                                                         @Param("ifRecheck") String ifRecheck);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(@Param("pageSize") String pageSize,
                                                           @Param("currentPage") String currentPage,
@@ -54,7 +58,9 @@ public interface WorkIndexMapper {
                                                           @Param("approvalState") String approvalState,
                                                           @Param("userLevel") String userLevel,
                                                           @Param("businessEmergency") String businessEmergency,
-                                                          @Param("pbcCode") String pbcCode);
+                                                          @Param("pbcCode") String pbcCode,
+                                                          @Param("ifUploadLicense") String ifUploadLicense,
+                                                          @Param("ifRecheck") String ifRecheck);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(@Param("pageSize") String pageSize,
                                                          @Param("currentPage") String currentPage,
