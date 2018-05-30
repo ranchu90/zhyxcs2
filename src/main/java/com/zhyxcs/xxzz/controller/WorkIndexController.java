@@ -2,15 +2,11 @@ package com.zhyxcs.xxzz.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import com.zhyxcs.xxzz.config.WordConfig;
 import com.zhyxcs.xxzz.domain.*;
-import com.zhyxcs.xxzz.service.ApprovalRecordService;
-import com.zhyxcs.xxzz.service.ImageService;
-import com.zhyxcs.xxzz.service.OrgaService;
-import com.zhyxcs.xxzz.service.WorkIndexService;
-import com.zhyxcs.xxzz.utils.ActionType;
-import com.zhyxcs.xxzz.utils.CramsConstants;
-import com.zhyxcs.xxzz.utils.Logs;
+import com.zhyxcs.xxzz.service.*;
+import com.zhyxcs.xxzz.utils.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +32,9 @@ public class WorkIndexController extends BaseController{
 
     @Autowired
     private ApprovalRecordService approvalRecordService;
+
+    @Autowired
+    private BusinessStatisticsService businessStatisticsService;
 
     @Autowired
     private ImageService imageService;
@@ -161,12 +160,17 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/ApprovalState", method = RequestMethod.PUT)
     public int updateWorkIndexByApprovalState(@RequestBody WorkIndex workIndex,
-                                              @RequestParam(value = "action") String action){
+                                              @RequestParam(value = "action") String action,
+                                              @RequestParam(value = "groundsId", required = false) String groundsId,
+                                              @RequestParam(value = "grounds", required = false) String grounds,
+                                              @RequestParam(value = "groundsState", required = false) String groundsState){
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String userCode = user.getSusercode();
         String userName = user.getSusername();
         String level = user.getSuserlevel();
+
+        WorkIndex tempWorkIndex = null;
 
         switch (action){
             case ActionType.COMMIT:
@@ -183,6 +187,11 @@ public class WorkIndexController extends BaseController{
                 break;
             case ActionType.SEND_BACK_REN:
                 workIndex.setSpbcreturntimes(new Date());
+                tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
+                //人民银行退回
+                businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                tempWorkIndex = null;
                 break;
             case ActionType.REVIEW:
                 workIndex.setSreviewusercode(userCode);
@@ -190,6 +199,11 @@ public class WorkIndexController extends BaseController{
                 break;
             case ActionType.CHECK:
                 workIndex.setScheckusercode(userCode);
+                tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                tempWorkIndex.setScheckusercode(userCode);
+                //人民银行通过
+                businessStatisticsService.insert(tempWorkIndex, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, null);
+                tempWorkIndex = null;
                 break;
             case ActionType.RECHECK:
                 workIndex.setSrecheckusercode(userCode);
@@ -201,6 +215,11 @@ public class WorkIndexController extends BaseController{
                 break;
             case ActionType.END:
                 workIndex.setScompletetimes(new Date());
+                tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
+                //人民银行中止
+                businessStatisticsService.insert(workIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                tempWorkIndex = null;
                 break;
         }
 
