@@ -54,6 +54,11 @@
     <select id="selectByBankKindAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
     select *
     from torga
+    where sPBCode = #{pbcCode} and sBankKind = #{bankKind}
+  </select>
+    <select id="selectByBankTypeAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
+    select *
+    from torga
     where sPBCode = #{pbcCode} and sBankTypeCode = #{bankTypeCode}
   </select>
     <select id="getOrgaLevel" parameterType="java.lang.String" resultType="java.lang.String">

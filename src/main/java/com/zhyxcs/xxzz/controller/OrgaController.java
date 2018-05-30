@@ -17,17 +17,15 @@ public class OrgaController {
     private OrgaService orgaService;
 
     @RequestMapping(value = "/orga", method = RequestMethod.GET)
-    public List<Orga> getByBankTypeAndPbcCode(
-                                              @RequestParam("pbcCode") String pbcCode,
+    public List<Orga> getByBankTypeAndPbcCode(@RequestParam("pbcCode") String pbcCode,
                                               @RequestParam("bankTypeCode") String bankTypeCode){
 
         return orgaService.selectByBankTypeAndPbcCode(pbcCode, bankTypeCode);
     }
 
     @RequestMapping(value = "/orgaWithKindAndPbcCode", method = RequestMethod.GET)
-    public List<Orga> getByBankKindAndPbcCode(
-            @RequestParam("pbcCode") String pbcCode,
-            @RequestParam("bankKind") String bankKind){
+    public List<Orga> getByBankKindAndPbcCode(@RequestParam("pbcCode") String pbcCode,
+                                              @RequestParam("bankKind") String bankKind){
 
         return orgaService.selectByBankKindAndPbcCode(pbcCode, bankKind);
     }

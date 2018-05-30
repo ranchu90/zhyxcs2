@@ -15,4 +15,6 @@ public interface OrgaService {
     OrgaLevelEnum getOrgaLevel(String bankCode);
 
     List<String> getUnderBankcodeList(String bankCode);
+
+    List<Orga> selectByBankTypeAndPbcCode(String pbcCode, String bankTypeCode);
 }
