@@ -58,51 +58,30 @@
         select sID, sUserCode, sUseName, sBankCode, sBankName, sIPAddress, sMACAddress, sComments,
         sLogTime
         from tsystemlog
-        <trim prefix="where" prefixOverrides=" AND ">
+        <trim prefix="where" prefixOverrides="and">
             <if test="userCode != null">
                 sUserCode = #{userCode,jdbcType=VARCHAR}
             </if>
-            <if test="userCode != null and userName != null">
-                and
-            </if>
             <if test="userName != null">
-                sUseName = #{userName,jdbcType=VARCHAR}
-            </if>
-            <if test="(userCode != null || userName != null) and bankCode != null">
-                and
+                and sUseName = #{userName,jdbcType=VARCHAR}
             </if>
             <if test="bankCode != null">
-                sBankCode = #{bankCode,jdbcType=VARCHAR}
-            </if>
-            <if test="(userCode != null || userName != null || bankCode != null) and bankName != null">
-                and
+                and sBankCode = #{bankCode,jdbcType=VARCHAR}
             </if>
             <if test="bankName != null">
-                sBankName like CONCAT('%',#{bankName,jdbcType=VARCHAR}, '%')
-            </if>
-            <if test="(userCode != null || userName != null || bankCode != null || bankName != null) and ipAddress != null">
-                and
+                and sBankName like CONCAT('%',#{bankName,jdbcType=VARCHAR}, '%')
             </if>
             <if test="ipAddress != null">
-                sIPAddress like CONCAT('%',#{ipAddress,jdbcType=VARCHAR} ,'%')
-            </if>
-            <if test="(userCode != null || userName != null || bankCode != null || bankName != null || ipAddress != null) and comments != null">
-                and
+                and sIPAddress like CONCAT('%',#{ipAddress,jdbcType=VARCHAR} ,'%')
             </if>
             <if test="comments != null">
-                sComments like CONCAT('%',#{comments,jdbcType=VARCHAR},'%')
-            </if>
-            <if test="(userCode != null || userName != null || bankCode != null || bankName != null || ipAddress != null || comments != null) and startTime != null">
-                and
+                and sComments like CONCAT('%',#{comments,jdbcType=VARCHAR},'%')
             </if>
             <if test="startTime != null">
-                date(sLogTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="(userCode != null || userName != null || bankCode != null || bankName != null || ipAddress != null || comments != null || startTime != null) and endTime != null">
-                and
+                and date(sLogTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
             </if>
             <if test="endTime != null">
-                date(sLogTime) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+                and date(sLogTime) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
             </if>
         </trim>
         order by sLogTime desc

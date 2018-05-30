@@ -4,11 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 public class CommonUtils {
     public static boolean compareString(String srcStr, String destStr) {
@@ -107,6 +104,7 @@ public class CommonUtils {
 
     public static void main(String[] args) {
         //System.out.println(MD5("crams888"));
-        System.out.println(getBankCode("104569018015201805210001"));
+        //System.out.println(getBankCode("104569018015201805210001"));
+        System.out.println(OrgaLevelEnum.BANKOFCOMMERCE);
     }
 }

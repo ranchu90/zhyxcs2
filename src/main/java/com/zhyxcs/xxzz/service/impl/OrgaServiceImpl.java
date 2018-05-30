@@ -3,6 +3,7 @@ package com.zhyxcs.xxzz.service.impl;
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.mapper.OrgaMapper;
 import com.zhyxcs.xxzz.service.OrgaService;
+import com.zhyxcs.xxzz.utils.OrgaLevelEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,16 @@ public class OrgaServiceImpl implements OrgaService {
     @Override
     public List<Orga> selectByBankKindAndPbcCode(String pbcCode, String bankKind) {
         return orgaMapper.selectByBankKindAndPbcCode(pbcCode, bankKind);
+    }
+
+    @Override
+    public OrgaLevelEnum getOrgaLevel(String bankCode) {
+        String bankLevel = orgaMapper.getOrgaLevel(bankCode);
+        return OrgaLevelEnum.valueOf(bankLevel);
+    }
+
+    @Override
+    public List<String> getUnderBankcodeList(String bankCode) {
+        return orgaMapper.getUnderBankcodeList(bankCode);
     }
 }

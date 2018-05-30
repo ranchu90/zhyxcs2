@@ -13,6 +13,9 @@ import com.zhyxcs.xxzz.utils.OvertimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class BusinessStatisticsServiceImpl implements BusinessStatisticsService {
     @Autowired
@@ -39,15 +42,15 @@ public class BusinessStatisticsServiceImpl implements BusinessStatisticsService 
         businessStatistics.setSbanktypecode(CommonUtils.getBankTypeCode(transactionNum));
         businessStatistics.setSbusinesscategory(workIndex.getSbusinesscategory());
         businessStatistics.setSaccounttype(workIndex.getSaccounttype());
-        if(auditStatus==AuditStatus.APPROVAL){
+        if (auditStatus == AuditStatus.APPROVAL) {
             businessStatistics.setSpass(auditStatus.getValue());
             businessStatistics.setSerrortype(null);
-        }else{
+        } else {
             businessStatistics.setSpass(auditStatus.getValue());
             businessStatistics.setSerrortype(groundsForReturn.getSgrounds());
         }
         businessStatistics.setSovertime(overtimeStatus.getValue());
-        businessStatistics.setShappentimes(null);
+        businessStatistics.setShappentimes(new Date());
         return businessStatisticsMapper.insert(businessStatistics);
     }
 
@@ -62,5 +65,38 @@ public class BusinessStatisticsServiceImpl implements BusinessStatisticsService 
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int measureBusiness(String pbcCode,
+                               String areaCode,
+                               String cityCode,
+                               String bankKind,
+                               String bankType,
+                               String bankCode,
+                               Date startTime,
+                               Date endTime,
+                               String businessCategory,
+                               String accountType,
+                               String passed,
+                               List<String> pbcCodeList,
+                               List<String> commerceCodeList) {
+        return businessStatisticsMapper.measureBusiness(pbcCode, areaCode, cityCode, bankKind, bankType, bankCode, startTime, endTime, businessCategory, accountType, passed,pbcCodeList,commerceCodeList);
+    }
+
+    @Override
+    public int mistakeBusiness(String pbcCode,
+                               String areaCode,
+                               String cityCode,
+                               String bankKind,
+                               String bankType,
+                               String bankCode,
+                               Date startTime,
+                               Date endTime,
+                               String businessCategory,
+                               String grounds,
+                               List<String> pbcCodeList,
+                               List<String> commerceCodeList) {
+        return businessStatisticsMapper.mistakeBusiness(pbcCode, areaCode, cityCode, bankKind, bankType, bankCode, startTime, endTime, businessCategory, grounds, pbcCodeList, commerceCodeList);
     }
 }

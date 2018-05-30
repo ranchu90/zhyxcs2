@@ -68,4 +68,103 @@
     <select id="getCountByTransactionNum" resultType="int">
         select count(*) from tbusinessstatistics where sTransactionNum = #{transactionNum}
     </select>
+
+    <select id="measureBusiness" resultType="int">
+        select count(*) from tbusinessstatistics
+        <trim prefix="where" prefixOverrides="and">
+            <if test="pbcCode != null">
+                sPBCode = #{pbcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="areaCode != null">
+                and sBankAreaCode = #{areaCode,jdbcType=VARCHAR}
+            </if>
+            <if test="cityCode != null">
+                and sBankCityCode = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankKind != null">
+                and sBankKind = #{bankKind,jdbcType=VARCHAR}
+            </if>
+            <if test="bankType != null">
+                and sBankTypeCode = #{bankType,jdbcType=VARCHAR}
+            </if>
+            <if test="bankCode != null">
+                and SUBSTRING(sTransactionNum,1,12) = #{bankCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null">
+                and date(sHappenTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null">
+                and date(sHappenTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="businessCategory != null">
+                and sBusinessCategory = #{businessCategory,jdbcType=VARCHAR}
+            </if>
+            <if test="accountType != null">
+                and sAccountType = #{accountType,jdbcType=VARCHAR}
+            </if>
+            <if test="passed != null">
+                and sPass = #{passed,jdbcType=VARCHAR}
+            </if>
+            <if test="pbcCodeList != null and pbcCodeList.size > 0">
+                and sPBCode IN
+                <foreach collection="pbcCodeList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="commerceCodeList != null and commerceCodeList.size > 0">
+                and SUBSTRING(sTransactionNum,1,12) IN
+                <foreach collection="commerceCodeList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+    <select id="mistakeBusiness" resultType="int">
+        select count(*) from tbusinessstatistics
+        <trim prefix="where" prefixOverrides="and">
+            <if test="pbcCode != null">
+                sPBCode = #{pbcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="areaCode != null">
+                and sBankAreaCode = #{areaCode,jdbcType=VARCHAR}
+            </if>
+            <if test="cityCode != null">
+                and sBankCityCode = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankKind != null">
+                and sBankKind = #{bankKind,jdbcType=VARCHAR}
+            </if>
+            <if test="bankType != null">
+                and sBankTypeCode = #{bankType,jdbcType=VARCHAR}
+            </if>
+            <if test="bankCode != null">
+                and SUBSTRING(sTransactionNum,1,12) = #{bankCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null">
+                and date(sHappenTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null">
+                and date(sHappenTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="businessCategory != null">
+                and sBusinessCategory = #{businessCategory,jdbcType=VARCHAR}
+            </if>
+            <if test="grounds != null">
+                and sErrorType = #{grounds,jdbcType=VARCHAR}
+            </if>
+            <if test="pbcCodeList != null and pbcCodeList.size > 0">
+                and sPBCode IN
+                <foreach collection="pbcCodeList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="commerceCodeList != null and commerceCodeList.size > 0">
+                and SUBSTRING(sTransactionNum,1,12) IN
+                <foreach collection="commerceCodeList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </select>
 </mapper>
