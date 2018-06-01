@@ -17,7 +17,7 @@
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.ApprovalRecord">
-    insert into tapprovalrecord ( sTransactionNum, sApprovelResult,
+    insert into tapprovalrecord (sTransactionNum, sApprovelResult,
       sApprovelOpinion, sApprovelUserCode, sApprovelUserName)
     values (#{stransactionnum,jdbcType=VARCHAR}, #{sapprovelresult,jdbcType=VARCHAR},
       #{sapprovelopinion,jdbcType=VARCHAR}, #{sapprovelusercode,jdbcType=VARCHAR}, #{sapprovelusername,jdbcType=VARCHAR})

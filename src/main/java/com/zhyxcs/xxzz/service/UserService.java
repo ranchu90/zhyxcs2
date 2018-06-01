@@ -18,4 +18,6 @@ public interface UserService {
     int insert(User record);
 
     int updateBasicByPrimaryKey(User record);
+
+    List<HashMap> ifBankEntryHasBankReview( String addUserCode);
 }

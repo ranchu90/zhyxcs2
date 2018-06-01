@@ -47,8 +47,8 @@
     from timagestandard
     where sBusineesCategory = #{businessCategory}
   </select>
-  <select id="certificateType" resultType="java.lang.String">
-    select sProofName
+  <select id="certificateType" resultType="java.util.HashMap">
+    select sProofName, sProofAmount
     from timagestandard
     where sBusineesCategory = #{businessCategory} and sAccountType = #{accountType}
   </select>

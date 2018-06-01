@@ -30,7 +30,7 @@ public class ImageStandardController extends BaseController {
     }
 
     @RequestMapping(value = "/certificateType", method = RequestMethod.GET)
-    public List<String> getCertificateType(@RequestParam(value = "businessCategory") String businessCategory,
+    public List<HashMap<String, Object>> getCertificateType(@RequestParam(value = "businessCategory") String businessCategory,
                                            @RequestParam(value = "accountType") String accountType){
         return imageStandardService.certificateType(businessCategory, accountType);
     }

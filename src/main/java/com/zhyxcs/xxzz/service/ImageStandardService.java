@@ -1,5 +1,6 @@
 package com.zhyxcs.xxzz.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ImageStandardService {
@@ -7,5 +8,5 @@ public interface ImageStandardService {
 
     List<String> accountType(String businessCategory);
 
-    List<String> certificateType(String businessCategory, String accountType);
+    List<HashMap<String, Object>> certificateType(String businessCategory, String accountType);
 }

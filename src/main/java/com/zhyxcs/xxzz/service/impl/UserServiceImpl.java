@@ -43,4 +43,9 @@ public class UserServiceImpl implements UserService {
     public int updateBasicByPrimaryKey(User record) {
         return userMapper.updateBasicByPrimaryKey(record);
     }
+
+    @Override
+    public List<HashMap> ifBankEntryHasBankReview(String addUserCode) {
+        return userMapper.ifBankEntryHasBankReview(addUserCode);
+    }
 }

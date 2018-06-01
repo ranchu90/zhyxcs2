@@ -5,6 +5,8 @@ import com.zhyxcs.xxzz.mapper.ImageStandardMapper;
 import com.zhyxcs.xxzz.service.ImageStandardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -23,7 +25,7 @@ public class ImageStandardServiceImpl implements ImageStandardService {
     }
 
     @Override
-    public List<String> certificateType(String businessCategory, String accountType) {
+    public List<HashMap<String, Object>> certificateType(String businessCategory, String accountType) {
         return imageStandardMapper.certificateType(businessCategory, accountType);
     }
 

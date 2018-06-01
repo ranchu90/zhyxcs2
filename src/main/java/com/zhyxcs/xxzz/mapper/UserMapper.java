@@ -23,4 +23,6 @@ public interface UserMapper {
 
     List<HashMap> selectBysAddUserCodeAndBankType(@Param("addUserCode") String addUserCode,
                                                   @Param("bankTypeCode") String bankTypeCode);
+
+    List<HashMap> ifBankEntryHasBankReview(@Param("addUserCode") String addUserCode);
 }

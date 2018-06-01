@@ -136,4 +136,31 @@ public class UserController extends BaseController{
 
         return map;
     }
+
+    @RequestMapping(value = "/bankReviewCheck", method = RequestMethod.GET)
+    public Map<String, Object> ifBankEntryHasBankReview(){
+        HttpSession session = super.request.getSession();
+        User cur_user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+
+        Map<String, Object> result = new HashMap();
+        String addUserCode = cur_user.getSaddusercode();
+        String userLevel = cur_user.getSuserlevel();
+
+        if ("1".equals(userLevel)){
+            List<HashMap> list = userService.ifBankEntryHasBankReview(addUserCode);
+
+            if (list != null && list.size() > 0){
+                result.put("ifBankEntryHasBankReview", "true");
+            } else {
+                result.put("ifBankEntryHasBankReview", "false");
+            }
+
+        } else {
+            result.put("ifBankEntryHasBankReview", "false");
+        }
+
+
+
+        return result;
+    }
 }

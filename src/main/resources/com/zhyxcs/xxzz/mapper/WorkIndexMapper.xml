@@ -405,77 +405,43 @@
     </select>
     <select id="queryRecordByConditions" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
         select * from tworkindex
-        <if test="(orgaCode != null || businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null || renRecheckUserCode != null || transactionNum != null             || approvalCode != null || startTime != null || endTime != null || currentBankArea != null || currentCity != null || bankKind != null || bankType != null)">
-            where
-        </if>
+        where
+        (sApprovalState = '3' or sApprovalState = '5')
         <if test="orgaCode != null">
-            sBankCode = #{orgaCode}
-        </if>
-        <if test="orgaCode != null and businessCategory != null">
-            and
+            and sBankCode = #{orgaCode}
         </if>
         <if test="businessCategory != null">
-            sBusinessCategory = #{businessCategory}
-        </if>
-        <if test="(orgaCode != null || businessCategory != null) and accountType != null">
-            and
+            and sBusinessCategory = #{businessCategory}
         </if>
         <if test="accountType != null">
-            sAccountType = #{accountType}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null) and bankEntryUserCode != null">
-            and
+            and sAccountType = #{accountType}
         </if>
         <if test="bankEntryUserCode != null">
-            sUpUserCode = #{bankEntryUserCode}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null) and bankReviewUserCode != null">
-            and
+            and sUpUserCode = #{bankEntryUserCode}
         </if>
         <if test="bankReviewUserCode != null">
-            sReviewUserCode = #{bankReviewUserCode}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null) and renEntryUserCode != null">
-            and
+            and sReviewUserCode = #{bankReviewUserCode}
         </if>
         <if test="renEntryUserCode != null">
-            sCheckUserCode = #{renEntryUserCode}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null) and renRecheckUserCode != null">
-            and
+            and sCheckUserCode = #{renEntryUserCode}
         </if>
         <if test="renRecheckUserCode != null">
-            sReCheckUserCode = #{renRecheckUserCode}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null || renRecheckUserCode != null) and transactionNum != null">
-            and
+            and sReCheckUserCode = #{renRecheckUserCode}
         </if>
         <if test="transactionNum != null">
-            sTransactionNum = #{transactionNum}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null || renRecheckUserCode != null || transactionNum != null)             and approvalCode != null">
-            and
+            and sTransactionNum = #{transactionNum}
         </if>
         <if test="approvalCode != null">
-            sApprovalCode = #{approvalCode}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null || renRecheckUserCode != null || transactionNum != null             || approvalCode != null) and startTime != null">
-            and
+            and sApprovalCode = #{approvalCode}
         </if>
         <if test="startTime != null">
-            date(sEndTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null || renRecheckUserCode != null || transactionNum != null             || approvalCode != null || startTime != null) and endTime != null">
-            and
+            and date(sEndTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
         </if>
         <if test="endTime != null">
-            date(sRecheckTime) <![CDATA[ >= ]]> #{endTime,jdbcType=TIMESTAMP}
-        </if>
-        <if test="(orgaCode != null ||businessCategory != null ||accountType != null || bankEntryUserCode != null || bankReviewUserCode != null || renEntryUserCode != null || renRecheckUserCode != null || transactionNum != null             || approvalCode != null || startTime != null || endTime != null) and (currentBankArea != null || currentCity != null || bankKind != null || bankType != null)">
-            and
+            and date(sRecheckTime) <![CDATA[ >= ]]> #{endTime,jdbcType=TIMESTAMP}
         </if>
         <if test="currentBankArea != null || currentCity != null || bankKind != null || bankType != null">
-            sBankCode in
+            and sBankCode in
             (select sBankCode from torga
               where
             <if test="currentBankArea != null">

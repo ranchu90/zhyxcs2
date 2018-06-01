@@ -3,6 +3,7 @@ package com.zhyxcs.xxzz.mapper;
 import com.zhyxcs.xxzz.domain.ImageStandard;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ImageStandardMapper {
@@ -20,5 +21,5 @@ public interface ImageStandardMapper {
 
     List<String> accountType(@Param("businessCategory") String businessCategory);
 
-    List<String> certificateType(@Param("businessCategory") String businessCategory, @Param("accountType") String accountType);
+    List<HashMap<String, Object>> certificateType(@Param("businessCategory") String businessCategory, @Param("accountType") String accountType);
 }
