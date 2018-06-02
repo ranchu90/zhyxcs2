@@ -81,7 +81,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        super.addResourceHandlers(registry);
         String basePath = imageConfig.getBasePath();
+        String licenceBasePath = imageConfig.getLicenceBasePath();
         registry.addResourceHandler("/OTA/**").addResourceLocations("file:" + basePath);
+        registry.addResourceHandler("/LTA/**").addResourceLocations("file:" + licenceBasePath);
 //        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
 //

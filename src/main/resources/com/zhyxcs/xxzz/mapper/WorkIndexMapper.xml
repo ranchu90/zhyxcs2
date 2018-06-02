@@ -133,6 +133,7 @@
     <if test="action == 'commit_ren'">
         , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
         , sCommitTimes = #{workIndex.scommittimes, jdbcType=TIMESTAMP}
+        , sBusinessEmergency = #{workIndex.sbusinessemergency,jdbcType=VARCHAR}
     </if>
     <if test="action == 'review'">
       , sReviewUserCode = #{workIndex.sreviewusercode,jdbcType=VARCHAR}
@@ -153,9 +154,13 @@
     </if>
     <if test="action == 'send_back_ren'">
         , sPBCReturnTimes = #{workIndex.spbcreturntimes,jdbcType=TIMESTAMP}
+        , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
     </if>
     <if test="action == 'upload_licence'">
         , sUploadLicense = #{workIndex.suploadlicense,jdbcType=INTEGER}
+    </if>
+    <if test="action == 'end'">
+        , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
     </if>
     where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
     </update>
@@ -197,7 +202,7 @@
                   and sCheckUserCode = #{userCode}
               </otherwise>
           </choose>
-          <if test="approvalState == 3">
+          <if test="approvalState == 3 or approvalState == 5">
               <choose>
                   <when test="ifUploadLicense != null">
                       and sUploadLicense != 0
@@ -219,14 +224,14 @@
       </if>
       <if test="userLevel == 5">
          <choose>
-             <when test="approvalState != 3">
+             <when test="approvalState == 3 or approvalState == 5">
                  and (sReCheckUserCode = #{userCode} or sReCheckUserCode is null)
              </when>
              <otherwise>
                  and sReCheckUserCode = #{userCode}
              </otherwise>
          </choose>
-          <if test="approvalState == 3">
+          <if test="approvalState == 3 or approvalState == 5">
               <choose>
                   <when test="ifUploadLicense != null">
                       and sUploadLicense != 0
@@ -257,7 +262,7 @@
     where sApprovalState = #{approvalState}
     --     人民银行录入员
     <choose>
-        <when test="approvalState == 2">
+        <when test="approvalState == 2 or approvalState == 5">
             and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
         </when>
         <otherwise>
@@ -268,7 +273,7 @@
       and sBusinessEmergency = #{businessEmergency}
     </if>
       and sPBCBankCode = #{pbcCode}
-    <if test="approvalState == 3">
+    <if test="approvalState == 3 or approvalState == 5">
         <choose>
             <when test="ifUploadLicense != null">
                 and sUploadLicense != 0
@@ -297,7 +302,7 @@
     where sApprovalState = #{approvalState}
     --     人民银行复审员
     <choose>
-        <when test="approvalState == 3">
+        <when test="approvalState == 3 or approvalState == 5">
             and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
         </when>
         <otherwise>
@@ -308,7 +313,7 @@
       and sBusinessEmergency = #{businessEmergency}
     </if>
       and sPBCBankCode = #{pbcCode}
-    <if test="approvalState == 3">
+    <if test="approvalState == 3 or approvalState == 5">
         <choose>
             <when test="ifUploadLicense != null">
                 and sUploadLicense != 0

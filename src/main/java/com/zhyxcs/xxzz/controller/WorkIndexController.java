@@ -187,6 +187,7 @@ public class WorkIndexController extends BaseController{
                 break;
             case ActionType.SEND_BACK_REN:
                 workIndex.setSpbcreturntimes(new Date());
+                workIndex.setScheckusercode(userCode);
                 tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                 tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
                 //人民银行退回
@@ -215,9 +216,10 @@ public class WorkIndexController extends BaseController{
                 break;
             case ActionType.END:
                 workIndex.setScompletetimes(new Date());
+                workIndex.setScheckusercode(userCode);
                 tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                 tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
-                //人民银行中止
+                //人民银行终止
                 businessStatisticsService.insert(workIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
                 tempWorkIndex = null;
                 break;
@@ -433,7 +435,7 @@ public class WorkIndexController extends BaseController{
 //            case "4": return "待通过";
             case "3": return "已通过";
             case "4": return "被退回";
-            case "5": return "业务中止";
+            case "5": return "业务终止";
         }
         return null;
     }
