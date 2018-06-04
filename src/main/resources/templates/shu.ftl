@@ -929,12 +929,12 @@ lang=EN-US style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿�
 lang=EN-US style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:Arial'>${hour}</span><span
 style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿宋_GB2312'>时 </span><span
 lang=EN-US style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:Arial'>${minute}</span><span
-style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿宋_GB2312'>分通过账户影像传递辅助系统向<span
+style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿宋_GB2312'>分通过账户影像传输辅助系统向<span
 lang=EN-US>${pbcBankName}</span>提交的 <u><span
 style='mso-spacerun:yes'> </span><span lang=EN-US>${unitName}
 </span></u>、账户性质为</span><span lang=EN-US style='font-size:15.0pt;
 font-family:仿宋;mso-bidi-font-family:Arial'>${accountType}</span><span
-style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿宋_GB2312'>的开户资料已审核通过。</span><span
+style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿宋_GB2312'>的<span lang=EN-US>${businessCategory}</span>资料已审核通过。</span><span
 style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:Arial'>核准号为<span
 lang=EN-US>${approvalCode}</span>，</span><span
 style='font-size:15.0pt;font-family:仿宋;mso-bidi-font-family:仿宋_GB2312'>开户许可证编号为</span><span

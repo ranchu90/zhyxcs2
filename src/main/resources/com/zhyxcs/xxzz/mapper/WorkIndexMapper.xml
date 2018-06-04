@@ -129,6 +129,7 @@
     set sApprovalState = #{workIndex.sapprovalstate,jdbcType=VARCHAR}
     <if test="action == 'commit'">
       , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
+      , sBusinessEmergency = #{workIndex.sbusinessemergency,jdbcType=VARCHAR}
     </if>
     <if test="action == 'commit_ren'">
         , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
@@ -168,6 +169,9 @@
     update tworkindex
     set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
     , sCompleteTimes = #{scompletetimes, jdbcType=TIMESTAMP}
+    <if test="suploadlicense != null">
+        , sUploadLicense = #{suploadlicense,jdbcType=INTEGER}
+    </if>
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
     <update id="updateWorkIndexBusinessEmergency" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">

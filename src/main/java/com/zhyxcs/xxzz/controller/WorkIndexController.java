@@ -54,6 +54,7 @@ public class WorkIndexController extends BaseController{
             workIndex.setSbankname(orga.getSbankname());
             workIndex.setSupusername(user.getSusername());
             workIndex.setSupusercode(user.getSusercode());
+            workIndex.setSbusinessemergency("0");
             workIndexService.newWorkIndex(workIndex);
 
             this.writeLog(Logs.TRANS_NEW_SUCCESS);
@@ -220,7 +221,7 @@ public class WorkIndexController extends BaseController{
                 tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                 tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
                 //人民银行终止
-                businessStatisticsService.insert(workIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
                 tempWorkIndex = null;
                 break;
         }
@@ -300,15 +301,21 @@ public class WorkIndexController extends BaseController{
         for (WorkIndex workIndex : tempList){
             String approvelState = workIndex.getSapprovalstate();
             Date startDate = workIndex.getSstarttime();
+            Date endDate = workIndex.getSendtime();
             Date checkDate = workIndex.getSrechecktime();
+            Date completeDate = workIndex.getScompletetimes();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String startTime = startDate!=null? format.format(startDate) : null;
             String checkTime = checkDate!=null? format.format(checkDate) : null;
+            String endTime = endDate!=null? format.format(endDate) : null;
+            String completeTime = completeDate!=null? format.format(completeDate) : null;
 
             HashMap<String,Object> workTemp = new HashMap<String, Object>();
 
             workTemp.put("srechecktime", checkTime);
             workTemp.put("sstarttime", startTime);
+            workTemp.put("scompletetimes", completeTime);
+            workTemp.put("sendtime", endTime);
             workTemp.put("sapprovalstate", this.approvalState(approvelState));
             workTemp.put("sapprovalcode", workIndex.getSapprovalcode());
             workTemp.put("saccounttype", workIndex.getSaccounttype());
@@ -360,7 +367,7 @@ public class WorkIndexController extends BaseController{
     @RequestMapping(value = "/receipt", method = RequestMethod.GET)
     public void downloadReceipt(@RequestParam(value = "transactionNum") String transactionNum, HttpServletResponse response){
         WorkIndex result =workIndexService.selectByPrimaryKey(transactionNum);
-        List<String> fileList = imageService.selectProofNameByTranID(transactionNum);
+//        List<String> fileList = imageService.selectProofNameByTranID(transactionNum);
 
         //商业银行行名
         String bankName = result.getSbankname();
@@ -379,17 +386,16 @@ public class WorkIndexController extends BaseController{
         String pbcBankName = orga.getSbankname();
         //开户人名称
         String unitName = result.getSdepositorname();
-        //开户性质
+        //业务性质
+        String businessCategory = result.getSbusinesscategory();
+        //账号类型
         String accountType = result.getSaccounttype();
         //核准号
         String approvalCode = result.getSapprovalcode();
         //证书编号
         String identifier = result.getSidentifier();
         //通过的日期
-        String checkUserCode = result.getScheckusercode();
-        ApprovalRecord approvalRecord = approvalRecordService.selectByUserCodeAndOpinion(transactionNum,
-                checkUserCode, "审核已通过");
-        Date newDate = approvalRecord.getSapproveltime();
+        Date newDate = result.getScompletetimes();
         calendar.setTime(newDate);
         String newYear = String.valueOf(calendar.get(Calendar.YEAR));
         String newMonth = String.valueOf(calendar.get(Calendar.MONTH) + 1);
@@ -405,6 +411,7 @@ public class WorkIndexController extends BaseController{
         map.put("minute", minute);
         map.put("pbcBankName", pbcBankName);
         map.put("unitName", unitName);
+        map.put("businessCategory", businessCategory);
         map.put("accountType", accountType);
         map.put("approvalCode", approvalCode);
         map.put("identifier", identifier);
