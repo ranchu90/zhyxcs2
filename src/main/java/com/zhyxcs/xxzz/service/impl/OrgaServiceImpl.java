@@ -24,6 +24,8 @@ public class OrgaServiceImpl implements OrgaService {
         return orgaMapper.selectByBankTypeAndPbcCode(pbcCode, bankTypeCode);
     }
 
+
+
     @Override
     public List<Orga> selectByBankKindAndPbcCode(String pbcCode, String bankKind) {
         return orgaMapper.selectByBankKindAndPbcCode(pbcCode, bankKind);
@@ -38,5 +40,15 @@ public class OrgaServiceImpl implements OrgaService {
     @Override
     public List<String> getUnderBankcodeList(String bankCode) {
         return orgaMapper.getUnderBankcodeList(bankCode);
+    }
+
+    @Override
+    public List<Orga> getByFullConditions(Orga orga) {
+        return orgaMapper.getByFullConditions(orga);
+    }
+
+    @Override
+    public List<Orga> getPBCList() {
+        return orgaMapper.getPBCList();
     }
 }

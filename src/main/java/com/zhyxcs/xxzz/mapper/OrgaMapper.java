@@ -25,4 +25,8 @@ public interface OrgaMapper {
     String getOrgaLevel(@Param("bankCode") String bankCode);
 
     List<String> getUnderBankcodeList(@Param("bankCode") String bankCode);
+
+    List<Orga> getByFullConditions(@Param("orga") Orga orga);
+
+    List<Orga> getPBCList();
 }

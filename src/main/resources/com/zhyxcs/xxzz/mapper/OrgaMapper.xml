@@ -57,17 +57,67 @@
     where sPBCode = #{pbcCode} and sBankKind = #{bankKind}
   </select>
     <select id="selectByBankTypeAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
-    select *
-    from torga
-    where sPBCode = #{pbcCode} and sBankTypeCode = #{bankTypeCode}
-  </select>
+        select *
+        from torga
+        <trim prefix="where" prefixOverrides="and">
+            <if test="pbcCode != null and pbcCode != ''">
+                sPBCode = #{pbcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankTypeCode != null and bankTypeCode != ''">
+                and sBankTypeCode = #{bankTypeCode,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </select>
     <select id="getOrgaLevel" parameterType="java.lang.String" resultType="java.lang.String">
     select getorgalevel(#{bankCode})
   </select>
 
-    <select id="getUnderBankcodeList" parameterType="java.lang.String" resultType="java.lang.String" statementType="CALLABLE">
+    <select id="getUnderBankcodeList" parameterType="java.lang.String" resultType="java.lang.String"
+            statementType="CALLABLE">
       {
         call sp_getunderbankcodelist(#{bankCode,jdbcType=VARCHAR,mode=IN})
       }
   </select>
+
+    <select id="getByFullConditions" parameterType="com.zhyxcs.xxzz.domain.Orga"
+            resultType="com.zhyxcs.xxzz.domain.Orga">
+        select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
+        sBankCityCode, sBankState
+        from torga
+        <trim prefix="where" prefixOverrides="and">
+            <if test="sbankcode != null and sbankcode != ''">
+                sBankCode = #{sbankcode,jdbcType=VARCHAR}
+            </if>
+            <if test="sbanktypecode != null and sbanktypecode != ''">
+                and sBankTypeCode = #{sbanktypecode,jdbcType=VARCHAR}
+            </if>
+            <if test="sbankkind != null and sbankkind != ''">
+                and sBankKind = #{sbankkind,jdbcType=VARCHAR}
+            </if>
+            <if test="sbankname != null and sbankname != ''">
+                and sBankName = #{sbankname,jdbcType=VARCHAR}
+            </if>
+            <if test="stopbankcode != null and stopbankcode != ''">
+                and sTopBankCode = #{stopbankcode,jdbcType=VARCHAR}
+            </if>
+            <if test="spbcode != null and spbcode != ''">
+                and sPBCode = #{spbcode,jdbcType=VARCHAR}
+            </if>
+            <if test="sbankareacode != null and sbankareacode != ''">
+                and sBankAreaCode = #{sbankareacode,jdbcType=VARCHAR}
+            </if>
+            <if test="sbankcitycode != null and sbankcitycode != ''">
+                and sBankCityCode = #{sbankcitycode,jdbcType=VARCHAR}
+            </if>
+            <if test="sbankstate != null and sbankstate != ''">
+                and sBankState = #{sbankstate,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getPBCList" resultType="com.zhyxcs.xxzz.domain.Orga">
+         select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
+        sBankCityCode, sBankState
+        from torga where sBankKind = '0' and sBankCode  <![CDATA[ <> ]]> '001551099999'
+    </select>
 </mapper>

@@ -6,6 +6,7 @@ import com.zhyxcs.xxzz.service.BankTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,14 +18,19 @@ public class BankTypeController {
     BankTypeService bankTypeService;
 
     @RequestMapping(value = "/business", method = RequestMethod.GET)
-    public List<BankType> getBusinessBankKind(){
+    public List<BankType> getBusinessBankKind() {
 
         return bankTypeService.selectAllBusinessBank();
     }
 
     @RequestMapping(value = "/businesses", method = RequestMethod.GET)
-    public List<BankType> getAllBankKind(){
-
+    public List<BankType> getAllBankKind() {
         return bankTypeService.selectAll();
+    }
+
+
+    @RequestMapping(value = "/getTypesByBankKind", method = RequestMethod.GET)
+    public List<BankType> getTypesByBankKind(@RequestParam("bankKindCode") String bankKindCode) {
+        return bankTypeService.getTypesByBankKind(bankKindCode);
     }
 }

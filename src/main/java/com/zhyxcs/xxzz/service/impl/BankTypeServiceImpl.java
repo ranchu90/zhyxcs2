@@ -22,4 +22,9 @@ public class BankTypeServiceImpl implements BankTypeService {
     public List<BankType> selectAll() {
         return bankTypeMapper.selectAll();
     }
+
+    @Override
+    public List<BankType> getTypesByBankKind(String bankKindCode) {
+        return bankTypeMapper.getTypesByBankKind(bankKindCode);
+    }
 }

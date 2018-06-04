@@ -34,4 +34,9 @@
     from tbanktype
     where sBankTypeCode != '001' and sBankTypeCode != '011'
   </select>
+  <select id="getTypesByBankKind" resultType="com.zhyxcs.xxzz.domain.BankType" parameterType="java.lang.String">
+     select sBankTypeCode, sTypeName
+    from tbanktype
+    where left(sBankTypeCode,1) = #{bankKindCode}
+  </select>
 </mapper>

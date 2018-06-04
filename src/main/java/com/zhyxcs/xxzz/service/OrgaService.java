@@ -1,8 +1,8 @@
 package com.zhyxcs.xxzz.service;
 
 import com.zhyxcs.xxzz.domain.Orga;
+import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.utils.OrgaLevelEnum;
-
 import java.util.List;
 
 public interface OrgaService {
@@ -17,4 +17,8 @@ public interface OrgaService {
     List<String> getUnderBankcodeList(String bankCode);
 
     List<Orga> selectByBankTypeAndPbcCode(String pbcCode, String bankTypeCode);
+
+    List<Orga> getByFullConditions(Orga orga);
+
+    List<Orga> getPBCList();
 }

@@ -9,4 +9,6 @@ public interface BankTypeService {
     List<BankType> selectAllBusinessBank();
 
     List<BankType> selectAll();
+
+    List<BankType> getTypesByBankKind(String bankKindCode);
 }
