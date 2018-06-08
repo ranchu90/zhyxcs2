@@ -9,6 +9,8 @@ import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.UdpGetClientMacAddr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,8 @@ public class BaseController {
     private SystemLogService systemLogService;
     @Autowired
     private PageConfig pageConfig;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     public String getDisplayCount(){
@@ -37,19 +41,20 @@ public class BaseController {
         }
         try {
             String ipAddress=CommonUtils.getIpAddress(request);
-            String macAddress=UdpGetClientMacAddr.getMac(ipAddress);
+//            String macAddress=UdpGetClientMacAddr.getMac(ipAddress);
             SystemLog systemLog=new SystemLog();
             systemLog.setSusercode(user.getSusercode());
             systemLog.setSusename(user.getSusername());
             systemLog.setSbankcode(orga.getSbankcode());
             systemLog.setSbankname(orga.getSbankname());
             systemLog.setSipaddress(ipAddress);
-            systemLog.setSmacaddress(macAddress);
+            systemLog.setSmacaddress(null);
             systemLog.setSlogtime(new Date());
             systemLog.setScomments(comments);
             systemLogService.insert(systemLog);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("## Error Information ##: {}", e);
         }
     }
 }

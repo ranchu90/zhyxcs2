@@ -170,7 +170,10 @@
     set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
     , sCompleteTimes = #{scompletetimes, jdbcType=TIMESTAMP}
     <if test="suploadlicense != null">
-        , sUploadLicense = #{suploadlicense,jdbcType=INTEGER}
+    , sUploadLicense = #{suploadlicense,jdbcType=INTEGER}
+    </if>
+    <if test="srecheckresult != null">
+    , sRecheckResult = #{srecheckresult, jdbcType=VARCHAR}
     </if>
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>

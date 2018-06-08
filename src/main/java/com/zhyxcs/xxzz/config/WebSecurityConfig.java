@@ -33,6 +33,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         /*不需要登陆验证*/
         addInterceptor.excludePathPatterns("/OTA/**");
         addInterceptor.excludePathPatterns("/api/login/**");
+        addInterceptor.excludePathPatterns("/api/download/**");
 
         /*需要登陆验证*/
         addInterceptor.addPathPatterns("/api/**");
@@ -43,7 +44,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
             HttpSession session = request.getSession();
 
-            System.out.println("拦截器："+session.getId());
+//            System.out.println("拦截器："+session.getId());
 
             //判断是否已有该用户登录的session
             if(session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null

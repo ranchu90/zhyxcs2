@@ -6,6 +6,8 @@ import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.ImageService;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.Logs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +27,8 @@ public class ImageController extends BaseController {
     private ImageService imageService;
     @Autowired
     private ImageConfig imageConfig;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/image", method = RequestMethod.POST)
     public Long insertNewImage(@RequestParam (value = "transactionNum") String transactionNum,

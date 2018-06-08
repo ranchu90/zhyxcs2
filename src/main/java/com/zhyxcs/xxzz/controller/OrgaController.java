@@ -2,6 +2,8 @@ package com.zhyxcs.xxzz.controller;
 
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.service.OrgaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,8 @@ import java.util.List;
 public class OrgaController {
     @Autowired
     private OrgaService orgaService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/orga", method = RequestMethod.GET)
     public List<Orga> getByBankTypeAndPbcCode(@RequestParam("pbcCode") String pbcCode,
@@ -34,5 +38,10 @@ public class OrgaController {
     @RequestMapping(value = "/getPBCList", method = RequestMethod.GET)
     public List<Orga> getPBCList() {
         return orgaService.getPBCList();
+    }
+
+    @RequestMapping(value = "/bankCode", method = RequestMethod.GET)
+    public Orga getBankCityCodeByBankCode( @RequestParam("bankCode") String bankCode){
+        return orgaService.selectByPrimaryKey(bankCode);
     }
 }

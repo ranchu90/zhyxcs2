@@ -2,6 +2,8 @@ package com.zhyxcs.xxzz.controller;
 
 import com.zhyxcs.xxzz.service.ImageStandardService;
 import com.zhyxcs.xxzz.utils.CramsConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +20,8 @@ import java.util.List;
 public class ImageStandardController extends BaseController {
     @Autowired
     private ImageStandardService imageStandardService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
     public List<String> getBusinessCategory(){

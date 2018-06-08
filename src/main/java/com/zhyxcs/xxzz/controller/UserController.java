@@ -9,6 +9,8 @@ import com.zhyxcs.xxzz.service.UserService;
 import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.Logs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,8 @@ import java.util.Map;
 public class UserController extends BaseController{
     @Autowired
     private UserService userService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public Map<String, Object> getUsersByAddUserCode(@RequestParam(value = "pageSize", required = false) String pageSize,
@@ -57,8 +61,20 @@ public class UserController extends BaseController{
 
         user.setSaddusercode(cur_user.getSusercode() );
 
-        this.writeLog(Logs.USER_NEW);
-        return userService.insert(user);
+        User oldUser = userService.selectByPrimaryKey(user.getSusercode());
+
+        int code = 0;
+
+        if (oldUser == null) {
+            try {
+                code = userService.insert(user);
+                this.writeLog(Logs.USER_NEW);
+            } catch (Exception e) {
+                logger.error("## Error Information ##: {}", e);
+            }
+        }
+
+        return code;
     }
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST)

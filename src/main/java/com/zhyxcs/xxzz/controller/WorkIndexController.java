@@ -9,6 +9,8 @@ import com.zhyxcs.xxzz.service.*;
 import com.zhyxcs.xxzz.utils.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +44,8 @@ public class WorkIndexController extends BaseController{
     @Autowired
     private WordConfig wordConfig;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @RequestMapping(value = "/workIndex", method = RequestMethod.POST)
     public WorkIndex insert(@RequestBody WorkIndex workIndex){
         HttpSession session = super.request.getSession(false);
@@ -55,13 +59,17 @@ public class WorkIndexController extends BaseController{
             workIndex.setSupusername(user.getSusername());
             workIndex.setSupusercode(user.getSusercode());
             workIndex.setSbusinessemergency("0");
-            workIndexService.newWorkIndex(workIndex);
+
+            try {
+                workIndexService.newWorkIndex(workIndex);
+            } catch (Exception e){
+                e.printStackTrace();
+                logger.error("## Error Information ##: {}", e);
+            }
 
             this.writeLog(Logs.TRANS_NEW_SUCCESS);
             return workIndex;
         } else {
-            System.out.println("orga:" + orga);
-            System.out.println("user:" + user);
             this.writeLog(Logs.TRANS_NEW_FAILED);
         }
 
@@ -135,14 +143,20 @@ public class WorkIndexController extends BaseController{
         }
 
         Map<String, Object> map = new HashMap();
-        PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
-        List<WorkIndex> list = workIndexService.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType, businessCategory,
-                accountType, orgaCode, bankEntryUserCode, bankReviewUserCode, renEntryUserCode, renRecheckUserCode, transactionNum,
-                approvalCode, identifier, startTime, endTime);
-        PageInfo<WorkIndex> workIndexPageInfo = new PageInfo(list);
-        map.put("pageInfo", workIndexPageInfo);
 
-        this.writeLog(Logs.TRANS_QUERY);
+        try {
+            PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+            List<WorkIndex> list = workIndexService.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType, businessCategory,
+                    accountType, orgaCode, bankEntryUserCode, bankReviewUserCode, renEntryUserCode, renRecheckUserCode, transactionNum,
+                    approvalCode, identifier, startTime, endTime);
+            PageInfo<WorkIndex> workIndexPageInfo = new PageInfo(list);
+            map.put("pageInfo", workIndexPageInfo);
+
+            this.writeLog(Logs.TRANS_QUERY);
+        } catch (Exception e){
+            e.printStackTrace();
+            logger.error("## Error Information ##: {}", e);
+        }
 
         return map;
     }
@@ -173,68 +187,86 @@ public class WorkIndexController extends BaseController{
 
         WorkIndex tempWorkIndex = null;
 
-        switch (action){
-            case ActionType.COMMIT:
-                workIndex.setSendtime(new Date());
-                break;
-            case ActionType.COMMIT_REN:
-                workIndex.setSendtime(new Date());
-                workIndex.setScommittimes(new Date());
-                break;
-            case ActionType.CALL_BACK:
-                break;
-            case ActionType.SEND_BACK:
-                workIndex.setSreturntimes(new Date());
-                break;
-            case ActionType.SEND_BACK_REN:
-                workIndex.setSpbcreturntimes(new Date());
-                workIndex.setScheckusercode(userCode);
-                tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
-                tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
-                //人民银行退回
-                businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
-                tempWorkIndex = null;
-                break;
-            case ActionType.REVIEW:
-                workIndex.setSreviewusercode(userCode);
-                workIndex.setScommittimes(new Date());
-                break;
-            case ActionType.CHECK:
-                workIndex.setScheckusercode(userCode);
-                tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
-                tempWorkIndex.setScheckusercode(userCode);
-                //人民银行通过
-                businessStatisticsService.insert(tempWorkIndex, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, null);
-                tempWorkIndex = null;
-                break;
-            case ActionType.RECHECK:
-                workIndex.setSrecheckusercode(userCode);
-                workIndex.setSrecheckusername(userName);
-                workIndex.setSrechecktime(new Date());
-                break;
-            case ActionType.UPLOAD_LICENCE:
-                workIndex.setSuploadlicense(1);
-                break;
-            case ActionType.END:
-                workIndex.setScompletetimes(new Date());
-                workIndex.setScheckusercode(userCode);
-                tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
-                tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
-                //人民银行终止
-                businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
-                tempWorkIndex = null;
-                break;
+        try {
+            switch (action) {
+                case ActionType.COMMIT:
+                    workIndex.setSendtime(new Date());
+                    break;
+                case ActionType.COMMIT_REN:
+                    workIndex.setSendtime(new Date());
+                    workIndex.setScommittimes(new Date());
+                    break;
+                case ActionType.CALL_BACK:
+                    break;
+                case ActionType.SEND_BACK:
+                    workIndex.setSreturntimes(new Date());
+                    break;
+                case ActionType.SEND_BACK_REN:
+                    workIndex.setSpbcreturntimes(new Date());
+                    workIndex.setScheckusercode(userCode);
+                    tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                    tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
+                    //人民银行退回
+                    businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                    tempWorkIndex = null;
+                    break;
+                case ActionType.REVIEW:
+                    workIndex.setSreviewusercode(userCode);
+                    workIndex.setScommittimes(new Date());
+                    break;
+                case ActionType.CHECK:
+                    workIndex.setScheckusercode(userCode);
+                    tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                    tempWorkIndex.setScheckusercode(userCode);
+                    //人民银行通过
+                    businessStatisticsService.insert(tempWorkIndex, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, null);
+                    tempWorkIndex = null;
+                    break;
+                case ActionType.RECHECK:
+                    workIndex.setSrecheckusercode(userCode);
+                    workIndex.setSrecheckusername(userName);
+                    workIndex.setSrechecktime(new Date());
+                    break;
+                case ActionType.UPLOAD_LICENCE:
+                    workIndex.setSuploadlicense(1);
+                    break;
+                case ActionType.END:
+                    workIndex.setScompletetimes(new Date());
+                    workIndex.setScheckusercode(userCode);
+                    tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                    tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
+                    //人民银行终止
+                    businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                    tempWorkIndex = null;
+                    break;
+            }
+        } catch (Exception e) {
+            logger.error("## Error Information ##: {}", e);
         }
 
         this.writeLog(Logs.TRANS_UPDATE_APPROVALSTATE + ":" + action);
 
-        return workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
+        int result = 0;
+
+        try {
+            result = workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
+        } catch (Exception e) {
+            logger.error("## Error Information ##: {}", e);
+        }
+
+        return result;
     }
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
     public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
         workIndex.setScompletetimes(new Date());
-        int code = workIndexService.updateWorkIndexByApprovalCodeAndIdentifier(workIndex);
+        int code = 0;
+
+        try {
+            code = workIndexService.updateWorkIndexByApprovalCodeAndIdentifier(workIndex);
+        } catch (Exception e) {
+            logger.error("## Error Information ##: {}", e);
+        }
 
         if (code <= 0){
             return 0;
@@ -267,28 +299,32 @@ public class WorkIndexController extends BaseController{
         Map<String, Object> mapTest = new HashMap();
         PageHelper.startPage(Integer.parseInt(currentPage), Integer.parseInt(pageSize));
 
-        //判断用户的查询权限，根据用户级别
-        switch (userLevel){
-            case "1":
-                workIndexList = workIndexService.queryRecordByPageAndUserCodeBankEntry(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
-                break;
-            case "2":
-                workIndexList = workIndexService.queryRecordByPageAndUserCodeBankCharge(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
-                break;
-            case "4":
-                workIndexList = workIndexService.queryRecordByPageAndUserCodeRenEntry(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
-                break;
-            case "5":
-                workIndexList = workIndexService.queryRecordByPageAndUserCodeRenCharge(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
-                break;
-            case "7":
-                workIndexList = workIndexService.queryRecordByPageAndUserCodeRenAdmin(pageSize,
-                        currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
-                break;
+        try {
+            //判断用户的查询权限，根据用户级别
+            switch (userLevel) {
+                case "1":
+                    workIndexList = workIndexService.queryRecordByPageAndUserCodeBankEntry(pageSize,
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
+                    break;
+                case "2":
+                    workIndexList = workIndexService.queryRecordByPageAndUserCodeBankCharge(pageSize,
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
+                    break;
+                case "4":
+                    workIndexList = workIndexService.queryRecordByPageAndUserCodeRenEntry(pageSize,
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
+                    break;
+                case "5":
+                    workIndexList = workIndexService.queryRecordByPageAndUserCodeRenCharge(pageSize,
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
+                    break;
+                case "7":
+                    workIndexList = workIndexService.queryRecordByPageAndUserCodeRenAdmin(pageSize,
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency);
+                    break;
+            }
+        } catch (Exception e) {
+            logger.error("## Error Information ##: {}", e);
         }
 
         PageInfo<WorkIndex> pageInfo = new PageInfo(workIndexList);
@@ -440,7 +476,7 @@ public class WorkIndexController extends BaseController{
             case "1": return "待复核";
             case "2": return "待审核";
 //            case "4": return "待通过";
-            case "3": return "已通过";
+            case "3": return "已审核";
             case "4": return "被退回";
             case "5": return "业务终止";
         }
@@ -482,7 +518,9 @@ public class WorkIndexController extends BaseController{
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("## Error Information ##: {}", e);
         }
+
     }
 
 }
