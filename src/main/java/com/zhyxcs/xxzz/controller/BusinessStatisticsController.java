@@ -58,8 +58,8 @@ public class BusinessStatisticsController extends BaseController {
         cityCode = ((cityCode == null || "".equals(cityCode.trim())) ? null : cityCode);
         bankKind = ((bankKind == null || "".equals(bankKind.trim())) ? null : bankKind);
         bankCode = ((bankCode == null || "".equals(bankCode.trim())) ? null : bankCode);
-        startTime = ((startTime == null) ? null : startTime);
-        endTime = ((endTime == null) ? null : endTime);
+        startTime = (startTime);
+        endTime = (endTime);
 
         List<String> pbcCodeList = null;
         List<String> commerceCodeList = null;
@@ -117,8 +117,8 @@ public class BusinessStatisticsController extends BaseController {
         cityCode = ((cityCode == null || "".equals(cityCode.trim())) ? null : cityCode);
         bankKind = ((bankKind == null || "".equals(bankKind.trim())) ? null : bankKind);
         bankCode = ((bankCode == null || "".equals(bankCode.trim())) ? null : bankCode);
-        startTime = ((startTime == null) ? null : startTime);
-        endTime = ((endTime == null) ? null : endTime);
+        startTime = (startTime);
+        endTime = (endTime);
 
         List<String> pbcCodeList = null;
         List<String> commerceCodeList = null;

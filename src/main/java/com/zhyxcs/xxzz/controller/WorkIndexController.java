@@ -187,22 +187,23 @@ public class WorkIndexController extends BaseController{
 
         WorkIndex tempWorkIndex = null;
 
+        Date date = CommonUtils.newDate();
         try {
             switch (action) {
                 case ActionType.COMMIT:
-                    workIndex.setSendtime(new Date());
+                    workIndex.setSendtime(date);
                     break;
                 case ActionType.COMMIT_REN:
-                    workIndex.setSendtime(new Date());
-                    workIndex.setScommittimes(new Date());
+                    workIndex.setSendtime(date);
+                    workIndex.setScommittimes(date);
                     break;
                 case ActionType.CALL_BACK:
                     break;
                 case ActionType.SEND_BACK:
-                    workIndex.setSreturntimes(new Date());
+                    workIndex.setSreturntimes(date);
                     break;
                 case ActionType.SEND_BACK_REN:
-                    workIndex.setSpbcreturntimes(new Date());
+                    workIndex.setSpbcreturntimes(date);
                     workIndex.setScheckusercode(userCode);
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
@@ -212,7 +213,7 @@ public class WorkIndexController extends BaseController{
                     break;
                 case ActionType.REVIEW:
                     workIndex.setSreviewusercode(userCode);
-                    workIndex.setScommittimes(new Date());
+                    workIndex.setScommittimes(date);
                     break;
                 case ActionType.CHECK:
                     workIndex.setScheckusercode(userCode);
@@ -225,13 +226,13 @@ public class WorkIndexController extends BaseController{
                 case ActionType.RECHECK:
                     workIndex.setSrecheckusercode(userCode);
                     workIndex.setSrecheckusername(userName);
-                    workIndex.setSrechecktime(new Date());
+                    workIndex.setSrechecktime(date);
                     break;
                 case ActionType.UPLOAD_LICENCE:
                     workIndex.setSuploadlicense(1);
                     break;
                 case ActionType.END:
-                    workIndex.setScompletetimes(new Date());
+                    workIndex.setScompletetimes(date);
                     workIndex.setScheckusercode(userCode);
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
@@ -259,7 +260,7 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
     public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
-        workIndex.setScompletetimes(new Date());
+        workIndex.setScompletetimes(CommonUtils.newDate());
         int code = 0;
 
         try {
@@ -336,22 +337,17 @@ public class WorkIndexController extends BaseController{
 
         for (WorkIndex workIndex : tempList){
             String approvelState = workIndex.getSapprovalstate();
-            Date startDate = workIndex.getSstarttime();
-            Date endDate = workIndex.getSendtime();
-            Date checkDate = workIndex.getSrechecktime();
-            Date completeDate = workIndex.getScompletetimes();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String startTime = startDate!=null? format.format(startDate) : null;
-            String checkTime = checkDate!=null? format.format(checkDate) : null;
-            String endTime = endDate!=null? format.format(endDate) : null;
-            String completeTime = completeDate!=null? format.format(completeDate) : null;
 
             HashMap<String,Object> workTemp = new HashMap<String, Object>();
+            Date recheckDate = workIndex.getSrechecktime();
+            Date startDate = workIndex.getSstarttime();
+            Date completeDate = workIndex.getScompletetimes();
+            Date endDate = workIndex.getSendtime();
 
-            workTemp.put("srechecktime", checkTime);
-            workTemp.put("sstarttime", startTime);
-            workTemp.put("scompletetimes", completeTime);
-            workTemp.put("sendtime", endTime);
+            workTemp.put("srechecktime", recheckDate);
+            workTemp.put("sstarttime", startDate);
+            workTemp.put("scompletetimes", completeDate);
+            workTemp.put("sendtime", endDate);
             workTemp.put("sapprovalstate", this.approvalState(approvelState));
             workTemp.put("sapprovalcode", workIndex.getSapprovalcode());
             workTemp.put("saccounttype", workIndex.getSaccounttype());
@@ -360,7 +356,6 @@ public class WorkIndexController extends BaseController{
             workTemp.put("sbusinesscategory", workIndex.getSbusinesscategory());
             workTemp.put("scheckusercode", workIndex.getScheckusercode());
             workTemp.put("sdepositorname", workIndex.getSdepositorname());
-            workTemp.put("sendtime", workIndex.getSendtime());
             workTemp.put("sidentifier", workIndex.getSidentifier());
             workTemp.put("srecheckopinion", workIndex.getSrecheckopinion());
             workTemp.put("srecheckresult", workIndex.getSrecheckresult());
@@ -410,6 +405,7 @@ public class WorkIndexController extends BaseController{
         //提交的日期
         Date date = result.getSendtime();
         Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         calendar.setTime(date);
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);

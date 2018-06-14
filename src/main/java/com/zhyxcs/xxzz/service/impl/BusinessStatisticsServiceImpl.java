@@ -50,7 +50,7 @@ public class BusinessStatisticsServiceImpl implements BusinessStatisticsService 
             businessStatistics.setSerrortype(groundsForReturn.getSgrounds());
         }
         businessStatistics.setSovertime(overtimeStatus.getValue());
-        businessStatistics.setShappentimes(new Date());
+        businessStatistics.setShappentimes(CommonUtils.newDate());
         return businessStatisticsMapper.insert(businessStatistics);
     }
 
@@ -60,11 +60,7 @@ public class BusinessStatisticsServiceImpl implements BusinessStatisticsService 
 
     private boolean businessExist(String transactionNum) {
         int count = businessStatisticsMapper.getCountByTransactionNum(transactionNum);
-        if (count > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return count > 0;
     }
 
     @Override

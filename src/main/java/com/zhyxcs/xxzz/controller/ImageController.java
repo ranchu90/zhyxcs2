@@ -4,6 +4,7 @@ import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.domain.Image;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.ImageService;
+import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.Logs;
 import org.slf4j.Logger;
@@ -12,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,7 @@ public class ImageController extends BaseController {
         String basePath = imageConfig.getBasePath();
         String bankCodePath = user.getSbankcode();
 
-        Date currentDate = new Date();
+        Date currentDate = CommonUtils.newDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
 
         String datePath = format.format(currentDate);
@@ -116,13 +117,20 @@ public class ImageController extends BaseController {
         return imageService.selectImagesByTranID(sTransactionNum);
     }
 
+//    @RequestMapping(value = "/image64", method = RequestMethod.GET)
+//    public Map getBase64Image(@RequestParam(value = "path") String path){
+//        String basePath = imageConfig.getBasePath();
+//        String base64 = this.encryptToBase64(basePath + path);
+//        HashMap map = new HashMap();
+//        map.put("src", base64);
+//        return map;
+//    }
+
     @RequestMapping(value = "/image64", method = RequestMethod.GET)
-    public Map getBase64Image(@RequestParam(value = "path") String path){
+    public void getBase64Image(@RequestParam(value = "path") String path, HttpServletResponse response){
         String basePath = imageConfig.getBasePath();
-        String base64 = this.encryptToBase64(basePath + path);
-        HashMap map = new HashMap();
-        map.put("src", base64);
-        return map;
+
+        CommonUtils.downloadImage(basePath + path, response);
     }
 
     // 文件转base64
