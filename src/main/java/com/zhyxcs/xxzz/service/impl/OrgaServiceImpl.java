@@ -24,8 +24,6 @@ public class OrgaServiceImpl implements OrgaService {
         return orgaMapper.selectByBankTypeAndPbcCode(pbcCode, bankTypeCode);
     }
 
-
-
     @Override
     public List<Orga> selectByBankKindAndPbcCode(String pbcCode, String bankKind) {
         return orgaMapper.selectByBankKindAndPbcCode(pbcCode, bankKind);
@@ -50,5 +48,31 @@ public class OrgaServiceImpl implements OrgaService {
     @Override
     public List<Orga> getPBCList() {
         return orgaMapper.getPBCList();
+    }
+
+    @Override
+    public List<Orga> pageOrgaWithConditions(String bankAreaCode, String bankCityCode, String bankKind, String bankTypeCode, String topBankCode, String pbcode, String bankCode, String bankName, String bankState) {
+        return orgaMapper.pageOrgaWithConditions(bankAreaCode, bankCityCode, bankKind, bankTypeCode, topBankCode, pbcode, bankCode, bankName, bankState);
+    }
+
+    @Override
+    public int calculateNextOrgaNum(String bankCode) {
+        String bankKindChar = bankCode.substring(0, 1);
+        return orgaMapper.calculateNextOrgaNum(bankCode, bankKindChar);
+    }
+
+    @Override
+    public int deleteByBankCodeArray(String[] bankCodeArray) {
+        return orgaMapper.deleteByBankCodeArray(bankCodeArray);
+    }
+
+    @Override
+    public int insert(Orga orga) {
+        return orgaMapper.insert(orga);
+    }
+
+    @Override
+    public int updateByPrimaryKeyCheckPropertyIsNull(Orga orga) {
+        return orgaMapper.updateByPrimaryKeyCheckPropertyIsNull(orga);
     }
 }

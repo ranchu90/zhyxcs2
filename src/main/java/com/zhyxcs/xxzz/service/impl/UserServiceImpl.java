@@ -48,4 +48,9 @@ public class UserServiceImpl implements UserService {
     public List<HashMap> ifBankEntryHasBankReview(String addUserCode) {
         return userMapper.ifBankEntryHasBankReview(addUserCode);
     }
+
+    @Override
+    public int calculateUsersByBankCodeArray(String[] bankCodeArray) {
+        return userMapper.calculateUsersByBankCodeArray(bankCodeArray);
+    }
 }

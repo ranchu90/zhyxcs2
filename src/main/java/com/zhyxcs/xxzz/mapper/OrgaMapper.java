@@ -29,4 +29,21 @@ public interface OrgaMapper {
     List<Orga> getByFullConditions(@Param("orga") Orga orga);
 
     List<Orga> getPBCList();
+
+    List<Orga> pageOrgaWithConditions(@Param("bankAreaCode") String bankAreaCode,
+                                      @Param("bankCityCode") String bankCityCode,
+                                      @Param("bankKind") String bankKind,
+                                      @Param("bankTypeCode") String bankTypeCode,
+                                      @Param("topBankCode") String topBankCode,
+                                      @Param("pbcode") String pbcode,
+                                      @Param("bankCode") String bankCode,
+                                      @Param("bankName") String bankName,
+                                      @Param("bankState") String bankState);
+
+    int calculateNextOrgaNum(@Param("bankCode") String bankCode,
+                             @Param("bankKindChar") String bankKindChar);
+
+    int deleteByBankCodeArray(@Param("bankCodeArray") String[] bankCodeArray);
+
+    int updateByPrimaryKeyCheckPropertyIsNull(Orga record);
 }

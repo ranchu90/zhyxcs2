@@ -91,10 +91,10 @@
                 and SUBSTRING(sTransactionNum,1,12) = #{bankCode,jdbcType=VARCHAR}
             </if>
             <if test="startTime != null">
-                and date(sHappenTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+                and date(sHappenTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=DATE}
             </if>
             <if test="endTime != null">
-                and date(sHappenTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+                and date(sHappenTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=DATE}
             </if>
             <if test="businessCategory != null">
                 and sBusinessCategory = #{businessCategory,jdbcType=VARCHAR}
@@ -142,10 +142,10 @@
                 and SUBSTRING(sTransactionNum,1,12) = #{bankCode,jdbcType=VARCHAR}
             </if>
             <if test="startTime != null">
-                and date(sHappenTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+                and date(sHappenTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=DATE}
             </if>
             <if test="endTime != null">
-                and date(sHappenTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+                and date(sHappenTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=DATE}
             </if>
             <if test="businessCategory != null">
                 and sBusinessCategory = #{businessCategory,jdbcType=VARCHAR}

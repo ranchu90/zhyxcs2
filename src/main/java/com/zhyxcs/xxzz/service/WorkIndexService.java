@@ -89,4 +89,6 @@ public interface WorkIndexService {
                                             String identifier,
                                             String startTime,
                                             String endTime);
+
+    int calculateWorksByBankCode(String bankCode);
 }

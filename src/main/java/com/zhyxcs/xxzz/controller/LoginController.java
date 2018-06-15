@@ -30,9 +30,6 @@ public class LoginController extends BaseController{
         User dbUser = userService.selectByPrimaryKey(user.getSusercode());
         Map result = new HashMap();
         HttpSession session = super.request.getSession();
-
-        System.out.println("login: " + session.getId());
-
         if (dbUser != null){
             if ("0".equals(dbUser.getSuserstate())) {
                 if (dbUser.getSpwderror() < 5){
