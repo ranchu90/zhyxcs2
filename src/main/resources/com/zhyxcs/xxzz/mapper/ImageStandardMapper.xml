@@ -8,34 +8,37 @@
       <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sProofName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sProofAmount" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sifNeedLicence" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from timagestandard
     where sID = #{sid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.ImageStandard">
     insert into timagestandard (sID, sBusineesCategory, sAccountType,
-      sProofName, sProofAmount)
+      sProofName, sProofAmount, sifNeedLicence
+      )
     values (#{sid,jdbcType=INTEGER}, #{sbusineescategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR},
-      #{sproofname,jdbcType=VARCHAR}, #{sproofamount,jdbcType=VARCHAR})
+      #{sproofname,jdbcType=VARCHAR}, #{sproofamount,jdbcType=VARCHAR}, #{sifneedlicence,jdbcType=INTEGER}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.ImageStandard">
     update timagestandard
     set sBusineesCategory = #{sbusineescategory,jdbcType=VARCHAR},
       sAccountType = #{saccounttype,jdbcType=VARCHAR},
       sProofName = #{sproofname,jdbcType=VARCHAR},
-      sProofAmount = #{sproofamount,jdbcType=VARCHAR}
+      sProofAmount = #{sproofamount,jdbcType=VARCHAR},
+      sifNeedLicence = #{sifneedlicence,jdbcType=INTEGER}
     where sID = #{sid,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount
+    select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount, sifNeedLicence
     from timagestandard
     where sID = #{sid,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount
+    select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount, sifNeedLicence
     from timagestandard
   </select>
   <select id="businessCategory" resultType="java.lang.String">

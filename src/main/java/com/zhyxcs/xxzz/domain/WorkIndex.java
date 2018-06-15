@@ -21,6 +21,8 @@ public class WorkIndex {
 
     private Integer suploadlicense;
 
+    private Integer sifneedlicence;
+
     private String sbusinesscategory;
 
     private String saccounttype;
@@ -57,7 +59,7 @@ public class WorkIndex {
 
     private Date srechecktime;
 
-    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, Integer suploadlicense, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime) {
+    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, Integer suploadlicense, Integer sifneedlicence, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime) {
         this.stransactionnum = stransactionnum;
         this.sdepositorname = sdepositorname;
         this.sapprovalstate = sapprovalstate;
@@ -67,6 +69,7 @@ public class WorkIndex {
         this.spbcreturntimes = spbcreturntimes;
         this.scompletetimes = scompletetimes;
         this.suploadlicense = suploadlicense;
+        this.sifneedlicence = sifneedlicence;
         this.sbusinesscategory = sbusinesscategory;
         this.saccounttype = saccounttype;
         this.sbankcode = sbankcode;
@@ -161,6 +164,14 @@ public class WorkIndex {
 
     public void setSuploadlicense(Integer suploadlicense) {
         this.suploadlicense = suploadlicense;
+    }
+
+    public Integer getSifneedlicence() {
+        return sifneedlicence;
+    }
+
+    public void setSifneedlicence(Integer sifneedlicence) {
+        this.sifneedlicence = sifneedlicence;
     }
 
     public String getSbusinesscategory() {
