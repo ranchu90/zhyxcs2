@@ -4,8 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class CommonUtils {
     public static boolean compareString(String srcStr, String destStr) {
@@ -102,9 +108,43 @@ public class CommonUtils {
         return transactionNum.substring(0, 12);
     }
 
+    public static void downloadImage(String path, HttpServletResponse response){
+
+        File file = new File(path);
+        FileInputStream fis = null;
+
+        try {
+            fis = new FileInputStream(file);
+            long size = file.length();
+            byte[] temp = new byte[(int) size];
+            fis.read(temp, 0, (int) size);
+            fis.close();
+            byte[] data = temp;
+            response.setContentType("blob");
+            OutputStream out = response.getOutputStream();
+            out.write(data);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         //System.out.println(MD5("crams888"));
         //System.out.println(getBankCode("104569018015201805210001"));
         System.out.println(OrgaLevelEnum.BANKOFCOMMERCE);
+    }
+
+    public static Date newDate(){
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        String dateString = formatter.format(currentTime);
+        ParsePosition pos = new ParsePosition(0);
+        Date currentTime_2 = formatter.parse(dateString, pos);
+        return currentTime_2;
     }
 }

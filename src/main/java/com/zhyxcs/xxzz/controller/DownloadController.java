@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +23,17 @@ public class DownloadController {
 
 
     @RequestMapping(value = "/chrome", method = RequestMethod.GET)
-    public void Download(HttpServletResponse res) {
+    public void Download(HttpServletResponse res, @RequestParam(value = "type", required = false) String type) {
         String baseDirectory = wordConfig.getBaseDirectory();
 
-        String fileName = "chrome_installer.exe";
+        String fileName;
+
+        if (type != null && "xp".equals(type.toLowerCase())){
+            fileName = "chrome_installer_xp.exe";
+        } else {
+            fileName = "chrome_installer.exe";
+        }
+
         res.setHeader("content-type", "application/octet-stream");
         res.setContentType("application/octet-stream");
         res.setHeader("Content-Disposition", "attachment;filename=" + fileName);
@@ -44,14 +52,14 @@ public class DownloadController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("## Error Information ##: {}", e);
+            logger.error("## Error Information ##: {DownloadController}", e);
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    logger.error("## Error Information ##: {}", e);
+                    logger.error("## Error Information ##: {DownloadController}", e);
                 }
             }
         }

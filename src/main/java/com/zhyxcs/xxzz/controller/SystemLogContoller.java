@@ -42,8 +42,8 @@ public class SystemLogContoller extends BaseController {
         bankName = (bankName == null || "".equals(bankName.trim())) ? null : bankName;
         ipAddress = (ipAddress == null || "".equals(ipAddress.trim())) ? null : ipAddress;
         comments = (comments == null || "".equals(comments.trim())) ? null : comments;
-        startTime = (startTime == null) ? null : startTime;
-        endTime = (endTime == null) ? null : endTime;
+        startTime = startTime;
+        endTime = endTime;
 
         PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
         List<SystemLog> systemLogs = systemLogService.querySystemLogByPageWithConditions(userCode, userName, bankCode, bankName, ipAddress, comments, startTime, endTime);

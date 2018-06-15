@@ -63,7 +63,7 @@ public class UdpGetClientMacAddr {
     // Name:array [1..34] 0x20 0x43 0x4B 0x41(30个) 0x00 ;
     // Type:NBSTAT 两字节 0x00 0x21
     // Class:INET 两字节（16位）0x00 0x01
-    protected byte[] getQueryCmd() throws Exception {
+    protected byte[] getQueryCmd() {
         byte[] t_ns = new byte[50];
         t_ns[0] = 0x00;
         t_ns[1] = 0x00;
@@ -110,7 +110,7 @@ public class UdpGetClientMacAddr {
     // NetBIOS Name Info 18×Number Of Name字节
     // Unit ID 6字节（48位
 
-    protected final String getMacAddr(byte[] brevdata) throws Exception {
+    protected final String getMacAddr(byte[] brevdata) {
         // 获取计算机名
         //   System.out.println(new String(brevdata, 57, 18));
         //   System.out.println(new String(brevdata, 75, 18));
@@ -171,7 +171,7 @@ public class UdpGetClientMacAddr {
         try {
             ia = InetAddress.getLocalHost();
             byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();
-            StringBuffer sb = new StringBuffer("");
+            StringBuffer sb = new StringBuffer();
             for (int i = 0; i < mac.length; i++) {
                 if (i != 0) {
                     sb.append("-");

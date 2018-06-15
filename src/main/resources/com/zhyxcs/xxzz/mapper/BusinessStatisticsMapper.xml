@@ -54,13 +54,13 @@
     where sID = #{sid,jdbcType=BIGINT}
   </update>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sPBCode, sBankAreaCode, sBankCityCode, sBankKind, sBankTypeCode, 
+    select sID, sTransactionNum, sPBCode, sBankAreaCode, sBankCityCode, sBankKind, sBankTypeCode,
     sBusinessCategory, sAccountType, sPass, sOverTime, sErrorType, sHappenTimes
     from tbusinessstatistics
     where sID = #{sid,jdbcType=BIGINT}
   </select>
     <select id="selectAll" resultMap="BaseResultMap">
-    select sID, sTransactionNum, sPBCode, sBankAreaCode, sBankCityCode, sBankKind, sBankTypeCode, 
+    select sID, sTransactionNum, sPBCode, sBankAreaCode, sBankCityCode, sBankKind, sBankTypeCode,
     sBusinessCategory, sAccountType, sPass, sOverTime, sErrorType, sHappenTimes
     from tbusinessstatistics
   </select>

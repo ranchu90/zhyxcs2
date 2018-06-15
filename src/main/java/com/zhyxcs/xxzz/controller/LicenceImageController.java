@@ -4,6 +4,7 @@ import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.domain.LicenceImage;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.LicenceImageService;
+import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -49,7 +50,7 @@ public class LicenceImageController extends BaseController{
         String basePath = imageConfig.getLicenceBasePath();
         String bankCodePath = user.getSbankcode();
 
-        Date currentDate = new Date();
+        Date currentDate = CommonUtils.newDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
 
         String datePath = format.format(currentDate);
@@ -119,21 +120,26 @@ public class LicenceImageController extends BaseController{
     }
 
     @RequestMapping(value = "/licence", method = RequestMethod.GET)
-    public Map getLicenceImage(@RequestParam(value = "transactionNum") String transactionNum){
+    public void getLicenceImage(@RequestParam(value = "transactionNum") String transactionNum, HttpServletResponse response){
         LicenceImage image = licenceImageService.selectByPrimaryKey(transactionNum);
-        Map map = new HashMap<String, Object>();
+        String licenceBasePath = imageConfig.getLicenceBasePath();
 
-        if (image!=null){
-            String licenceBasePath = imageConfig.getLicenceBasePath();
-            String base64 = this.encryptToBase64(licenceBasePath + image.getSstorepath());
-
-            map.put("src", base64);
-            map.put("approvalCode", image.getSapprovalcode()!=null? image.getSapprovalcode() : "");
-            map.put("identifier", image.getSidentifier()!=null? image.getSidentifier() : "");
-        } else {
-            map.put("src", null);
+        if (image != null) {
+            CommonUtils.downloadImage(licenceBasePath + image.getSstorepath(), response);
         }
-        return map;
+
+//        Map map = new HashMap<String, Object>();
+//
+//        if (image!=null){
+//            String base64 = this.encryptToBase64(licenceBasePath + image.getSstorepath());
+//
+//            map.put("src", base64);
+//            map.put("approvalCode", image.getSapprovalcode()!=null? image.getSapprovalcode() : "");
+//            map.put("identifier", image.getSidentifier()!=null? image.getSidentifier() : "");
+//        } else {
+//            map.put("src", null);
+//        }
+//        return map;
     }
 
     // 文件转base64

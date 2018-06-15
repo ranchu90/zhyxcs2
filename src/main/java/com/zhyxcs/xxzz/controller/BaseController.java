@@ -49,12 +49,12 @@ public class BaseController {
             systemLog.setSbankname(orga.getSbankname());
             systemLog.setSipaddress(ipAddress);
             systemLog.setSmacaddress(null);
-            systemLog.setSlogtime(new Date());
+            systemLog.setSlogtime(CommonUtils.newDate());
             systemLog.setScomments(comments);
             systemLogService.insert(systemLog);
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("## Error Information ##: {}", e);
+            logger.error("## Error Information ##: {BaseController}", e);
         }
     }
 }

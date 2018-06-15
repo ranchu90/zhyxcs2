@@ -55,7 +55,7 @@
     select *
     from timage
     where sTransactionNum = #{sTransactionNum}
-    order by sUploadTime
+    order by sImageSN
   </select>
   <select id="selectProofNameByTranID" resultType="java.lang.String">
     select distinct sProofName
