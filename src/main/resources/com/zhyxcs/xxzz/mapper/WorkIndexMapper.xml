@@ -41,23 +41,23 @@
     insert into tworkindex (sTransactionNum, sDepositorName,
       sApprovalState, sBusinessEmergency, sCommitTimes,
       sReturnTimes, sPBCReturnTimes, sCompleteTimes,
-      sUploadLicense, sIfNeedLicence, sBusinessCategory,
-      sAccountType, sBankCode, sPBCBankCode,
-      sBankName, sUpUserCode, sUpUserName,
-      sApprovalCode, sIdentifier, sStartTime,
-      sEndTime, sReviewUserCode, sCheckUserCode,
-      sRecheckUserCode, sRecheckUserName, sRecheckResult,
-      sRecheckOpinion, sRecheckTime)
+      sUploadLicense, sBusinessCategory, sAccountType,
+      sBankCode, sPBCBankCode, sBankName,
+      sUpUserCode, sUpUserName, sApprovalCode,
+      sIdentifier, sStartTime, sEndTime,
+      sReviewUserCode, sCheckUserCode, sRecheckUserCode,
+      sRecheckUserName, sRecheckResult, sRecheckOpinion,
+      sRecheckTime)
     values (#{stransactionnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR},
       #{sapprovalstate,jdbcType=VARCHAR}, #{sbusinessemergency,jdbcType=VARCHAR}, #{scommittimes,jdbcType=TIMESTAMP},
       #{sreturntimes,jdbcType=TIMESTAMP}, #{spbcreturntimes,jdbcType=TIMESTAMP}, #{scompletetimes,jdbcType=TIMESTAMP},
-      #{suploadlicense,jdbcType=INTEGER}, #{sifneedlicence,jdbcType=INTEGER}, #{sbusinesscategory,jdbcType=VARCHAR},
-      #{saccounttype,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR}, #{spbcbankcode,jdbcType=VARCHAR},
-      #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR}, #{supusername,jdbcType=VARCHAR},
-      #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP},
-      #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR},
-      #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckusername,jdbcType=VARCHAR}, #{srecheckresult,jdbcType=VARCHAR},
-      #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP})
+      #{suploadlicense,jdbcType=INTEGER}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR},
+      #{sbankcode,jdbcType=VARCHAR}, #{spbcbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR},
+      #{supusercode,jdbcType=VARCHAR}, #{supusername,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR},
+      #{sidentifier,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP},
+      #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR}, #{srecheckusercode,jdbcType=VARCHAR},
+      #{srecheckusername,jdbcType=VARCHAR}, #{srecheckresult,jdbcType=VARCHAR}, #{srecheckopinion,jdbcType=VARCHAR},
+      #{srechecktime,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
@@ -69,7 +69,6 @@
       sPBCReturnTimes = #{spbcreturntimes,jdbcType=TIMESTAMP},
       sCompleteTimes = #{scompletetimes,jdbcType=TIMESTAMP},
       sUploadLicense = #{suploadlicense,jdbcType=INTEGER},
-      sIfNeedLicence = #{sifneedlicence,jdbcType=INTEGER},
       sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
       sAccountType = #{saccounttype,jdbcType=VARCHAR},
       sBankCode = #{sbankcode,jdbcType=VARCHAR},
@@ -92,7 +91,7 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sCommitTimes,
-    sReturnTimes, sPBCReturnTimes, sCompleteTimes, sUploadLicense, sIfNeedLicence, sBusinessCategory,
+    sReturnTimes, sPBCReturnTimes, sCompleteTimes, sUploadLicense, sBusinessCategory,
     sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode,
     sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode,
     sRecheckUserName, sRecheckResult, sRecheckOpinion, sRecheckTime
@@ -101,7 +100,7 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sCommitTimes,
-    sReturnTimes, sPBCReturnTimes, sCompleteTimes, sUploadLicense, sIfNeedLicence, sBusinessCategory,
+    sReturnTimes, sPBCReturnTimes, sCompleteTimes, sUploadLicense, sBusinessCategory,
     sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode,
     sIdentifier, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode,
     sRecheckUserName, sRecheckResult, sRecheckOpinion, sRecheckTime
@@ -117,7 +116,6 @@
            #{sbankname, mode=IN,jdbcType=VARCHAR},
            #{supusercode, mode=IN,jdbcType=VARCHAR},
            #{supusername, mode=IN,jdbcType=VARCHAR},
-           #{sapprovalcode, mode=IN,jdbcType=VARCHAR},
            #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
           )
       }
@@ -385,7 +383,7 @@
         </if>
         and sBankCode = #{bankCode}
         order by sEndTime
-        <if test="approvalState &gt;= 3">
+        <if test="approvalState >= 3">
             desc
         </if>
 
@@ -414,7 +412,7 @@
         </if>
         and sBankCode = #{bankCode}
         order by sEndTime
-        <if test="approvalState &gt;= 3">
+        <if test="approvalState >= 3">
             desc
         </if>
     </select>
@@ -482,5 +480,17 @@
             </if>
             )
         </if>
+    </select>
+
+    <select id="calculateWorksByBankCode" resultType="int">
+        select count(*) from tworkindex where
+        <choose>
+            <when test="bankKindChar == '0'.toString()">
+                sPBCBankCode = #{bankCode,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                sBankCode = #{bankCode,jdbcType=VARCHAR}
+            </otherwise>
+        </choose>
     </select>
 </mapper>

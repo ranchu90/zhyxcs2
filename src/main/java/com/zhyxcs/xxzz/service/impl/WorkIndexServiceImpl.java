@@ -139,4 +139,9 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                 identifier, startTime, endTime);
     }
 
+    @Override
+    public int calculateWorksByBankCode(String bankCode) {
+        String bankKindChar = bankCode.substring(0, 1);
+        return workIndexMapper.calculateWorksByBankCode(bankCode, bankKindChar);
+    }
 }

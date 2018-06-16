@@ -116,8 +116,96 @@
     </select>
 
     <select id="getPBCList" resultType="com.zhyxcs.xxzz.domain.Orga">
-         select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
+        select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
         sBankCityCode, sBankState
-        from torga where sBankKind = '0' and sBankCode  <![CDATA[ <> ]]> '001551099999'
+        from torga where sBankKind = '0'
+        <!--
+        and sBankCode  <![CDATA[ <> ]]> '001551099999'
+        -->
     </select>
+
+    <select id="pageOrgaWithConditions" resultType="com.zhyxcs.xxzz.domain.Orga">
+        select sBankCode, sBankTypeCode, sBankKind, sBankName, sTopBankCode, sPBCode, sBankAreaCode,
+        sBankCityCode, sBankState
+        from torga
+        <trim prefix="where" prefixOverrides="and">
+            <if test="bankAreaCode != null">
+                sBankAreaCode = #{bankAreaCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankCityCode != null">
+                and sBankCityCode = #{bankCityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankKind != null">
+                and sBankKind = #{bankKind,jdbcType=VARCHAR}
+            </if>
+            <if test="bankTypeCode != null">
+                and sBankTypeCode = #{bankTypeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="topBankCode != null">
+                and sTopBankCode = #{topBankCode,jdbcType=VARCHAR}
+            </if>
+            <if test="pbcode != null">
+                and sPBCode = #{pbcode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankCode != null">
+                and sBankCode = #{bankCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bankName != null">
+                and sBankName like CONCAT('%',#{bankName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="bankState != null">
+                and sBankState = #{bankState,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </select>
+
+    <select id="calculateNextOrgaNum" resultType="int">
+        select count(*) from torga where sBankState = '0'
+        <choose>
+            <when test="bankKindChar == '0'.toString()">
+                and sPBCode = #{bankCode,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                and sTopBankCode = #{bankCode,jdbcType=VARCHAR}
+            </otherwise>
+        </choose>
+    </select>
+
+    <delete id="deleteByBankCodeArray">
+        delete from torga where sBankCode in
+        <foreach collection="bankCodeArray" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKeyCheckPropertyIsNull" parameterType="com.zhyxcs.xxzz.domain.Orga">
+        update torga
+        <set>
+            <if test="sbanktypecode != null and sbanktypecode != ''">
+                sBankTypeCode = #{sbanktypecode,jdbcType=VARCHAR},
+            </if>
+            <if test="sbankkind != null and sbankkind != ''">
+                sBankKind = #{sbankkind,jdbcType=VARCHAR},
+            </if>
+            <if test="sbankname != null and sbankname != ''">
+                sBankName = #{sbankname,jdbcType=VARCHAR},
+            </if>
+            <if test="stopbankcode != null and stopbankcode != ''">
+                sTopBankCode = #{stopbankcode,jdbcType=VARCHAR},
+            </if>
+            <if test="spbcode != null and spbcode != ''">
+                sPBCode = #{spbcode,jdbcType=VARCHAR},
+            </if>
+            <if test="sbankareacode != null and sbankareacode != ''">
+                sBankAreaCode = #{sbankareacode,jdbcType=VARCHAR},
+            </if>
+            <if test="sbankcitycode != null and sbankcitycode != ''">
+                sBankCityCode = #{sbankcitycode,jdbcType=VARCHAR},
+            </if>
+            <if test="sbankstate != null and sbankstate != ''">
+                sBankState = #{sbankstate,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where sBankCode = #{sbankcode,jdbcType=VARCHAR}
+    </update>
 </mapper>

@@ -20,4 +20,6 @@ public interface UserService {
     int updateBasicByPrimaryKey(User record);
 
     List<HashMap> ifBankEntryHasBankReview( String addUserCode);
+
+    int calculateUsersByBankCodeArray(String[] bankCodeArray);
 }

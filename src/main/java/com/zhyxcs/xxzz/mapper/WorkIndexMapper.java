@@ -94,4 +94,7 @@ public interface WorkIndexMapper {
                                             @Param("startTime") String startTime,
                                             @Param("endTime") String endTime);
 
+    int calculateWorksByBankCode(@Param("bankCode")String bankCode,
+                                 @Param("bankKindChar")String bankKindChar);
+
 }
