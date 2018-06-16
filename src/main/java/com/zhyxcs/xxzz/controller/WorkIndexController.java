@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -256,7 +257,19 @@ public class WorkIndexController extends BaseController{
     }
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
-    public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
+    public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex,
+                                                          @RequestParam(value = "expireTime", required = false) String expireTime){
+        if (expireTime != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date eDate;
+            try {
+                eDate = sdf.parse(expireTime.substring(0,11));
+                workIndex.setSexpiretime(eDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         workIndex.setScompletetimes(CommonUtils.newDate());
         int code = 0;
 
@@ -366,6 +379,7 @@ public class WorkIndexController extends BaseController{
             workTemp.put("sbusinessemergency", workIndex.getSbusinessemergency());
             workTemp.put("suploadlicence", workIndex.getSuploadlicense());
             workTemp.put("sifneedlicence", workIndex.getSifneedlicence());
+            workTemp.put("sexpiretime", workIndex.getSexpiretime());
 
             newWorkIndexList.add(workTemp);
         }
@@ -451,7 +465,7 @@ public class WorkIndexController extends BaseController{
         String basePath = wordConfig.getBasePath();
 
         this.createWord(map, "shu.ftl", baseDirectory,
-                basePath + transactionNum, transactionNum+ ".doc", response);
+                basePath + transactionNum, transactionNum+ ".pdf", response);
 
         this.writeLog(Logs.TRANS_RECIEPT_DOWNLOAD);
     }
