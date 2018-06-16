@@ -3,6 +3,7 @@ package com.zhyxcs.xxzz.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
+import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.config.WordConfig;
 import com.zhyxcs.xxzz.domain.*;
 import com.zhyxcs.xxzz.service.*;
@@ -32,6 +33,12 @@ public class WorkIndexController extends BaseController{
 
     @Autowired
     private OrgaService orgaService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ImageConfig imageConfig;
 
     @Autowired
     private UserService userService;
@@ -161,6 +168,22 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.DELETE)
     public int deleteWorkIndexByTranID(@RequestParam(value = "stransactionnum") String stransactionnum){
+        List<Image> imageList = imageService.selectImagesByTranID(stransactionnum);
+
+        for (Image image : imageList){
+
+            if (image != null){
+                String path = image.getSstorepath();
+                String basePath = imageConfig.getBasePath();
+                File file = new File(basePath + path);
+
+                if (file != null && file.delete()){
+                    imageService.deleteByPrimaryKey(image.getSid());
+                }
+            }
+        }
+
+        this.writeLog(Logs.IMAGE_DELETE);
         this.writeLog(Logs.TRANS_DELETE);
         return workIndexService.deleteByPrimaryKey(stransactionnum);
     }

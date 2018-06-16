@@ -36,7 +36,10 @@
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from tworkindex
-    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR};
+
+    delete from tapprovalrecord
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR};
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     insert into tworkindex (sTransactionNum, sDepositorName,
