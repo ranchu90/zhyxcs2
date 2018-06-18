@@ -3,6 +3,7 @@ package com.zhyxcs.xxzz.mapper;
 import com.zhyxcs.xxzz.domain.WorkIndex;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface WorkIndexMapper {
@@ -96,5 +97,8 @@ public interface WorkIndexMapper {
 
     int calculateWorksByBankCode(@Param("bankCode")String bankCode,
                                  @Param("bankKindChar")String bankKindChar);
+
+    List<WorkIndex> queryDiary(@Param("pbcBankCode")String pbcBankCode,
+                               @Param("completeTimes")Date completeTimes);
 
 }

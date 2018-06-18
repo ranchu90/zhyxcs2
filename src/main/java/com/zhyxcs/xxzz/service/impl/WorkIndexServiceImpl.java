@@ -6,6 +6,7 @@ import com.zhyxcs.xxzz.service.WorkIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -143,5 +144,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     public int calculateWorksByBankCode(String bankCode) {
         String bankKindChar = bankCode.substring(0, 1);
         return workIndexMapper.calculateWorksByBankCode(bankCode, bankKindChar);
+    }
+
+    @Override
+    public List<WorkIndex> queryDiary(String pbcBankCode, Date completeTimes) {
+        return workIndexMapper.queryDiary(pbcBankCode, completeTimes);
     }
 }

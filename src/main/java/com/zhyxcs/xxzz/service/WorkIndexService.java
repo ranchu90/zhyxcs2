@@ -2,6 +2,7 @@ package com.zhyxcs.xxzz.service;
 
 import com.zhyxcs.xxzz.domain.WorkIndex;
 
+import java.util.Date;
 import java.util.List;
 
 public interface WorkIndexService {
@@ -91,4 +92,6 @@ public interface WorkIndexService {
                                             String endTime);
 
     int calculateWorksByBankCode(String bankCode);
+
+    List<WorkIndex> queryDiary(String pbcBankCode, Date completeTimes);
 }

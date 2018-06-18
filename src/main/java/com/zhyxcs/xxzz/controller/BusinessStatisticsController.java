@@ -1,11 +1,10 @@
 package com.zhyxcs.xxzz.controller;
 
 import com.zhyxcs.xxzz.domain.GroundsForReturn;
+import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.User;
-import com.zhyxcs.xxzz.service.BusinessStatisticsService;
-import com.zhyxcs.xxzz.service.GroundsForReturnService;
-import com.zhyxcs.xxzz.service.ImageStandardService;
-import com.zhyxcs.xxzz.service.OrgaService;
+import com.zhyxcs.xxzz.domain.WorkIndex;
+import com.zhyxcs.xxzz.service.*;
 import com.zhyxcs.xxzz.utils.AuditStatus;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.OrgaLevelEnum;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -29,6 +29,8 @@ public class BusinessStatisticsController extends BaseController {
     private GroundsForReturnService groundsForReturnService;
     @Autowired
     private OrgaService orgaService;
+    @Autowired
+    private WorkIndexService workIndexService;
 
     /**
      * @描述:业务量统计
@@ -57,9 +59,10 @@ public class BusinessStatisticsController extends BaseController {
         areaCode = ((areaCode == null || "".equals(areaCode.trim())) ? null : areaCode);
         cityCode = ((cityCode == null || "".equals(cityCode.trim())) ? null : cityCode);
         bankKind = ((bankKind == null || "".equals(bankKind.trim())) ? null : bankKind);
+        bankType = ((bankType == null || "".equals(bankType.trim())) ? null : bankType);
         bankCode = ((bankCode == null || "".equals(bankCode.trim())) ? null : bankCode);
-        startTime = (startTime);
-        endTime = (endTime);
+        startTime = (startTime == null ? null : startTime);
+        endTime = (endTime == null ? null : endTime);
 
         List<String> pbcCodeList = null;
         List<String> commerceCodeList = null;
@@ -116,9 +119,10 @@ public class BusinessStatisticsController extends BaseController {
         areaCode = ((areaCode == null || "".equals(areaCode.trim())) ? null : areaCode);
         cityCode = ((cityCode == null || "".equals(cityCode.trim())) ? null : cityCode);
         bankKind = ((bankKind == null || "".equals(bankKind.trim())) ? null : bankKind);
+        bankType = ((bankType == null || "".equals(bankType.trim())) ? null : bankType);
         bankCode = ((bankCode == null || "".equals(bankCode.trim())) ? null : bankCode);
-        startTime = (startTime);
-        endTime = (endTime);
+        startTime = (startTime == null ? null : startTime);
+        endTime = (endTime == null ? null : endTime);
 
         List<String> pbcCodeList = null;
         List<String> commerceCodeList = null;
@@ -141,6 +145,45 @@ public class BusinessStatisticsController extends BaseController {
             bean.setUntread(untread);
         }
         resultMap.put("mistakeResult", mistakeBeanList);
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/diaryprint", method = RequestMethod.GET)
+    public Map<String, Object> diaryPrint(@RequestParam(value = "startTime", required = false) Date startTime) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (startTime == null) {
+            resultMap.put("warn", "请选择查询条件的开始时间作为日计表的统计时间");
+            return resultMap;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        if (user == null || !"0".equals(user.getSbankcode().substring(0, 1))) {
+            resultMap.put("warn", "仅人民银行可打印账户日计表");
+            return resultMap;
+        }
+
+        List<WorkIndex> workIndexList = workIndexService.queryDiary(user.getSbankcode(), startTime);
+        if (workIndexList == null || workIndexList.size() == 0) {
+            resultMap.put("warn", "选择的日期没有对应的日计表数据");
+            return resultMap;
+        }
+
+        List<DiaryBean> diaryBeanList = new ArrayList<DiaryBean>();
+        for (int i = 0; i < workIndexList.size(); i++) {
+            DiaryBean bean = new DiaryBean();
+            bean.setIndex(i + 1);
+            bean.setDepositorName(workIndexList.get(i).getSdepositorname());
+            bean.setBankCode(workIndexList.get(i).getSbankcode());
+            bean.setBankName(workIndexList.get(i).getSbankname());
+            bean.setBusinessCategory(workIndexList.get(i).getSbusinesscategory());
+            bean.setApprovalCode(workIndexList.get(i).getSapprovalcode());
+            bean.setBankSignIn(null);
+            diaryBeanList.add(bean);
+        }
+        resultMap.put("list", diaryBeanList);
         return resultMap;
     }
 
@@ -293,5 +336,84 @@ class MistakeBean {
 
     public void setUntread(Integer untread) {
         this.untread = untread;
+    }
+}
+
+class DiaryBean {
+    private int index;
+    private String depositorName;
+    private String bankCode;
+    private String bankName;
+    private String businessCategory;
+    private String approvalCode;
+    private String bankSignIn;
+
+    public DiaryBean() {
+    }
+
+    public DiaryBean(int index, String depositorName, String bankCode, String bankName, String businessCategory, String approvalCode, String bankSignIn) {
+        this.index = index;
+        this.depositorName = depositorName;
+        this.bankCode = bankCode;
+        this.bankName = bankName;
+        this.businessCategory = businessCategory;
+        this.approvalCode = approvalCode;
+        this.bankSignIn = bankSignIn;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getDepositorName() {
+        return depositorName;
+    }
+
+    public void setDepositorName(String depositorName) {
+        this.depositorName = depositorName;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getBusinessCategory() {
+        return businessCategory;
+    }
+
+    public void setBusinessCategory(String businessCategory) {
+        this.businessCategory = businessCategory;
+    }
+
+    public String getApprovalCode() {
+        return approvalCode;
+    }
+
+    public void setApprovalCode(String approvalCode) {
+        this.approvalCode = approvalCode;
+    }
+
+    public String getBankSignIn() {
+        return bankSignIn;
+    }
+
+    public void setBankSignIn(String bankSignIn) {
+        this.bankSignIn = bankSignIn;
     }
 }
