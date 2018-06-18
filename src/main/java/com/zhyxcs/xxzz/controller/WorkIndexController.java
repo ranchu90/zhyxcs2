@@ -281,16 +281,9 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
     public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex,
-                                                          @RequestParam(value = "expireTime", required = false) String expireTime){
+                                                          @RequestParam(value = "expireTime", required = false) Date expireTime){
         if (expireTime != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date eDate;
-            try {
-                eDate = sdf.parse(expireTime.substring(0,11));
-                workIndex.setSexpiretime(eDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            workIndex.setSexpiretime(expireTime);
         }
 
         workIndex.setScompletetimes(CommonUtils.newDate());
