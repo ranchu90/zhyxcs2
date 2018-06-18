@@ -465,6 +465,15 @@ public class WorkIndexController extends BaseController{
         String newYear = String.valueOf(calendar.get(Calendar.YEAR));
         String newMonth = String.valueOf(calendar.get(Calendar.MONTH) + 1);
         String newDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        Date expireDate = result.getSexpiretime();
+        String expireStr = null;
+        if (expireDate !=null ) {
+            calendar.setTime(expireDate);
+            String eYear = String.valueOf(calendar.get(Calendar.YEAR));
+            String eMonth = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+            String eDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            expireStr = eYear + "年" + eMonth + "月" + eDay + "日";
+        }
         Map map = new HashMap<String, Object>();
 
         map.put("transactionNum", transactionNum);
@@ -483,11 +492,22 @@ public class WorkIndexController extends BaseController{
         map.put("newYear", newYear);
         map.put("newMonth", newMonth);
         map.put("newDay", newDay);
+        map.put("expireTime", expireStr);
 
         String baseDirectory = wordConfig.getBaseDirectory();
         String basePath = wordConfig.getBasePath();
 
-        this.createWord(map, "shu.ftl", baseDirectory,
+        String filename;
+
+        switch (businessCategory) {
+            case "存款人密码重置":
+            case "临时户展期":
+            case "注销久悬标志":
+            case "专户现金支取": filename = businessCategory; break;
+            default: filename = "账户核准"; break;
+        }
+
+        this.createWord(map, filename + ".ftl", baseDirectory,
                 basePath + transactionNum, transactionNum+ ".pdf", response);
 
         this.writeLog(Logs.TRANS_RECIEPT_DOWNLOAD);
