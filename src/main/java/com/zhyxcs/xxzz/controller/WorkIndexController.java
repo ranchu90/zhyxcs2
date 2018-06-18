@@ -503,6 +503,7 @@ public class WorkIndexController extends BaseController{
             case "存款人密码重置":
             case "临时户展期":
             case "注销久悬标志":
+            case "撤销":
             case "专户现金支取": filename = businessCategory; break;
             default: filename = "账户核准"; break;
         }
