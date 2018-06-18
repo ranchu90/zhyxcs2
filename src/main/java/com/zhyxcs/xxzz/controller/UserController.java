@@ -69,6 +69,7 @@ public class UserController extends BaseController{
             try {
                 code = userService.insert(user);
                 this.writeLog(Logs.USER_NEW);
+                return code;
             } catch (Exception e) {
                 logger.error("## Error Information ##: {}", e);
             }

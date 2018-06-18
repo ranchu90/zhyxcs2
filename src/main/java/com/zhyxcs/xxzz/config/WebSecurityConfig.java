@@ -1,6 +1,5 @@
 package com.zhyxcs.xxzz.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import org.springframework.beans.factory.annotation.Autowired;

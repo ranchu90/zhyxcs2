@@ -1,5 +1,6 @@
 package com.zhyxcs.xxzz.controller;
 
+import com.zhyxcs.xxzz.config.SessionListener;
 import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.OrgaService;
@@ -8,10 +9,7 @@ import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -27,9 +25,23 @@ public class LoginController extends BaseController{
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
     public Map loginVerify(@RequestBody User user){
-        User dbUser = userService.selectByPrimaryKey(user.getSusercode());
+        Map<String, HttpSession> loginUser = SessionListener.loginUser;
         Map result = new HashMap();
+
+        if (loginUser.containsKey(user.getSusercode())){
+            result.put("state", "failed");
+            result.put("message", "用户已登陆！");
+            result.put("code", 20000);
+            this.writeLog(Logs.LOGIN_FAILED);
+
+            return result;
+        }
+
+        User dbUser = userService.selectByPrimaryKey(user.getSusercode());
         HttpSession session = super.request.getSession();
+
+//        System.out.println("login: " + session.getId());
+
         if (dbUser != null){
             if ("0".equals(dbUser.getSuserstate())) {
                 if (dbUser.getSpwderror() < 5){
@@ -43,6 +55,7 @@ public class LoginController extends BaseController{
 
                         session.setAttribute(CramsConstants.SESSION_LOGIN_USER, dbUser);
                         session.setAttribute(CramsConstants.SESSION_ORGA_WITH_USER, orga);
+//                        session.setMaxInactiveInterval(5);
 
                         HashMap userMap = new HashMap();
                         userMap.put("username", dbUser.getSusername());
@@ -98,14 +111,48 @@ public class LoginController extends BaseController{
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Map loginOut(HttpSession session){
-        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
 
         Map result = new HashMap();
         result.put("state", "true");
         result.put("code", 20000);
 
         this.writeLog(Logs.LOGIN_LOGOUT);
+
+        return result;
+    }
+
+    @RequestMapping(value = "/force_logout", method = RequestMethod.POST)
+    public Map forceLoginOut(@RequestParam("userCode") String userCode){
+        Map<String, HttpSession> loginUser = SessionListener.loginUser;
+        Map result = new HashMap();
+        result.put("state", "true");
+        result.put("code", 20000);
+
+        HttpSession sessionOwn = super.request.getSession();
+        User user = (User) sessionOwn.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        User tmpUSer = userService.selectByPrimaryKey(userCode);
+        if (tmpUSer == null) {
+            result.put("message", userCode + "用户不存在！");
+        } else {
+            Orga tmpOrga = orgaService.selectByPrimaryKey(tmpUSer.getSbankcode());
+            String pbcCode = tmpOrga.getSpbcode();
+
+            if (pbcCode.equals(user.getSbankcode()) || user.getSbankcode().equals(tmpUSer.getSbankcode())) {
+                if (loginUser.containsKey(userCode)) {
+                    HttpSession session = loginUser.get(userCode);
+                    session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+                    session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+                    loginUser.remove(userCode);
+                    result.put("message", "已注销" + userCode + "用户！");
+                } else {
+                    result.put("message", userCode + "用户未登陆！");
+                }
+            } else {
+                result.put("message", "无权操作该用户！");
+            }
+        }
 
         return result;
     }

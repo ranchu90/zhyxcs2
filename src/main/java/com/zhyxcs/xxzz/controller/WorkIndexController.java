@@ -3,6 +3,7 @@ package com.zhyxcs.xxzz.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
+import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.config.WordConfig;
 import com.zhyxcs.xxzz.domain.*;
 import com.zhyxcs.xxzz.service.*;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -33,13 +35,16 @@ public class WorkIndexController extends BaseController{
     private OrgaService orgaService;
 
     @Autowired
-    private ApprovalRecordService approvalRecordService;
+    private ImageService imageService;
+
+    @Autowired
+    private ImageConfig imageConfig;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private BusinessStatisticsService businessStatisticsService;
-
-    @Autowired
-    private ImageService imageService;
 
     @Autowired
     private WordConfig wordConfig;
@@ -163,6 +168,22 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.DELETE)
     public int deleteWorkIndexByTranID(@RequestParam(value = "stransactionnum") String stransactionnum){
+        List<Image> imageList = imageService.selectImagesByTranID(stransactionnum);
+
+        for (Image image : imageList){
+
+            if (image != null){
+                String path = image.getSstorepath();
+                String basePath = imageConfig.getBasePath();
+                File file = new File(basePath + path);
+
+                if (file != null && file.delete()){
+                    imageService.deleteByPrimaryKey(image.getSid());
+                }
+            }
+        }
+
+        this.writeLog(Logs.IMAGE_DELETE);
         this.writeLog(Logs.TRANS_DELETE);
         return workIndexService.deleteByPrimaryKey(stransactionnum);
     }
@@ -259,7 +280,19 @@ public class WorkIndexController extends BaseController{
     }
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
-    public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex){
+    public int updateWorkIndexByApprovalCodeAndIdentifier(@RequestBody WorkIndex workIndex,
+                                                          @RequestParam(value = "expireTime", required = false) String expireTime){
+        if (expireTime != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date eDate;
+            try {
+                eDate = sdf.parse(expireTime.substring(0,11));
+                workIndex.setSexpiretime(eDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         workIndex.setScompletetimes(CommonUtils.newDate());
         int code = 0;
 
@@ -368,11 +401,11 @@ public class WorkIndexController extends BaseController{
             workTemp.put("sreturntimes", workIndex.getSreturntimes());
             workTemp.put("sbusinessemergency", workIndex.getSbusinessemergency());
             workTemp.put("suploadlicence", workIndex.getSuploadlicense());
+            workTemp.put("sifneedlicence", workIndex.getSifneedlicence());
+            workTemp.put("sexpiretime", workIndex.getSexpiretime());
 
             newWorkIndexList.add(workTemp);
         }
-
-        this.writeLog(Logs.TRANS_QUERY_PAGES);
 
         HashMap<String,Object> map = new HashMap<String, Object>();
         map.put("totalPages", pageInfo.getTotal());
@@ -432,6 +465,15 @@ public class WorkIndexController extends BaseController{
         String newYear = String.valueOf(calendar.get(Calendar.YEAR));
         String newMonth = String.valueOf(calendar.get(Calendar.MONTH) + 1);
         String newDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        Date expireDate = result.getSexpiretime();
+        String expireStr = null;
+        if (expireDate !=null ) {
+            calendar.setTime(expireDate);
+            String eYear = String.valueOf(calendar.get(Calendar.YEAR));
+            String eMonth = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+            String eDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            expireStr = eYear + "年" + eMonth + "月" + eDay + "日";
+        }
         Map map = new HashMap<String, Object>();
 
         map.put("transactionNum", transactionNum);
@@ -450,12 +492,24 @@ public class WorkIndexController extends BaseController{
         map.put("newYear", newYear);
         map.put("newMonth", newMonth);
         map.put("newDay", newDay);
+        map.put("expireTime", expireStr);
 
         String baseDirectory = wordConfig.getBaseDirectory();
         String basePath = wordConfig.getBasePath();
 
-        this.createWord(map, "shu.ftl", baseDirectory,
-                basePath + transactionNum, transactionNum+ ".doc", response);
+        String filename;
+
+        switch (businessCategory) {
+            case "存款人密码重置":
+            case "临时户展期":
+            case "注销久悬标志":
+            case "撤销":
+            case "专户现金支取": filename = businessCategory; break;
+            default: filename = "账户核准"; break;
+        }
+
+        this.createWord(map, filename + ".ftl", baseDirectory,
+                basePath + transactionNum, transactionNum+ ".pdf", response);
 
         this.writeLog(Logs.TRANS_RECIEPT_DOWNLOAD);
     }
@@ -464,6 +518,50 @@ public class WorkIndexController extends BaseController{
     public int updateBusinessEmergency(@RequestBody WorkIndex workIndex){
         this.writeLog(Logs.TRANS_UPDATE_EMERGENCY);
         return workIndexService.updateWorkIndexBusinessEmergency(workIndex);
+    }
+
+    @RequestMapping(value = "/operators", method = RequestMethod.GET)
+    public HashMap queryOperators(@RequestParam(value = "transactionNum") String transactionNum){
+        HashMap<String, Object> map = new HashMap<>();
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+        String userCode = user.getSusercode();
+        String bankCode = orga.getSbankcode();
+        WorkIndex workIndex = workIndexService.selectByPrimaryKey(transactionNum);
+
+        if (workIndex != null){
+            String upUserCode = workIndex.getSupusercode();
+            String reviewUserCode = workIndex.getSreviewusercode();
+            String checkUserCode = workIndex.getScheckusercode();
+            String recheckUserCode = workIndex.getSrecheckusercode();
+
+            if (userCode.equals(upUserCode) || userCode.equals(reviewUserCode) ||
+                    userCode.equals(checkUserCode) || userCode.equals(recheckUserCode) || userCode.equals("admin") ||
+                    bankCode.equals(workIndex.getSpbcbankcode()) || bankCode.equals(workIndex.getSbankcode())){
+                    String upUserName = workIndex.getSupusername();
+                    String reviewName;
+                    String checkName;
+                    String recheckName = workIndex.getSrecheckusername();;
+
+                    User reviewUser = userService.selectByPrimaryKey(reviewUserCode);
+                    reviewName = reviewUser != null? reviewUser.getSusername() : null;
+
+                    User checkUser = userService.selectByPrimaryKey(checkUserCode);
+                    checkName = checkUser != null? checkUser.getSusername() : null;
+
+                    map.put("upUserName", upUserName);
+                    map.put("reviewName", reviewName);
+                    map.put("checkName", checkName);
+                    map.put("recheckName", recheckName);
+            } else {
+                map.put("error", "无权限查看经办人！");
+            }
+        } else {
+            map.put("error", "该笔业务不存在！");
+        }
+
+        return map;
     }
 
     private String approvalState(String code){

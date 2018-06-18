@@ -11,12 +11,15 @@ public class ImageStandard {
 
     private String sproofamount;
 
-    public ImageStandard(Integer sid, String sbusineescategory, String saccounttype, String sproofname, String sproofamount) {
+    private Integer sifneedlicence;
+
+    public ImageStandard(Integer sid, String sbusineescategory, String saccounttype, String sproofname, String sproofamount, Integer sifneedlicence) {
         this.sid = sid;
         this.sbusineescategory = sbusineescategory;
         this.saccounttype = saccounttype;
         this.sproofname = sproofname;
         this.sproofamount = sproofamount;
+        this.sifneedlicence = sifneedlicence;
     }
 
     public ImageStandard() {
@@ -61,5 +64,13 @@ public class ImageStandard {
 
     public void setSproofamount(String sproofamount) {
         this.sproofamount = sproofamount == null ? null : sproofamount.trim();
+    }
+
+    public Integer getSifneedlicence() {
+        return sifneedlicence;
+    }
+
+    public void setSifneedlicence(Integer sifneedlicence) {
+        this.sifneedlicence = sifneedlicence;
     }
 }

@@ -1,5 +1,7 @@
 package com.zhyxcs.xxzz.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class WorkIndex {
@@ -20,6 +22,8 @@ public class WorkIndex {
     private Date scompletetimes;
 
     private Integer suploadlicense;
+
+    private Integer sifneedlicence;
 
     private String sbusinesscategory;
 
@@ -57,7 +61,9 @@ public class WorkIndex {
 
     private Date srechecktime;
 
-    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, Integer suploadlicense, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime) {
+    private Date sexpiretime;
+
+    public WorkIndex(String stransactionnum, String sdepositorname, String sapprovalstate, String sbusinessemergency, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, Integer suploadlicense, Integer sifneedlicence, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, String sapprovalcode, String sidentifier, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckusername, String srecheckresult, String srecheckopinion, Date srechecktime, Date sexpiretime) {
         this.stransactionnum = stransactionnum;
         this.sdepositorname = sdepositorname;
         this.sapprovalstate = sapprovalstate;
@@ -67,6 +73,7 @@ public class WorkIndex {
         this.spbcreturntimes = spbcreturntimes;
         this.scompletetimes = scompletetimes;
         this.suploadlicense = suploadlicense;
+        this.sifneedlicence = sifneedlicence;
         this.sbusinesscategory = sbusinesscategory;
         this.saccounttype = saccounttype;
         this.sbankcode = sbankcode;
@@ -85,6 +92,7 @@ public class WorkIndex {
         this.srecheckresult = srecheckresult;
         this.srecheckopinion = srecheckopinion;
         this.srechecktime = srechecktime;
+        this.sexpiretime = sexpiretime;
     }
 
     public WorkIndex() {
@@ -161,6 +169,14 @@ public class WorkIndex {
 
     public void setSuploadlicense(Integer suploadlicense) {
         this.suploadlicense = suploadlicense;
+    }
+
+    public Integer getSifneedlicence() {
+        return sifneedlicence;
+    }
+
+    public void setSifneedlicence(Integer sifneedlicence) {
+        this.sifneedlicence = sifneedlicence;
     }
 
     public String getSbusinesscategory() {
@@ -305,5 +321,13 @@ public class WorkIndex {
 
     public void setSrechecktime(Date srechecktime) {
         this.srechecktime = srechecktime;
+    }
+
+    public Date getSexpiretime() {
+        return sexpiretime;
+    }
+
+    public void setSexpiretime(Date sexpiretime) {
+        this.sexpiretime = sexpiretime;
     }
 }
