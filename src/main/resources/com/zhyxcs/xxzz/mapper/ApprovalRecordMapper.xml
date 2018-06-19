@@ -17,9 +17,12 @@
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.ApprovalRecord">
-    insert into tapprovalrecord (sTransactionNum, sApprovelResult,
+    <selectKey resultType="java.lang.Long" keyProperty="sid"  keyColumn="sID" order="BEFORE">
+      select getSequenceNextVal('record_seq');
+    </selectKey>
+    insert into tapprovalrecord (sID, sTransactionNum, sApprovelResult,
       sApprovelOpinion, sApprovelUserCode, sApprovelUserName)
-    values (#{stransactionnum,jdbcType=VARCHAR}, #{sapprovelresult,jdbcType=VARCHAR},
+    values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{sapprovelresult,jdbcType=VARCHAR},
       #{sapprovelopinion,jdbcType=VARCHAR}, #{sapprovelusercode,jdbcType=VARCHAR}, #{sapprovelusername,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.ApprovalRecord">

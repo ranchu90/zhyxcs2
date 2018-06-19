@@ -19,6 +19,9 @@
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
   <insert id="insert" useGeneratedKeys="true" keyProperty="sid" keyColumn="sID" parameterType="com.zhyxcs.xxzz.domain.Image">
+    <selectKey resultType="java.lang.Long" keyProperty="sid"  keyColumn="sID" order="BEFORE">
+      select getSequenceNextVal('image_seq');
+    </selectKey>
     insert into timage (sID, sTransactionNum, sImageType,
       sProofName, sOriginalName, sImageName,
       sImageSN, sStorePath
