@@ -76,17 +76,20 @@ public class LoginController extends BaseController{
                         this.writeLog(Logs.LOGIN_SUCCESS);
 
                     } else {
-                        //记录密码错误次数
-                        byte pwdErrorTimes = dbUser.getSpwderror();
-                        pwdErrorTimes = (byte) (pwdErrorTimes + 1);
-                        dbUser.setSpwderror(pwdErrorTimes);
 
-                        userService.updateByPrimaryKey(dbUser);
+                        if (!"admin".equals(dbUser.getSusercode())) {
+                            //记录密码错误次数
+                            byte pwdErrorTimes = dbUser.getSpwderror();
+                            pwdErrorTimes = (byte) (pwdErrorTimes + 1);
+                            dbUser.setSpwderror(pwdErrorTimes);
 
-                        result.put("state", "failed");
-                        result.put("message", "密码错误！");
+                            userService.updateByPrimaryKey(dbUser);
 
-                        this.writeLog(Logs.LOGIN_FAILED);
+                            result.put("state", "failed");
+                            result.put("message", "密码错误！");
+
+                            this.writeLog(Logs.LOGIN_FAILED);
+                        }
                     }
                 } else {
                     result.put("state", "failed");
