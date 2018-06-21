@@ -181,11 +181,16 @@ public class LoginController extends BaseController {
             return false;
         }
         try {
-            mapSession = loginUserMap.get(loginOutUserCode);
-            mapSession.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
-            mapSession.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-            loginUserMap.remove(loginOutUserCode);
-            return true;
+            if (loginUserMap.containsKey(loginOutUserCode)) {
+                mapSession = loginUserMap.get(loginOutUserCode);
+                mapSession.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+                mapSession.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+                loginUserMap.remove(loginOutUserCode);
+                return true;
+            } else {
+                return false;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
