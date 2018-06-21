@@ -146,7 +146,7 @@ public class LoginController extends BaseController {
         Orga loginOutUserHasOrga = orgaService.selectByPrimaryKey(loginOutUser.getSbankcode());
 
         String currentLoginUserBankCode = currentLoginUser.getSbankcode();
-        String currentLoginUserPBCode = currentLoginUserOrga.getSpbcode();
+        //String currentLoginUserPBCode = currentLoginUserOrga.getSpbcode();
         String loginOutUserPBCode = loginOutUserHasOrga.getSpbcode();
         //当前登录用户的机构类别
         String currentLoginUserBankKind = currentLoginUserBankCode.substring(0, 1);
@@ -154,7 +154,7 @@ public class LoginController extends BaseController {
 
         //当前登录用户是人民银行用户
         if ("0".equals(currentLoginUserBankKind)) {
-            if (currentLoginUserPBCode.equals(loginOutUserPBCode)) {
+            if (currentLoginUserBankCode.equals(loginOutUserPBCode)||currentLoginUser.getSbankcode().equals(loginOutUser.getSbankcode())) {
                 if (removeUserLoginInfo(userCode)) {
                     result.put("message", "已注销" + userCode + "用户！");
                 } else {
@@ -176,8 +176,8 @@ public class LoginController extends BaseController {
     private boolean removeUserLoginInfo(String loginOutUserCode) {
 
         Map<String, HttpSession> loginUserMap = SessionListener.loginUser;
-        HttpSession mapSession = null;
-        if (mapSession == null) {
+        HttpSession mapSession;
+        if (loginUserMap == null) {
             return false;
         }
         try {
