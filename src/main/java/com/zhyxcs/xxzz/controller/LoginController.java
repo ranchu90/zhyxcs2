@@ -17,18 +17,18 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/login")
-public class LoginController extends BaseController{
+public class LoginController extends BaseController {
     @Autowired
     private UserService userService;
     @Autowired
     private OrgaService orgaService;
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public Map loginVerify(@RequestBody User user){
+    public Map loginVerify(@RequestBody User user) {
         Map<String, HttpSession> loginUser = SessionListener.loginUser;
         Map result = new HashMap();
 
-        if (loginUser.containsKey(user.getSusercode())){
+        if (loginUser.containsKey(user.getSusercode())) {
             result.put("state", "failed");
             result.put("message", "用户已登陆！");
             result.put("code", 20000);
@@ -42,9 +42,9 @@ public class LoginController extends BaseController{
 
 //        System.out.println("login: " + session.getId());
 
-        if (dbUser != null){
+        if (dbUser != null) {
             if ("0".equals(dbUser.getSuserstate())) {
-                if (dbUser.getSpwderror() < 5){
+                if (dbUser.getSpwderror() < 5) {
                     String md5Password = CommonUtils.MD5(user.getSpassword());
                     if (md5Password.equals(dbUser.getSpassword())) {
                         //获取机构信息
@@ -114,7 +114,7 @@ public class LoginController extends BaseController{
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public Map loginOut(HttpSession session){
+    public Map loginOut(HttpSession session) {
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
 
@@ -128,45 +128,68 @@ public class LoginController extends BaseController{
     }
 
     @RequestMapping(value = "/force_logout", method = RequestMethod.POST)
-    public Map forceLoginOut(@RequestParam("userCode") String userCode){
-        Map<String, HttpSession> loginUser = SessionListener.loginUser;
+    public Map forceLoginOut(@RequestParam("userCode") String userCode) {
         Map result = new HashMap();
         result.put("state", "true");
         result.put("code", 20000);
 
-        HttpSession sessionOwn = super.request.getSession();
-        User user = (User) sessionOwn.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        HttpSession currentSession = request.getSession();
+        User currentLoginUser = (User) currentSession.getAttribute(CramsConstants.SESSION_LOGIN_USER);
 
-        User tmpUSer = userService.selectByPrimaryKey(userCode);
-        if (tmpUSer == null) {
+        User loginOutUser = userService.selectByPrimaryKey(userCode);
+
+        if (loginOutUser == null) {
             result.put("message", userCode + "用户不存在！");
-        } else  if (user == null){
-            result.put("message", userCode + "无权操作该用户！");
-        } else {
-            Orga tmpOrga = orgaService.selectByPrimaryKey(tmpUSer.getSbankcode());
+            return result;
+        }
+        Orga currentLoginUserOrga = orgaService.selectByPrimaryKey(currentLoginUser.getSbankcode());
+        Orga loginOutUserHasOrga = orgaService.selectByPrimaryKey(loginOutUser.getSbankcode());
 
-            if (tmpOrga != null ) {
-                String pbcCode = tmpOrga.getSpbcode();
+        String currentLoginUserBankCode = currentLoginUser.getSbankcode();
+        String currentLoginUserPBCode = currentLoginUserOrga.getSpbcode();
+        String loginOutUserPBCode = loginOutUserHasOrga.getSpbcode();
+        //当前登录用户的机构类别
+        String currentLoginUserBankKind = currentLoginUserBankCode.substring(0, 1);
 
-                if (pbcCode.equals(user.getSbankcode()) || user.getSbankcode().equals(tmpUSer.getSbankcode())) {
-                    if (loginUser.containsKey(userCode)) {
-                        HttpSession session = loginUser.get(userCode);
-                        session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
-                        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-                        loginUser.remove(userCode);
-                        result.put("message", "已注销" + userCode + "用户！");
-                    } else {
-                        result.put("message", userCode + "用户未登陆！");
-                    }
+
+        //当前登录用户是人民银行用户
+        if ("0".equals(currentLoginUserBankKind)) {
+            if (currentLoginUserPBCode.equals(loginOutUserPBCode)) {
+                if (removeUserLoginInfo(userCode)) {
+                    result.put("message", "已注销" + userCode + "用户！");
                 } else {
-                    result.put("message", "无权操作该用户！");
+                    result.put("message", "注销" + userCode + "用户失败！");
                 }
-            } else {
-                result.put("message", "无权操作该用户！");
+            }
+        } else {
+            if (currentLoginUser.getSbankcode().equals(loginOutUser.getSbankcode())) {
+                if (removeUserLoginInfo(userCode)) {
+                    result.put("message", "已注销" + userCode + "用户！");
+                } else {
+                    result.put("message", "注销" + userCode + "用户失败！");
+                }
             }
         }
-
         return result;
+    }
+
+    private boolean removeUserLoginInfo(String loginOutUserCode) {
+
+        Map<String, HttpSession> loginUserMap = SessionListener.loginUser;
+        HttpSession mapSession = null;
+        if (mapSession == null) {
+            return false;
+        }
+        try {
+            mapSession = loginUserMap.get(loginOutUserCode);
+            mapSession.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+            mapSession.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+            loginUserMap.remove(loginOutUserCode);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
