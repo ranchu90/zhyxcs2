@@ -185,6 +185,61 @@ public class WorkIndexController extends BaseController{
         return workIndexService.deleteByPrimaryKey(stransactionnum);
     }
 
+    @RequestMapping(value = "/occupy", method = RequestMethod.GET)
+    public HashMap occupyTransaction(@RequestParam(value = "transactionNum") String transactionNum){
+        HttpSession session = super.request.getSession(false);
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userLevel = user.getSuserlevel();
+        String userBankCode = user.getSbankcode();
+        String userCode = user.getSusercode();
+
+        HashMap result = new HashMap();
+
+        WorkIndex workIndex = workIndexService.selectByPrimaryKey(transactionNum);
+
+        if (workIndex != null){
+            switch (userLevel) {
+                case "2":
+                    String reviewUserCode = workIndex.getSreviewusercode();
+                    if (!userBankCode.equals(workIndex.getSbankcode()) || (reviewUserCode!=null && !reviewUserCode.equals(userCode))) {
+                        result.put("error", "你没有权限操作该笔业务！");
+                        return result;
+                    } else if (reviewUserCode == null) {
+                        workIndex.setSreviewusercode(userCode);
+                        workIndexService.occupyTransaction(workIndex);
+                    }
+
+                    break;
+                case "4":
+                    String checkUserCode = workIndex.getScheckusercode();
+                    if (!userBankCode.equals(workIndex.getSpbcbankcode()) || (checkUserCode!=null && !checkUserCode.equals(userCode))) {
+                        result.put("error", "你没有权限操作该笔业务！");
+                        return result;
+                    } else if (checkUserCode == null) {
+                        workIndex.setScheckusercode(userCode);
+                        workIndexService.occupyTransaction(workIndex);
+                    }
+                    break;
+                case "5":
+                    String reCheckUserCode = workIndex.getSrecheckusercode();
+                    if (!userBankCode.equals(workIndex.getSpbcbankcode()) || (reCheckUserCode!=null && !reCheckUserCode.equals(userCode))) {
+                        result.put("error", "你没有权限操作该笔业务！");
+                        return result;
+                    } else if (reCheckUserCode == null) {
+                        workIndex.setSrecheckusercode(userCode);
+                        workIndexService.occupyTransaction(workIndex);
+                    }
+                    break;
+            }
+
+            result.put("success", "success");
+        } else {
+            result.put("error", "该流水号业务不存在");
+        }
+
+        return result;
+    }
+
     @RequestMapping(value = "/Depositor", method = RequestMethod.PUT)
     public int updateWorkIndexByDepositor(@RequestBody WorkIndex workIndex){
         this.writeLog(Logs.TRANS_UPDATE_DEPOSITOR);
@@ -299,6 +354,8 @@ public class WorkIndexController extends BaseController{
         this.writeLog(Logs.TRANS_UPDATE_APPROVALCODE_IDENTIFIER);
         return 1;
     }
+
+
 
     @RequestMapping(value = "/workIndexes", method = RequestMethod.GET)
     public HashMap<String, Object> getWorkIndexesByPage(@RequestParam(value = "pageSize") String pageSize,

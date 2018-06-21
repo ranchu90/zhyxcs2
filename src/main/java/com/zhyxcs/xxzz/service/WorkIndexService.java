@@ -94,4 +94,6 @@ public interface WorkIndexService {
     int calculateWorksByBankCode(String bankCode);
 
     List<WorkIndex> queryDiary(String pbcBankCode, Date completeTimes);
+
+    int occupyTransaction(WorkIndex workIndex);
 }

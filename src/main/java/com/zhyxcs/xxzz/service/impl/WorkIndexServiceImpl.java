@@ -150,4 +150,9 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     public List<WorkIndex> queryDiary(String pbcBankCode, Date completeTimes) {
         return workIndexMapper.queryDiary(pbcBankCode, completeTimes);
     }
+
+    @Override
+    public int occupyTransaction(WorkIndex workIndex) {
+        return workIndexMapper.occupyTransaction(workIndex);
+    }
 }

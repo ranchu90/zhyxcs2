@@ -78,6 +78,8 @@ public interface WorkIndexMapper {
 
     int updateWorkIndexBusinessEmergency(WorkIndex workIndex);
 
+    int occupyTransaction(WorkIndex workIndex);
+
     List<WorkIndex> queryRecordByConditions(@Param("currentBankArea") String currentBankArea,
                                             @Param("currentCity") String currentCity,
                                             @Param("bankKind") String bankKind,
