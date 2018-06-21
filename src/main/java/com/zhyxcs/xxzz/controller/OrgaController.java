@@ -105,8 +105,15 @@ public class OrgaController extends BaseController {
             map.put("warn", "机构下存在用户,请删除机构对应的用户");
             return map;
         }
-        orgaService.deleteByBankCodeArray(bankCodeArray);
-        map.put("success", "机构删除成功");
+        try {
+            orgaService.deleteByBankCodeArray(bankCodeArray);
+            map.put("success", "机构删除成功");
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            writeLog("删除机构{bankCode:" + bankCodeArray.toString() + "}");
+        }
+
         return map;
     }
 

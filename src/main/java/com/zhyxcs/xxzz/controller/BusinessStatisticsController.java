@@ -150,6 +150,7 @@ public class BusinessStatisticsController extends BaseController {
 
     @RequestMapping(value = "/diaryprint", method = RequestMethod.GET)
     public Map<String, Object> diaryPrint(@RequestParam(value = "startTime", required = false) Date startTime) {
+        writeLog("打印日计表");
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if (startTime == null) {
             resultMap.put("warn", "请选择查询条件的开始时间作为日计表的统计时间");
@@ -179,7 +180,9 @@ public class BusinessStatisticsController extends BaseController {
             bean.setBankCode(workIndexList.get(i).getSbankcode());
             bean.setBankName(workIndexList.get(i).getSbankname());
             bean.setBusinessCategory(workIndexList.get(i).getSbusinesscategory());
-            bean.setApprovalCode(workIndexList.get(i).getSapprovalcode());
+            String tempApprovalCode = workIndexList.get(i).getSapprovalcode();
+            tempApprovalCode = (tempApprovalCode == null || "".equals(tempApprovalCode.trim())) ? "" : tempApprovalCode;
+            bean.setApprovalCode(tempApprovalCode);
             bean.setBankSignIn(null);
             diaryBeanList.add(bean);
         }

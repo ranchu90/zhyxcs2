@@ -508,7 +508,7 @@
     </select>
 
     <select id="queryDiary" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
-        select * from tworkindex where (sApprovalCode is not null or sApprovalCode !='')
+        select * from tworkindex where sApprovalState = '3'
          and sPBCBankCode = #{pbcBankCode,jdbcType=VARCHAR}
          and date(sCompleteTimes) = #{completeTimes,jdbcType=DATE}
          order by sTransactionNum
