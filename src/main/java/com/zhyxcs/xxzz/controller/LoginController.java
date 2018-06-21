@@ -76,24 +76,25 @@ public class LoginController extends BaseController{
                         this.writeLog(Logs.LOGIN_SUCCESS);
 
                     } else {
+                        String userLevel = dbUser.getSuserlevel();
 
-                        if (!"admin".equals(dbUser.getSusercode())) {
+                        if (!"3".equals(userLevel) && !"6".equals(userLevel) && !"7".equals(userLevel)) {
                             //记录密码错误次数
                             byte pwdErrorTimes = dbUser.getSpwderror();
                             pwdErrorTimes = (byte) (pwdErrorTimes + 1);
                             dbUser.setSpwderror(pwdErrorTimes);
 
                             userService.updateByPrimaryKey(dbUser);
-
-                            result.put("state", "failed");
-                            result.put("message", "密码错误！");
-
-                            this.writeLog(Logs.LOGIN_FAILED);
                         }
+
+                        result.put("state", "failed");
+                        result.put("message", "密码错误！");
+
+                        this.writeLog(Logs.LOGIN_FAILED);
                     }
                 } else {
                     result.put("state", "failed");
-                    result.put("message", "密码错误超过5次！");
+                    result.put("message", "密码错误超过5次！请联系管理员重置密码！");
                     this.writeLog(Logs.LOGIN_FAILED);
                 }
             } else {

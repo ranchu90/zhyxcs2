@@ -2,7 +2,6 @@ package com.zhyxcs.xxzz.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.config.WordConfig;
 import com.zhyxcs.xxzz.domain.*;
@@ -20,8 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -491,6 +488,7 @@ public class WorkIndexController extends BaseController{
         String basePath = wordConfig.getBasePath();
 
         String filename;
+        int ifNeedLicence = result.getSifneedlicence();
 
         switch (businessCategory) {
             case "存款人密码重置":
@@ -498,7 +496,13 @@ public class WorkIndexController extends BaseController{
             case "注销久悬标志":
             case "撤销":
             case "专户现金支取": filename = businessCategory; break;
-            default: filename = "账户核准"; break;
+            default:
+                if (ifNeedLicence == 1) {
+                    filename = "账户核准";
+                } else {
+                    filename = "账户核准不换证";
+                }
+                break;
         }
 
         this.createWord(map, filename + ".ftl", baseDirectory,
