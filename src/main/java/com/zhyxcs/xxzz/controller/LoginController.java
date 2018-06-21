@@ -136,22 +136,30 @@ public class LoginController extends BaseController{
 
         HttpSession sessionOwn = super.request.getSession();
         User user = (User) sessionOwn.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+
         User tmpUSer = userService.selectByPrimaryKey(userCode);
         if (tmpUSer == null) {
             result.put("message", userCode + "用户不存在！");
+        } else  if (user == null){
+            result.put("message", userCode + "无权操作该用户！");
         } else {
             Orga tmpOrga = orgaService.selectByPrimaryKey(tmpUSer.getSbankcode());
-            String pbcCode = tmpOrga.getSpbcode();
 
-            if (pbcCode.equals(user.getSbankcode()) || user.getSbankcode().equals(tmpUSer.getSbankcode())) {
-                if (loginUser.containsKey(userCode)) {
-                    HttpSession session = loginUser.get(userCode);
-                    session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
-                    session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-                    loginUser.remove(userCode);
-                    result.put("message", "已注销" + userCode + "用户！");
+            if (tmpOrga != null ) {
+                String pbcCode = tmpOrga.getSpbcode();
+
+                if (pbcCode.equals(user.getSbankcode()) || user.getSbankcode().equals(tmpUSer.getSbankcode())) {
+                    if (loginUser.containsKey(userCode)) {
+                        HttpSession session = loginUser.get(userCode);
+                        session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+                        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+                        loginUser.remove(userCode);
+                        result.put("message", "已注销" + userCode + "用户！");
+                    } else {
+                        result.put("message", userCode + "用户未登陆！");
+                    }
                 } else {
-                    result.put("message", userCode + "用户未登陆！");
+                    result.put("message", "无权操作该用户！");
                 }
             } else {
                 result.put("message", "无权操作该用户！");
