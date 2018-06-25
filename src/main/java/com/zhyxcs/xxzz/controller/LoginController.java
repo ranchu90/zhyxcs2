@@ -142,33 +142,45 @@ public class LoginController extends BaseController {
             result.put("message", userCode + "用户不存在！");
             return result;
         }
-        Orga currentLoginUserOrga = orgaService.selectByPrimaryKey(currentLoginUser.getSbankcode());
+
         Orga loginOutUserHasOrga = orgaService.selectByPrimaryKey(loginOutUser.getSbankcode());
 
         String currentLoginUserBankCode = currentLoginUser.getSbankcode();
-        //String currentLoginUserPBCode = currentLoginUserOrga.getSpbcode();
         String loginOutUserPBCode = loginOutUserHasOrga.getSpbcode();
+        String loginOutUserBankCode = loginOutUser.getSbankcode();
         //当前登录用户的机构类别
-        String currentLoginUserBankKind = currentLoginUserBankCode.substring(0, 1);
+//        String currentLoginUserBankKind = currentLoginUserBankCode.substring(0, 1);
 
 
         //当前登录用户是人民银行用户
-        if ("0".equals(currentLoginUserBankKind)) {
-            if (currentLoginUserBankCode.equals(loginOutUserPBCode)||currentLoginUser.getSbankcode().equals(loginOutUser.getSbankcode())) {
-                if (removeUserLoginInfo(userCode)) {
-                    result.put("message", "已注销" + userCode + "用户！");
-                } else {
-                    result.put("message", "注销" + userCode + "用户失败！");
-                }
+//        if ("0".equals(currentLoginUserBankKind)) {
+//            if (currentLoginUserBankCode.equals(loginOutUserPBCode) ||
+//                    currentLoginUserBankCode.equals(loginOutUserBankCode)) {
+//                if (removeUserLoginInfo(userCode)) {
+//                    result.put("message", "已注销" + userCode + "用户！");
+//                } else {
+//                    result.put("message", "注销" + userCode + "用户失败！");
+//                }
+//            }
+//        } else {
+//            if (currentLoginUserBankCode.equals(loginOutUserBankCode)) {
+//                if (removeUserLoginInfo(userCode)) {
+//                    result.put("message", "已注销" + userCode + "用户！");
+//                } else {
+//                    result.put("message", "注销" + userCode + "用户失败！");
+//                }
+//            }
+//        }
+
+        if (currentLoginUserBankCode.equals(loginOutUserPBCode) ||
+                currentLoginUserBankCode.equals(loginOutUserBankCode)) {
+            if (removeUserLoginInfo(userCode)) {
+                result.put("message", "已注销" + userCode + "用户！");
+            } else {
+                result.put("message", userCode + "用户未登陆，无法注销！");
             }
         } else {
-            if (currentLoginUser.getSbankcode().equals(loginOutUser.getSbankcode())) {
-                if (removeUserLoginInfo(userCode)) {
-                    result.put("message", "已注销" + userCode + "用户！");
-                } else {
-                    result.put("message", "注销" + userCode + "用户失败！");
-                }
-            }
+            result.put("message",  "无权操作用户" + userCode);
         }
         return result;
     }

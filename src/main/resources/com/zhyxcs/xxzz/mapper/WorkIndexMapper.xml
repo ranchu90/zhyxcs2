@@ -464,7 +464,7 @@
             and date(sEndTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
         </if>
         <if test="endTime != null">
-            and date(sRecheckTime) <![CDATA[ >= ]]> #{endTime,jdbcType=TIMESTAMP}
+            and date(sCompleteTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
         </if>
         <if test="currentBankArea != null || currentCity != null || bankKind != null || bankType != null">
             and sBankCode in
@@ -493,6 +493,7 @@
             </if>
             )
         </if>
+        order by sEndTime
     </select>
 
     <select id="calculateWorksByBankCode" resultType="int">

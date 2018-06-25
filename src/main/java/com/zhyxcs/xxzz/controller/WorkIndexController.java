@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -96,8 +97,8 @@ public class WorkIndexController extends BaseController{
                                           @RequestParam(value = "transactionNum", required = false) String transactionNum,
                                           @RequestParam(value = "approvalCode", required = false) String approvalCode,
                                           @RequestParam(value = "identifier", required = false) String identifier,
-                                          @RequestParam(value = "startTime", required = false) String startTime,
-                                          @RequestParam(value = "endTime", required = false) String endTime){
+                                          @RequestParam(value = "startTime", required = false) Date startTimeDate,
+                                          @RequestParam(value = "endTime", required = false) Date endTimeDate){
         pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
         pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
         currentBankArea = (currentBankArea == null || "".equals(currentBankArea)) ? null : currentBankArea;
@@ -114,8 +115,10 @@ public class WorkIndexController extends BaseController{
         transactionNum = (transactionNum == null || "".equals(transactionNum)) ? null : transactionNum;
         approvalCode = (approvalCode == null || "".equals(approvalCode)) ? null : approvalCode;
         identifier = (identifier == null || "".equals(identifier)) ? null : identifier;
-        startTime = (startTime == null || "".equals(startTime)) ? null : startTime;
-        endTime = (endTime == null || "".equals(endTime)) ? null : endTime;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String startTime = (startTimeDate == null) ? null : format.format(startTimeDate);
+        String endTime = (endTimeDate == null) ? null : format.format(endTimeDate);
+
 
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
