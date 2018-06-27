@@ -134,18 +134,18 @@ public class WorkIndexController extends BaseController{
         if ("1".equals(user.getSuserlevel())){
             bankEntryUserCode = user.getSusercode();
         }
-
-        if ("2".equals(user.getSuserlevel())){
-            bankReviewUserCode = user.getSusercode();
-        }
+//
+//        if ("2".equals(user.getSuserlevel())){
+//            bankReviewUserCode = user.getSusercode();
+//        }
 
         if ("4".equals(user.getSuserlevel())){
             renEntryUserCode = user.getSusercode();
         }
-
-        if ("5".equals(user.getSuserlevel())){
-            renRecheckUserCode = user.getSusercode();
-        }
+//
+//        if ("5".equals(user.getSuserlevel())){
+//            renRecheckUserCode = user.getSusercode();
+//        }
 
         Map<String, Object> map = new HashMap();
 
