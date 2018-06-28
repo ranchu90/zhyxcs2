@@ -250,7 +250,7 @@ public class WorkIndexController extends BaseController{
     }
 
     @RequestMapping(value = "/ApprovalState", method = RequestMethod.PUT)
-    public int updateWorkIndexByApprovalState(@RequestBody WorkIndex workIndex,
+    public HashMap updateWorkIndexByApprovalState(@RequestBody WorkIndex workIndex,
                                               @RequestParam(value = "action") String action,
                                               @RequestParam(value = "groundsId", required = false) String groundsId,
                                               @RequestParam(value = "grounds", required = false) String grounds,
@@ -259,62 +259,91 @@ public class WorkIndexController extends BaseController{
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String userCode = user.getSusercode();
         String userName = user.getSusername();
-        String level = user.getSuserlevel();
+        HashMap resultMap = new HashMap();
 
-        WorkIndex tempWorkIndex = null;
+        WorkIndex dbWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+        //如果数据库不存在此业务返回错误代码
+        if (dbWorkIndex == null) {
+            resultMap.put("error", "没有这笔业务！");
+            return resultMap;
+        }
+
+        String dbApprovalState = dbWorkIndex.getSapprovalstate();
+
+        //审核通过的业务只能被复审或上传许可证
+        if (ActionType.APPROVAL_STATE_PBC_PASS_AUDIT.equals(dbApprovalState) &&
+                !(action.equals(ActionType.RECHECK) || action.equals(ActionType.UPLOAD_LICENCE))){
+            resultMap.put("error", "该业务已通过无法进行退回、撤销、终止操作！");
+            return resultMap;
+        }
+
+        //被终止的业务无法修改状态
+        if (ActionType.APPROVAL_STATE_ERROR.equals(dbApprovalState)){
+            resultMap.put("error", "该业务已被终止！");
+            return resultMap;
+        }
+
+        WorkIndex tempWorkIndex;
 
         Date date = CommonUtils.newDate();
         try {
             switch (action) {
                 case ActionType.COMMIT:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_COMMERCE_REVIEW);
                     workIndex.setSendtime(date);
                     break;
                 case ActionType.COMMIT_REN:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_CHECK);
                     workIndex.setSendtime(date);
                     workIndex.setScommittimes(date);
                     break;
                 case ActionType.CALL_BACK:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_COMMERCE_NEW);
                     break;
                 case ActionType.SEND_BACK:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_NO_PASS);
                     workIndex.setSreturntimes(date);
                     break;
                 case ActionType.SEND_BACK_REN:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_NO_PASS);
                     workIndex.setSpbcreturntimes(date);
                     workIndex.setScheckusercode(userCode);
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
                     //人民银行退回
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
-                    tempWorkIndex = null;
                     break;
                 case ActionType.REVIEW:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_CHECK);
                     workIndex.setSreviewusercode(userCode);
                     workIndex.setScommittimes(date);
                     break;
                 case ActionType.CHECK:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_PASS_AUDIT);
                     workIndex.setScheckusercode(userCode);
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScheckusercode(userCode);
                     //人民银行通过
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, null);
-                    tempWorkIndex = null;
                     break;
                 case ActionType.RECHECK:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_PASS_AUDIT);
                     workIndex.setSrecheckusercode(userCode);
                     workIndex.setSrecheckusername(userName);
                     workIndex.setSrechecktime(date);
                     break;
                 case ActionType.UPLOAD_LICENCE:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_PASS_AUDIT);
                     workIndex.setSuploadlicense(1);
                     break;
                 case ActionType.END:
+                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_ERROR);
                     workIndex.setScompletetimes(date);
                     workIndex.setScheckusercode(userCode);
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
                     //人民银行终止
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
-                    tempWorkIndex = null;
                     break;
             }
         } catch (Exception e) {
@@ -327,11 +356,12 @@ public class WorkIndexController extends BaseController{
 
         try {
             result = workIndexService.updateApprovalStateNameByPrimaryKey(workIndex, action);
+            resultMap.put("success", "更新成功！");
         } catch (Exception e) {
             logger.error("## Error Information ##: {}", e);
         }
 
-        return result;
+        return resultMap;
     }
 
     @RequestMapping(value = "/ApprovalCode", method = RequestMethod.PUT)
@@ -493,7 +523,7 @@ public class WorkIndexController extends BaseController{
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
         String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-        String hour = String.valueOf(calendar.get(Calendar.HOUR));
+        String hour = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
         String minute = String.valueOf(calendar.get(Calendar.MINUTE));
         //人行名称
         String pbcBankCode = result.getSpbcbankcode();
