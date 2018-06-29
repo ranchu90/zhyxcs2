@@ -321,6 +321,7 @@ public class WorkIndexController extends BaseController{
                 case ActionType.CHECK:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_PASS_AUDIT);
                     workIndex.setScheckusercode(userCode);
+                    workIndex.setScompletetimes(date);
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScheckusercode(userCode);
                     //人民银行通过
@@ -371,7 +372,16 @@ public class WorkIndexController extends BaseController{
             workIndex.setSexpiretime(expireTime);
         }
 
-        workIndex.setScompletetimes(CommonUtils.newDate());
+//        HttpSession session = super.request.getSession();
+//        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+//        String level = user.getSuserlevel();
+
+//        if ("4".equals(level)) {
+//            workIndex.setScompletetimes(CommonUtils.newDate());
+//        } else if ("5".equals(level)) {
+//            workIndex.setScompletetimes(null);
+//        }
+
         int code = 0;
 
         try {
@@ -456,11 +466,13 @@ public class WorkIndexController extends BaseController{
             Date startDate = workIndex.getSstarttime();
             Date completeDate = workIndex.getScompletetimes();
             Date endDate = workIndex.getSendtime();
+            Date commitDate = workIndex.getScommittimes();
 
             workTemp.put("srechecktime", recheckDate);
             workTemp.put("sstarttime", startDate);
             workTemp.put("scompletetimes", completeDate);
             workTemp.put("sendtime", endDate);
+            workTemp.put("scommittimes", commitDate);
             workTemp.put("sapprovalstate", this.approvalState(approvelState));
             workTemp.put("sapprovalcode", workIndex.getSapprovalcode());
             workTemp.put("saccounttype", workIndex.getSaccounttype());

@@ -153,6 +153,7 @@
     </if>
     <if test="action == 'check'">
       , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+      , sCompleteTimes = #{workIndex.scompletetimes,jdbcType=TIMESTAMP}
     </if>
     <if test="action == 'recheck'">
       , sRecheckUserCode = #{workIndex.srecheckusercode,jdbcType=VARCHAR}
@@ -173,13 +174,13 @@
     </if>
     <if test="action == 'end'">
         , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+        , sCompleteTimes = #{workIndex.scompletetimes,jdbcType=TIMESTAMP}
     </if>
     where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
     </update>
     <update id="updateWorkIndexByApprovalCodeAndIdentifier" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
-    , sCompleteTimes = #{scompletetimes, jdbcType=TIMESTAMP}
     <if test="suploadlicense != null">
     , sUploadLicense = #{suploadlicense,jdbcType=INTEGER}
     </if>
@@ -461,7 +462,7 @@
             and sApprovalCode = #{approvalCode}
         </if>
         <if test="startTime != null">
-            and date(sEndTime) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+            and date(sCommitTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
         </if>
         <if test="endTime != null">
             and date(sCompleteTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
