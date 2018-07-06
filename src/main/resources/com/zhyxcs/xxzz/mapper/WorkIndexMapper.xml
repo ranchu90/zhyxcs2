@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhyxcs.xxzz.mapper.WorkIndexMapper">
-  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.WorkIndex">
-    <constructor>
-      <idArg column="sTransactionNum" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sApprovalState" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sBusinessEmergency" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sCommitTimes" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sReturnTimes" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sPBCReturnTimes" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sCompleteTimes" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sUploadLicense" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="sIfNeedLicence" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="sBusinessCategory" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sPBCBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sBankName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUpUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sUpUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sApprovalCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sIdentifier" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sStartTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sEndTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sReviewUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sCheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sRecheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sRecheckUserName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sRecheckResult" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sRecheckOpinion" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sRecheckTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="sExpireTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-    </constructor>
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.WorkIndex">
+        <constructor>
+            <idArg column="sTransactionNum" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sApprovalState" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sBusinessEmergency" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sCommitTimes" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sReturnTimes" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sPBCReturnTimes" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sCompleteTimes" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sUploadLicense" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="sIfNeedLicence" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="sBusinessCategory" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sAccountType" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sBankCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sPBCBankCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sBankName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sUpUserCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sUpUserName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sApprovalCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sIdentifier" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sStartTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sEndTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sReviewUserCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sCheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sRecheckUserCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sRecheckUserName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sRecheckResult" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sRecheckOpinion" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="sRecheckTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="sExpireTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from tworkindex
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR};
 
     delete from tapprovalrecord
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR};
   </delete>
-  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+    <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     insert into tworkindex (sTransactionNum, sDepositorName,
       sApprovalState, sBusinessEmergency, sCommitTimes,
       sReturnTimes, sPBCReturnTimes, sCompleteTimes,
@@ -65,7 +65,7 @@
       #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP}, #{sexpiretime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
+    <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
       sApprovalState = #{sapprovalstate,jdbcType=VARCHAR},
@@ -97,7 +97,7 @@
       sExpireTime = #{sexpiretime,jdbcType=TIMESTAMP}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sCommitTimes,
     sReturnTimes, sPBCReturnTimes, sCompleteTimes, sUploadLicense, sIfNeedLicence, sBusinessCategory,
     sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode,
@@ -106,7 +106,7 @@
     from tworkindex
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
     select sTransactionNum, sDepositorName, sApprovalState, sBusinessEmergency, sCommitTimes,
     sReturnTimes, sPBCReturnTimes, sCompleteTimes, sUploadLicense, sIfNeedLicence, sBusinessCategory,
     sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sApprovalCode,
@@ -136,250 +136,250 @@
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
     </update>
     <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
-    update tworkindex
-    set sApprovalState = #{workIndex.sapprovalstate,jdbcType=VARCHAR}
-    <if test="action == 'commit'">
-      , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
-      , sBusinessEmergency = #{workIndex.sbusinessemergency,jdbcType=VARCHAR}
-    </if>
-    <if test="action == 'commit_ren'">
-        , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
-        , sCommitTimes = #{workIndex.scommittimes, jdbcType=TIMESTAMP}
-        , sBusinessEmergency = #{workIndex.sbusinessemergency,jdbcType=VARCHAR}
-    </if>
-    <if test="action == 'review'">
-      , sReviewUserCode = #{workIndex.sreviewusercode,jdbcType=VARCHAR}
-      , sCommitTimes = #{workIndex.scommittimes, jdbcType=TIMESTAMP}
-    </if>
-    <if test="action == 'check'">
-      , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
-      , sCompleteTimes = #{workIndex.scompletetimes,jdbcType=TIMESTAMP}
-    </if>
-    <if test="action == 'recheck'">
-      , sRecheckUserCode = #{workIndex.srecheckusercode,jdbcType=VARCHAR}
-      , sRecheckUserName = #{workIndex.srecheckusername,jdbcType=VARCHAR}
-      , sRecheckResult = #{workIndex.srecheckresult,jdbcType=VARCHAR}
-      , sRecheckOpinion = #{workIndex.srecheckopinion,jdbcType=VARCHAR}
-      , sRecheckTime = #{workIndex.srechecktime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="action == 'send_back'">
-      , sReturnTimes = #{workIndex.sreturntimes,jdbcType=TIMESTAMP}
-    </if>
-    <if test="action == 'send_back_ren'">
-        , sPBCReturnTimes = #{workIndex.spbcreturntimes,jdbcType=TIMESTAMP}
-        , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
-    </if>
-    <if test="action == 'upload_licence'">
-        , sUploadLicense = #{workIndex.suploadlicense,jdbcType=INTEGER}
-    </if>
-    <if test="action == 'end'">
-        , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
-        , sCompleteTimes = #{workIndex.scompletetimes,jdbcType=TIMESTAMP}
-    </if>
-    where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
+        update tworkindex
+        set sApprovalState = #{workIndex.sapprovalstate,jdbcType=VARCHAR}
+        <if test="action == 'commit'">
+            , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
+            , sBusinessEmergency = #{workIndex.sbusinessemergency,jdbcType=VARCHAR}
+        </if>
+        <if test="action == 'commit_ren'">
+            , sEndTime = #{workIndex.sendtime, jdbcType=TIMESTAMP}
+            , sCommitTimes = #{workIndex.scommittimes, jdbcType=TIMESTAMP}
+            , sBusinessEmergency = #{workIndex.sbusinessemergency,jdbcType=VARCHAR}
+        </if>
+        <if test="action == 'review'">
+            , sReviewUserCode = #{workIndex.sreviewusercode,jdbcType=VARCHAR}
+            , sCommitTimes = #{workIndex.scommittimes, jdbcType=TIMESTAMP}
+        </if>
+        <if test="action == 'check'">
+            , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+            , sCompleteTimes = #{workIndex.scompletetimes,jdbcType=TIMESTAMP}
+        </if>
+        <if test="action == 'recheck'">
+            , sRecheckUserCode = #{workIndex.srecheckusercode,jdbcType=VARCHAR}
+            , sRecheckUserName = #{workIndex.srecheckusername,jdbcType=VARCHAR}
+            , sRecheckResult = #{workIndex.srecheckresult,jdbcType=VARCHAR}
+            , sRecheckOpinion = #{workIndex.srecheckopinion,jdbcType=VARCHAR}
+            , sRecheckTime = #{workIndex.srechecktime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="action == 'send_back'">
+            , sReturnTimes = #{workIndex.sreturntimes,jdbcType=TIMESTAMP}
+        </if>
+        <if test="action == 'send_back_ren'">
+            , sPBCReturnTimes = #{workIndex.spbcreturntimes,jdbcType=TIMESTAMP}
+            , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+        </if>
+        <if test="action == 'upload_licence'">
+            , sUploadLicense = #{workIndex.suploadlicense,jdbcType=INTEGER}
+        </if>
+        <if test="action == 'end'">
+            , sCheckUserCode = #{workIndex.scheckusercode,jdbcType=VARCHAR}
+            , sCompleteTimes = #{workIndex.scompletetimes,jdbcType=TIMESTAMP}
+        </if>
+        where sTransactionNum = #{workIndex.stransactionnum,jdbcType=VARCHAR}
     </update>
     <update id="updateWorkIndexByApprovalCodeAndIdentifier" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
-    update tworkindex
-    set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
-    <if test="suploadlicense != null">
-    , sUploadLicense = #{suploadlicense,jdbcType=INTEGER}
-    </if>
-    <if test="srecheckresult != null">
-    , sRecheckResult = #{srecheckresult, jdbcType=VARCHAR}
-    </if>
-    <if test="sexpiretime != null">
-    , sExpireTime = #{sexpiretime, jdbcType=TIMESTAMP}
-    </if>
-    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
-  </update>
+        update tworkindex
+        set sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR}, sIdentifier = #{sidentifier, jdbcType=VARCHAR}
+        <if test="suploadlicense != null">
+            , sUploadLicense = #{suploadlicense,jdbcType=INTEGER}
+        </if>
+        <if test="srecheckresult != null">
+            , sRecheckResult = #{srecheckresult, jdbcType=VARCHAR}
+        </if>
+        <if test="sexpiretime != null">
+            , sExpireTime = #{sexpiretime, jdbcType=TIMESTAMP}
+        </if>
+        where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+    </update>
     <update id="updateWorkIndexBusinessEmergency" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">
     update tworkindex
     set sBusinessEmergency = #{sbusinessemergency,jdbcType=VARCHAR}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
     <select id="queryRecordTotalNum" resultType="int">
-    select count(sTransactionNum)
-    from tworkindex
-    where sApprovalState = #{approvalState}
-      <if test="userLevel == 1">
-          and sUpUserCode = #{userCode} and sBankCode = #{bankCode}
-      </if>
-      <if test="userLevel == 2">
-          <choose>
-              <when test="approvalState == 1">
-                  and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
-              </when>
-              <otherwise>
-                  and sReviewUserCode = #{userCode}
-              </otherwise>
-          </choose>
-          and sBankCode = #{bankCode}
-      </if>
-      <if test="userLevel == 4">
-          <choose>
-              <when test="approvalState == 2">
-                  and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
-              </when>
-              <otherwise>
-                  and sCheckUserCode = #{userCode}
-              </otherwise>
-          </choose>
-          <if test="approvalState == 3 or approvalState == 5">
-              <choose>
-                  <when test="ifUploadLicense != null">
-                      and sUploadLicense != 0
-                  </when>
-                  <otherwise>
-                      and sUploadLicense = 0
-                  </otherwise>
-              </choose>
-              <choose>
-                  <when test="ifRecheck != null">
-                      and sRecheckTime is not null
-                  </when>
-                  <otherwise>
-                      and sRecheckTime is null
-                  </otherwise>
-              </choose>
-          </if>
-          and sPBCBankCode = #{bankCode}
-      </if>
-      <if test="userLevel == 5">
-         <choose>
-             <when test="approvalState == 3 or approvalState == 5">
-                 and (sReCheckUserCode = #{userCode} or sReCheckUserCode is null)
-             </when>
-             <otherwise>
-                 and sReCheckUserCode = #{userCode}
-             </otherwise>
-         </choose>
-          <if test="approvalState == 3 or approvalState == 5">
-              <choose>
-                  <when test="ifUploadLicense != null">
-                      and sUploadLicense != 0
-                  </when>
-                  <otherwise>
-                      and sUploadLicense = 0
-                  </otherwise>
-              </choose>
-              <choose>
-                  <when test="ifRecheck != null">
-                      and sRecheckTime is not null
-                  </when>
-                  <otherwise>
-                      and sRecheckTime is null
-                  </otherwise>
-              </choose>
-          </if>
-          and sPBCBankCode = #{bankCode}
-      </if>
+        select count(sTransactionNum)
+        from tworkindex
+        where sApprovalState = #{approvalState}
+        <if test="userLevel == 1">
+            and sUpUserCode = #{userCode} and sBankCode = #{bankCode}
+        </if>
+        <if test="userLevel == 2">
+            <choose>
+                <when test="approvalState == 1">
+                    and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
+                </when>
+                <otherwise>
+                    and sReviewUserCode = #{userCode}
+                </otherwise>
+            </choose>
+            and sBankCode = #{bankCode}
+        </if>
+        <if test="userLevel == 4">
+            <choose>
+                <when test="approvalState == 2">
+                    and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
+                </when>
+                <otherwise>
+                    and sCheckUserCode = #{userCode}
+                </otherwise>
+            </choose>
+            <if test="approvalState == 3 or approvalState == 5">
+                <choose>
+                    <when test="ifUploadLicense != null">
+                        and sUploadLicense != 0
+                    </when>
+                    <otherwise>
+                        and sUploadLicense = 0
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="ifRecheck != null">
+                        and sRecheckTime is not null
+                    </when>
+                    <otherwise>
+                        and sRecheckTime is null
+                    </otherwise>
+                </choose>
+            </if>
+            and sPBCBankCode = #{bankCode}
+        </if>
+        <if test="userLevel == 5">
+            <choose>
+                <when test="approvalState == 3 or approvalState == 5">
+                    and (sReCheckUserCode = #{userCode} or sReCheckUserCode is null)
+                </when>
+                <otherwise>
+                    and sReCheckUserCode = #{userCode}
+                </otherwise>
+            </choose>
+            <if test="approvalState == 3 or approvalState == 5">
+                <choose>
+                    <when test="ifUploadLicense != null">
+                        and sUploadLicense != 0
+                    </when>
+                    <otherwise>
+                        and sUploadLicense = 0
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="ifRecheck != null">
+                        and sRecheckTime is not null
+                    </when>
+                    <otherwise>
+                        and sRecheckTime is null
+                    </otherwise>
+                </choose>
+            </if>
+            and sPBCBankCode = #{bankCode}
+        </if>
 
-    <if test="businessEmergency != null and businessEmergency != ''">
-      and sBusinessEmergency = #{businessEmergency}
-    </if>
-  </select>
+        <if test="businessEmergency != null and businessEmergency != ''">
+            and sBusinessEmergency = #{businessEmergency}
+        </if>
+    </select>
     <select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
-    select *
-    from tworkindex
-    where sApprovalState = #{approvalState}
-    --     人民银行录入员
-    <choose>
-        <when test="approvalState == 2 or approvalState == 5">
-            and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
-        </when>
-        <otherwise>
-            and (sCheckUserCode = #{userCode})
-        </otherwise>
-    </choose>
-    <if test="businessEmergency != null and businessEmergency != ''">
-      and sBusinessEmergency = #{businessEmergency}
-    </if>
-      and sPBCBankCode = #{pbcCode}
-    <if test="approvalState == 3 or approvalState == 5">
+        select *
+        from tworkindex
+        where sApprovalState = #{approvalState}
+        -- 人民银行录入员
         <choose>
-            <when test="ifUploadLicense != null">
-                and sUploadLicense != 0
+            <when test="approvalState == 2 or approvalState == 5">
+                and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
             </when>
             <otherwise>
-                and sUploadLicense = 0
+                and (sCheckUserCode = #{userCode})
             </otherwise>
         </choose>
-        <choose>
-            <when test="ifRecheck != null">
-                and sRecheckTime is not null
-            </when>
-            <otherwise>
-                and sRecheckTime is null
-            </otherwise>
-        </choose>
-    </if>
-    order by sEndTime
-    <if test="approvalState >= 3">
-        desc
-    </if>
+        <if test="businessEmergency != null and businessEmergency != ''">
+            and sBusinessEmergency = #{businessEmergency}
+        </if>
+        and sPBCBankCode = #{pbcCode}
+        <if test="approvalState == 3 or approvalState == 5">
+            <choose>
+                <when test="ifUploadLicense != null">
+                    and sUploadLicense != 0
+                </when>
+                <otherwise>
+                    and sUploadLicense = 0
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="ifRecheck != null">
+                    and sRecheckTime is not null
+                </when>
+                <otherwise>
+                    and sRecheckTime is null
+                </otherwise>
+            </choose>
+        </if>
+        order by sEndTime
+        <if test="approvalState >= 3">
+            desc
+        </if>
     </select>
     <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
-    select *
-    from tworkindex
-    where sApprovalState = #{approvalState}
-    --     人民银行复审员
-    <choose>
-        <when test="approvalState == 3 or approvalState == 5">
-            and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
-        </when>
-        <otherwise>
-            and (sRecheckUserCode = #{userCode})
-        </otherwise>
-    </choose>
-    <if test="businessEmergency != null and businessEmergency !=''">
-      and sBusinessEmergency = #{businessEmergency}
-    </if>
-      and sPBCBankCode = #{pbcCode}
-    <if test="approvalState == 3 or approvalState == 5">
+        select *
+        from tworkindex
+        where sApprovalState = #{approvalState}
+        -- 人民银行复审员
         <choose>
-            <when test="ifUploadLicense != null">
-                and sUploadLicense != 0
+            <when test="approvalState == 3 or approvalState == 5">
+                and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
             </when>
             <otherwise>
-                and sUploadLicense = 0
+                and (sRecheckUserCode = #{userCode})
             </otherwise>
         </choose>
-        <choose>
-            <when test="ifRecheck != null">
-                and sRecheckTime is not null
-            </when>
-            <otherwise>
-                and sRecheckTime is null
-            </otherwise>
-        </choose>
-    </if>
-    order by sEndTime
-    <if test="approvalState >= 3">
-        desc
-    </if>
+        <if test="businessEmergency != null and businessEmergency !=''">
+            and sBusinessEmergency = #{businessEmergency}
+        </if>
+        and sPBCBankCode = #{pbcCode}
+        <if test="approvalState == 3 or approvalState == 5">
+            <choose>
+                <when test="ifUploadLicense != null">
+                    and sUploadLicense != 0
+                </when>
+                <otherwise>
+                    and sUploadLicense = 0
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="ifRecheck != null">
+                    and sRecheckTime is not null
+                </when>
+                <otherwise>
+                    and sRecheckTime is null
+                </otherwise>
+            </choose>
+        </if>
+        order by sEndTime
+        <if test="approvalState >= 3">
+            desc
+        </if>
     </select>
     <select id="queryRecordByPageAndUserCodeRenAdmin" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
-    select *
-    from tworkindex
-    where
-    <if test="approvalState != null and approvalState != ''">
-      sApprovalState = #{approvalState}
-    </if>
-    <if test="approvalState == ''">
-      sApprovalState = 4 or  sApprovalState = 5 or sApprovalState = 6
-    </if>
-    --     人民银行超级管理员
-    <if test="approvalState != null and businessEmergency != null and businessEmergency != ''">
-        and
-    </if>
-    <if test="businessEmergency != null and businessEmergency !=''">
-      sBusinessEmergency = #{businessEmergency}
-    </if>
-    order by sEndTime
-    <if test="approvalState >= 3">
-        desc
-    </if>
-  </select>
+        select *
+        from tworkindex
+        where
+        <if test="approvalState != null and approvalState != ''">
+            sApprovalState = #{approvalState}
+        </if>
+        <if test="approvalState == ''">
+            sApprovalState = 4 or sApprovalState = 5 or sApprovalState = 6
+        </if>
+        -- 人民银行超级管理员
+        <if test="approvalState != null and businessEmergency != null and businessEmergency != ''">
+            and
+        </if>
+        <if test="businessEmergency != null and businessEmergency !=''">
+            sBusinessEmergency = #{businessEmergency}
+        </if>
+        order by sEndTime
+        <if test="approvalState >= 3">
+            desc
+        </if>
+    </select>
     <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
         select *
         from tworkindex
@@ -387,11 +387,11 @@
         <if test="approvalState != null and approvalState != ''">
             sApprovalState = #{approvalState}
         </if>
-        --     商业银行录入员
+        -- 商业银行录入员
         <!--<if test="approvalState == 4">-->
-            <!--(sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)-->
+        <!--(sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)-->
         <!--</if>-->
-            and (sUpUserCode = #{userCode})
+        and (sUpUserCode = #{userCode})
         <if test="businessEmergency != null and businessEmergency != ''">
             and sBusinessEmergency = #{businessEmergency}
         </if>
@@ -409,9 +409,9 @@
         <if test="approvalState != null and approvalState != '' and approvalState != 4">
             sApprovalState = #{approvalState}
         </if>
---             商业银行复核员
+        -- 商业银行复核员
         <!--<if test="approvalState == 4">-->
-            <!--(sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)-->
+        <!--(sApprovalState = #{approvalState} or sApprovalState = 5 or sApprovalState = 6)-->
         <!--</if>-->
         <choose>
             <when test="approvalState == 1">
@@ -470,7 +470,7 @@
         <if test="currentBankArea != null || currentCity != null || bankKind != null || bankType != null">
             and sBankCode in
             (select sBankCode from torga
-              where
+            where
             <if test="currentBankArea != null">
                 sBankAreaCode = #{currentBankArea}
             </if>
@@ -511,9 +511,39 @@
 
     <select id="queryDiary" resultType="com.zhyxcs.xxzz.domain.WorkIndex">
         select * from tworkindex where sApprovalState = '3'
-         and sPBCBankCode = #{pbcBankCode,jdbcType=VARCHAR}
-         and date(sCompleteTimes) = #{completeTimes,jdbcType=DATE}
-         order by sTransactionNum
+        <choose>
+            <when test="bankOrPBC == '0'.toString()">
+                <if test="currentUserBankCode != null">
+                    and sPBCBankCode = #{currentUserBankCode,jdbcType=VARCHAR}
+                </if>
+                <if test="bankKind != null">
+                    and SUBSTRING(sBankCode,1,1) = #{bankKind,jdbcType=VARCHAR}
+                </if>
+                <if test="bankType != null">
+                    and SUBSTRING(sBankCode,1,3) = #{bankType,jdbcType=VARCHAR}
+                </if>
+                <if test="bankName != null">
+                    and sBankName like CONCAT('%',#{bankName,jdbcType=VARCHAR} ,'%')
+                </if>
+                <if test="startTime != null">
+                    and date(sCompleteTimes) = #{startTime,jdbcType=DATE}
+                </if>
+                order by sTransactionNum
+            </when>
+            <otherwise>
+                <if test="currentUserBankCode != null">
+                    and sBankCode = #{currentUserBankCode,jdbcType=VARCHAR}
+                </if>
+                <if test="startTime != null">
+                    and date(sCompleteTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=DATE}
+                </if>
+                <if test="endTime != null">
+                    and date(sCompleteTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=DATE}
+                </if>
+                order by sCompleteTimes
+            </otherwise>
+        </choose>
+
     </select>
 
     <update id="occupyTransaction" parameterType="com.zhyxcs.xxzz.domain.WorkIndex">

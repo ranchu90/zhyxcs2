@@ -52,6 +52,7 @@ public class BusinessStatisticsController extends BaseController {
                                        @RequestParam(value = "bankKind", required = false) String bankKind,
                                        @RequestParam(value = "bankType", required = false) String bankType,
                                        @RequestParam(value = "bankCode", required = false) String bankCode,
+                                       @RequestParam(value = "bankName", required = false) String bankName,
                                        @RequestParam(value = "startTime", required = false) Date startTime,
                                        @RequestParam(value = "endTime", required = false) Date endTime) {
         writeLog("账户业务量统计");
@@ -149,26 +150,42 @@ public class BusinessStatisticsController extends BaseController {
     }
 
     @RequestMapping(value = "/diaryprint", method = RequestMethod.GET)
-    public Map<String, Object> diaryPrint(@RequestParam(value = "startTime", required = false) Date startTime) {
-        writeLog("打印日计表");
+    public Map<String, Object> diaryPrint(@RequestParam(value = "bankKind", required = false) String bankKind,
+                                          @RequestParam(value = "bankType", required = false) String bankType,
+                                          @RequestParam(value = "bankName", required = false) String bankName,
+                                          @RequestParam(value = "startTime", required = false) Date startTime,
+                                          @RequestParam(value = "endTime", required = false) Date endTime) {
+        writeLog("打印账户资料清单");
+
+        bankKind = ((bankKind == null || "".equals(bankKind.trim())) ? null : bankKind);
+        bankType = ((bankType == null || "".equals(bankType.trim())) ? null : bankType);
+        bankName = ((bankName == null || "".equals(bankName.trim())) ? null : bankName);
+        startTime = (startTime != null ? startTime : null);
+        endTime = (endTime != null ? endTime : null);
+
+
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if (startTime == null) {
-            resultMap.put("warn", "请选择查询条件的开始时间作为日计表的统计时间");
+            resultMap.put("warn", "请选择查询条件的开始时间作为账户资料清单的统计时间");
             return resultMap;
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
-        if (user == null || !"0".equals(user.getSbankcode().substring(0, 1))) {
-            resultMap.put("warn", "仅人民银行可打印账户日计表");
-            return resultMap;
+
+        String bankOrPBC;
+        if (user != null && "0".equals(user.getSbankcode().substring(0, 1))) {
+            bankOrPBC = "0";
+        } else {
+            bankOrPBC = user.getSbankcode().substring(0, 1);
         }
 
-        List<WorkIndex> workIndexList = workIndexService.queryDiary(user.getSbankcode(), startTime);
+        List<WorkIndex> workIndexList = workIndexService.queryDiary(bankOrPBC, user.getSbankcode(), bankKind, bankType, bankName, startTime, endTime);
         if (workIndexList == null || workIndexList.size() == 0) {
-            resultMap.put("warn", "选择的日期没有对应的日计表数据");
+            resultMap.put("warn", "选择的检索条件没有对应的账户资料清单数据");
+            return resultMap;
+        } else if (workIndexList.size() > 500) {
+            resultMap.put("warn", "选择的检索条件对应的账户资料清单数据大于500条，请缩小检索范围");
             return resultMap;
         }
 

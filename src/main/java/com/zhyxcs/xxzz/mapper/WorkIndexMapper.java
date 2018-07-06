@@ -97,10 +97,15 @@ public interface WorkIndexMapper {
                                             @Param("startTime") String startTime,
                                             @Param("endTime") String endTime);
 
-    int calculateWorksByBankCode(@Param("bankCode")String bankCode,
-                                 @Param("bankKindChar")String bankKindChar);
+    int calculateWorksByBankCode(@Param("bankCode") String bankCode,
+                                 @Param("bankKindChar") String bankKindChar);
 
-    List<WorkIndex> queryDiary(@Param("pbcBankCode")String pbcBankCode,
-                               @Param("completeTimes")Date completeTimes);
+    List<WorkIndex> queryDiary(@Param("bankOrPBC") String bankOrPBC,
+                               @Param("currentUserBankCode") String currentUserBankCode,
+                               @Param("bankKind") String bankKind,
+                               @Param("bankType") String bankType,
+                               @Param("bankName") String bankName,
+                               @Param("startTime") Date startTime,
+                               @Param("endTime") Date endTime);
 
 }

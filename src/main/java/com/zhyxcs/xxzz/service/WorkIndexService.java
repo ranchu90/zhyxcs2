@@ -93,7 +93,13 @@ public interface WorkIndexService {
 
     int calculateWorksByBankCode(String bankCode);
 
-    List<WorkIndex> queryDiary(String pbcBankCode, Date completeTimes);
+    List<WorkIndex> queryDiary(String bankOrPBC,
+                               String currentUserBankCode,
+                               String bankKind,
+                               String bankType,
+                               String bankName,
+                               Date startTime,
+                               Date endTime);
 
     int occupyTransaction(WorkIndex workIndex);
 }

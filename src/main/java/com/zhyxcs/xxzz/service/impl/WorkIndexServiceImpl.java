@@ -147,8 +147,14 @@ public class WorkIndexServiceImpl implements WorkIndexService {
     }
 
     @Override
-    public List<WorkIndex> queryDiary(String pbcBankCode, Date completeTimes) {
-        return workIndexMapper.queryDiary(pbcBankCode, completeTimes);
+    public List<WorkIndex> queryDiary(String bankOrPBC,
+                                      String currentUserBankCode,
+                                      String bankKind,
+                                      String bankType,
+                                      String bankName,
+                                      Date startTime,
+                                      Date endTime) {
+        return workIndexMapper.queryDiary(bankOrPBC, currentUserBankCode, bankKind, bankType, bankName, startTime, endTime);
     }
 
     @Override
