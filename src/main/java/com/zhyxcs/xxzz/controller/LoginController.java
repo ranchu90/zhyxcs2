@@ -118,12 +118,13 @@ public class LoginController extends BaseController {
     public Map loginOut() {
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userCode = user.getSusercode();
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
 
         Map<String, HttpSession> loginUserMap = SessionListener.loginUser;
-        if (loginUserMap.containsKey(user.getSusercode())) {
-            loginUserMap.remove(user.getSusercode());
+        if (loginUserMap.containsKey(userCode)) {
+            loginUserMap.remove(userCode);
         }
 
         Map result = new HashMap();
