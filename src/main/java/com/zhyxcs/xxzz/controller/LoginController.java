@@ -117,8 +117,14 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Map loginOut() {
         HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+
+        Map<String, HttpSession> loginUserMap = SessionListener.loginUser;
+        if (loginUserMap.containsKey(user.getSusercode())) {
+            loginUserMap.remove(user.getSusercode());
+        }
 
         Map result = new HashMap();
         result.put("state", "true");
@@ -199,7 +205,10 @@ public class LoginController extends BaseController {
                 mapSession = loginUserMap.get(loginOutUserCode);
                 mapSession.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
                 mapSession.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-                loginUserMap.remove(loginOutUserCode);
+
+                if (loginUserMap.containsKey(loginOutUserCode)) {
+                    loginUserMap.remove(loginOutUserCode);
+                }
                 return true;
             } else {
                 return false;
