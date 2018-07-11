@@ -5,6 +5,7 @@ public class Logs {
     public static final String LOGIN_SUCCESS = "用户登陆成功";
     public static final String LOGIN_FAILED = "用户登陆失败";
     public static final String LOGIN_LOGOUT = "用户退出系统";
+    public static final String LOGIN_COVER = "挤出登陆";
 
     /*业务*/
     public static final String TRANS_NEW_SUCCESS = "新建业务成功";

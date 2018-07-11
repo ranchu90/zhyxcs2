@@ -27,8 +27,9 @@ public class LoginController extends BaseController {
     public Map loginVerify(@RequestBody User user) {
         Map<String, HttpSession> loginUser = SessionListener.loginUser;
         Map result = new HashMap();
+        String userCode = user.getSusercode();
 
-        if (loginUser.containsKey(user.getSusercode())) {
+        if (loginUser.containsKey(userCode)) {
             result.put("state", "failed");
             result.put("message", "用户已登陆！");
             result.put("code", 20000);
@@ -114,7 +115,8 @@ public class LoginController extends BaseController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public Map loginOut(HttpSession session) {
+    public Map loginOut() {
+        HttpSession session = super.request.getSession();
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
 

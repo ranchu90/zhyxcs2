@@ -33,7 +33,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                 System.out.println(user.getSusercode() + " destroyed!");
             }
         } catch (Exception e) {
-            logger.error("## Error Information ##: {SessionListener}", e);
+            logger.error("## Session Error Information ##: {SessionListener}", e);
         }
     }
 
@@ -65,7 +65,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                    loginUser.remove(user.getSusercode());
                }
             } catch (Exception e) {
-                logger.error("## Error Information ##: {SessionListener}", e);
+                logger.error("## Session Error Information ##: {SessionListener}", e);
             }
         }
     }
