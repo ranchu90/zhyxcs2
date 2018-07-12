@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/login")
@@ -25,17 +26,30 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
     public Map loginVerify(@RequestBody User user) {
-        Map<String, HttpSession> loginUser = SessionListener.loginUser;
+        ConcurrentHashMap<String, HttpSession> loginUser = SessionListener.loginUser;
         Map result = new HashMap();
         String userCode = user.getSusercode();
 
         if (loginUser.containsKey(userCode)) {
-            result.put("state", "failed");
-            result.put("message", "用户已登陆！");
-            result.put("code", 20000);
-            this.writeLog(Logs.LOGIN_FAILED);
+            HttpSession session = loginUser.get(userCode);
 
-            return result;
+            if (session != null) {
+                long lastTime = session.getLastAccessedTime();
+                long currentTime = CommonUtils.newDate().getTime();
+                long MaxInterval = session.getMaxInactiveInterval();
+                long interval = currentTime - lastTime;
+
+                if (interval/1000 < MaxInterval) {
+                    result.put("state", "failed");
+                    result.put("message", "用户已登陆！");
+                    result.put("code", 20000);
+                    this.writeLog(Logs.LOGIN_FAILED);
+
+                    return result;
+                } else {
+                    session.invalidate();
+                }
+            }
         }
 
         User dbUser = userService.selectByPrimaryKey(user.getSusercode());
@@ -120,10 +134,11 @@ public class LoginController extends BaseController {
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+        session.invalidate();
 
         if (user != null) {
             String userCode = user.getSusercode();
-            Map<String, HttpSession> loginUserMap = SessionListener.loginUser;
+            ConcurrentHashMap<String, HttpSession> loginUserMap = SessionListener.loginUser;
             if (loginUserMap.containsKey(userCode)) {
                 loginUserMap.remove(userCode);
             }
@@ -198,16 +213,15 @@ public class LoginController extends BaseController {
 
     private boolean removeUserLoginInfo(String loginOutUserCode) {
 
-        Map<String, HttpSession> loginUserMap = SessionListener.loginUser;
+        ConcurrentHashMap<String, HttpSession> loginUserMap = SessionListener.loginUser;
         HttpSession mapSession;
-        if (loginUserMap == null) {
-            return false;
-        }
+
         try {
             if (loginUserMap.containsKey(loginOutUserCode)) {
                 mapSession = loginUserMap.get(loginOutUserCode);
                 mapSession.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
                 mapSession.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+                mapSession.invalidate();
 
                 if (loginUserMap.containsKey(loginOutUserCode)) {
                     loginUserMap.remove(loginOutUserCode);

@@ -10,13 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @WebListener
 public class SessionListener implements HttpSessionListener, HttpSessionAttributeListener {
     // 保存当前登录的所有用户
-    public static Map<String, HttpSession> loginUser = new HashMap<>();
+    public static ConcurrentHashMap<String, HttpSession> loginUser = new ConcurrentHashMap<>();
 
     private final static Logger logger = LoggerFactory.getLogger(SessionListener.class);
 
@@ -30,7 +32,9 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
             User user = (User) httpSessionBindingEvent.getSession().getAttribute(CramsConstants.SESSION_LOGIN_USER);
             if (user != null) {
                 loginUser.remove(user.getSusercode());
-                System.out.println(user.getSusercode() + " destroyed!");
+                String info = (new Date()).toString() + " - " + user.getSusercode() + " destroyed!" + " 在线人数：" + loginUser.size();
+                System.out.println(info);
+                logger.info(info);
             }
         } catch (Exception e) {
             logger.error("## Session Error Information ##: {SessionListener}", e);
@@ -51,6 +55,9 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                     session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
                 }
                 loginUser.put(user.getSusercode(), httpSessionBindingEvent.getSession());
+                String info = (new Date()).toString() + " - " + user.getSusercode() + " login!" + " 在线人数：" + loginUser.size();
+                System.out.println(info);
+                logger.info(info);
             }
         }
     }
@@ -63,6 +70,9 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                 User user = (User) httpSessionBindingEvent.getValue();
                if (user != null) {
                    loginUser.remove(user.getSusercode());
+                   String info = (new Date()).toString() + " - " + user.getSusercode() + " removed!" + " 在线人数：" + loginUser.size();
+                   System.out.println(info);
+                   logger.info(info);
                }
             } catch (Exception e) {
                 logger.error("## Session Error Information ##: {SessionListener}", e);
