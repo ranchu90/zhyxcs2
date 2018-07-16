@@ -32,7 +32,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
             User user = (User) httpSessionBindingEvent.getSession().getAttribute(CramsConstants.SESSION_LOGIN_USER);
             if (user != null) {
                 loginUser.remove(user.getSusercode());
-                String info = (new Date()).toString() + " - " + user.getSusercode() + " destroyed!" + " 在线人数：" + loginUser.size();
+                String info = (new Date()).toString() + " - " + user.getSusercode() + " 销毁!" + " 在线人数：" + loginUser.size();
                 System.out.println(info);
                 logger.info(info);
             }
@@ -55,7 +55,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                     session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
                 }
                 loginUser.put(user.getSusercode(), httpSessionBindingEvent.getSession());
-                String info = (new Date()).toString() + " - " + user.getSusercode() + " login!" + " 在线人数：" + loginUser.size();
+                String info = (new Date()).toString() + " - " + user.getSusercode() + " 登陆!" + " 在线人数：" + loginUser.size();
                 System.out.println(info);
                 logger.info(info);
             }
@@ -70,7 +70,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                 User user = (User) httpSessionBindingEvent.getValue();
                if (user != null) {
                    loginUser.remove(user.getSusercode());
-                   String info = (new Date()).toString() + " - " + user.getSusercode() + " removed!" + " 在线人数：" + loginUser.size();
+                   String info = (new Date()).toString() + " - " + user.getSusercode() + " 退出!" + " 在线人数：" + loginUser.size();
                    System.out.println(info);
                    logger.info(info);
                }

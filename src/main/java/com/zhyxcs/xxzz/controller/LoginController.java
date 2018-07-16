@@ -33,7 +33,7 @@ public class LoginController extends BaseController {
         if (loginUser.containsKey(userCode)) {
             HttpSession session = loginUser.get(userCode);
 
-            if (session != null) {
+            if (session != null && session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null) {
                 long lastTime = session.getLastAccessedTime();
                 long currentTime = CommonUtils.newDate().getTime();
                 long MaxInterval = session.getMaxInactiveInterval();
@@ -48,6 +48,7 @@ public class LoginController extends BaseController {
                     return result;
                 } else {
                     session.invalidate();
+                    loginUser.remove(userCode);
                 }
             }
         }
@@ -134,7 +135,6 @@ public class LoginController extends BaseController {
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         session.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
         session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-        session.invalidate();
 
         if (user != null) {
             String userCode = user.getSusercode();
@@ -221,7 +221,6 @@ public class LoginController extends BaseController {
                 mapSession = loginUserMap.get(loginOutUserCode);
                 mapSession.removeAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
                 mapSession.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-                mapSession.invalidate();
 
                 if (loginUserMap.containsKey(loginOutUserCode)) {
                     loginUserMap.remove(loginOutUserCode);
