@@ -124,36 +124,50 @@ public class WorkIndexController extends BaseController{
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
 
-        if (!"7".equals(user.getSuserlevel()) &&
-                !"4".equals(user.getSuserlevel()) &&
-                !"5".equals(user.getSuserlevel())){
-            String bankCode = orga.getSbankcode();
-            orgaCode = bankCode;
-        }
+//        if (!"7".equals(user.getSuserlevel()) &&
+//                !"4".equals(user.getSuserlevel()) &&
+//                !"5".equals(user.getSuserlevel())){
+//            String bankCode = orga.getSbankcode();
+//            orgaCode = bankCode;
+//        }
 
-        if ("1".equals(user.getSuserlevel())){
-            bankEntryUserCode = user.getSusercode();
-        }
-//
+//        if ("1".equals(user.getSuserlevel())){
+//            bankEntryUserCode = user.getSusercode();
+//        }
+////
 //        if ("2".equals(user.getSuserlevel())){
 //            bankReviewUserCode = user.getSusercode();
 //        }
 
-        if ("4".equals(user.getSuserlevel())){
-            renEntryUserCode = user.getSusercode();
-        }
+//        if ("4".equals(user.getSuserlevel())){
+//            renEntryUserCode = user.getSusercode();
+//        }
 //
 //        if ("5".equals(user.getSuserlevel())){
 //            renRecheckUserCode = user.getSusercode();
 //        }
 
         Map<String, Object> map = new HashMap();
+        String bankCode = orga.getSbankcode();
+
+        List<String> pbcCodeList;
+        List<String> bankCodeList;
+
+        if (!"7".equals(user.getSuserlevel()) &&
+                !"4".equals(user.getSuserlevel()) &&
+                !"5".equals(user.getSuserlevel())) {
+            bankCodeList = orgaService.getUnderBankcodeList(bankCode);
+            pbcCodeList = null;
+        } else {
+            pbcCodeList = orgaService.getUnderBankcodeList(bankCode);
+            bankCodeList = null;
+        }
 
         try {
             PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
             List<WorkIndex> list = workIndexService.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType, businessCategory,
                     accountType, orgaCode, bankEntryUserCode, bankReviewUserCode, renEntryUserCode, renRecheckUserCode, transactionNum,
-                    approvalCode, identifier, startTime, endTime);
+                    approvalCode, identifier, startTime, endTime, bankCodeList, pbcCodeList);
             PageInfo<WorkIndex> workIndexPageInfo = new PageInfo(list);
             map.put("pageInfo", workIndexPageInfo);
 
@@ -298,7 +312,14 @@ public class WorkIndexController extends BaseController{
                     workIndex.setScommittimes(date);
                     break;
                 case ActionType.CALL_BACK:
-                    workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_COMMERCE_NEW);
+                    WorkIndex tmpWork = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
+                    String checkUserCode = tmpWork.getScheckusercode();
+                    if (checkUserCode == null) {
+                        workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_COMMERCE_NEW);
+                    } else {
+                        resultMap.put("error", "人行已进入审核无法撤回！");
+                        return  resultMap;
+                    }
                     break;
                 case ActionType.SEND_BACK:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_NO_PASS);

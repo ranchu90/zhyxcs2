@@ -494,6 +494,18 @@
             </if>
             )
         </if>
+        <if test="bankCodeList != null and bankCodeList.size > 0">
+            and sBankCode IN
+            <foreach collection="bankCodeList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="pbcCodeList != null and pbcCodeList.size > 0">
+            and sPBCBankCode IN
+            <foreach collection="pbcCodeList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         order by sEndTime
     </select>
 

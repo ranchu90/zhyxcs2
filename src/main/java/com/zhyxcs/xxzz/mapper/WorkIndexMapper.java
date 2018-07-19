@@ -95,7 +95,9 @@ public interface WorkIndexMapper {
                                             @Param("approvalCode") String approvalCode,
                                             @Param("identifier") String identifier,
                                             @Param("startTime") String startTime,
-                                            @Param("endTime") String endTime);
+                                            @Param("endTime") String endTime,
+                                            @Param("bankCodeList") List<String> bankCodeList,
+                                            @Param("pbcCodeList") List<String> pbcCodeList);
 
     int calculateWorksByBankCode(@Param("bankCode") String bankCode,
                                  @Param("bankKindChar") String bankKindChar);

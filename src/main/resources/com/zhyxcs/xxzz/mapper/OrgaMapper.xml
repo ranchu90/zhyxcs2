@@ -56,6 +56,17 @@
     from torga
     where sPBCode = #{pbcCode} and sBankKind = #{bankKind}
   </select>
+    <select id="ifXian" resultType="com.zhyxcs.xxzz.domain.Orga">
+    select distinct sBankAreaCode
+    from torga
+    where
+        <if test="bankKind == '0'.toString()">
+            sPBCode = #{bankCode} and sBankKind = #{bankKind}
+        </if>
+        <if test="bankKind != '0'.toString()">
+            sTopBankCode = #{bankCode}
+        </if>
+  </select>
     <select id="selectByBankTypeAndPbcCode" resultType="com.zhyxcs.xxzz.domain.Orga">
         select *
         from torga

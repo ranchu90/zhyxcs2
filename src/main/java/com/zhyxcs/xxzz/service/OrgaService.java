@@ -39,4 +39,6 @@ public interface OrgaService {
     int insert(Orga orga);
 
     int updateByPrimaryKeyCheckPropertyIsNull(Orga orga);
+
+    List<Orga> ifXian(String bankAreaCode, String bankKind);
 }

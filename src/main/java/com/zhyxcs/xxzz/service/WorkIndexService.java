@@ -89,7 +89,9 @@ public interface WorkIndexService {
                                             String approvalCode,
                                             String identifier,
                                             String startTime,
-                                            String endTime);
+                                            String endTime,
+                                            List<String> bankCodeList,
+                                            List<String> pbcCodeList);
 
     int calculateWorksByBankCode(String bankCode);
 

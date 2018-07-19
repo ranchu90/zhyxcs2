@@ -46,4 +46,7 @@ public interface OrgaMapper {
     int deleteByBankCodeArray(@Param("bankCodeArray") String[] bankCodeArray);
 
     int updateByPrimaryKeyCheckPropertyIsNull(Orga record);
+
+    List<Orga> ifXian(@Param("bankCode") String bankCode,
+                      @Param("bankKind") String bankKind);
 }

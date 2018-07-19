@@ -3,14 +3,17 @@ package com.zhyxcs.xxzz.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.domain.Orga;
+import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.service.OrgaService;
 import com.zhyxcs.xxzz.service.UserService;
 import com.zhyxcs.xxzz.service.WorkIndexService;
+import com.zhyxcs.xxzz.utils.CramsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +41,33 @@ public class OrgaController extends BaseController {
     public List<Orga> getByBankKindAndPbcCode(@RequestParam("pbcCode") String pbcCode,
                                               @RequestParam("bankKind") String bankKind) {
         return orgaService.selectByBankKindAndPbcCode(pbcCode, bankKind);
+    }
+
+    @RequestMapping(value = "/ifXian", method = RequestMethod.GET)
+    public Map ifXian(){
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+
+        String bankKind = orga.getSbankkind();
+        String bankCode = user.getSbankcode();
+
+        List<Orga> bankList;
+
+        bankList = orgaService.ifXian(bankCode, bankKind);
+
+        int totalNum = bankList.size();
+        HashMap<String, String> result = new HashMap();
+
+        if (totalNum == 0){
+            result.put("type", "县");
+        } else if (totalNum == 1) {
+            result.put("type", "地级市");
+        } else if (totalNum > 1) {
+            result.put("type", "省");
+        }
+
+        return result;
     }
 
     @RequestMapping(value = "/getNextOrgaIsOnCountByBankCode", method = RequestMethod.GET)

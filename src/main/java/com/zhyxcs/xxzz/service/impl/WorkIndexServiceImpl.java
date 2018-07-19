@@ -133,11 +133,12 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                    String bankType, String businessCategory, String accountType,
                                                    String orgaCode, String bankEntryUserCode, String bankReviewUserCode,
                                                    String renEntryUserCode, String renRecheckUserCode, String transactionNum,
-                                                   String approvalCode, String identifier, String startTime, String endTime) {
+                                                   String approvalCode, String identifier, String startTime, String endTime,
+                                                   List<String> bankCodeList, List<String> pbcCodeList) {
         return workIndexMapper.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType,
                 businessCategory, accountType, orgaCode, bankEntryUserCode, bankReviewUserCode,
                 renEntryUserCode, renRecheckUserCode, transactionNum, approvalCode,
-                identifier, startTime, endTime);
+                identifier, startTime, endTime, bankCodeList, pbcCodeList);
     }
 
     @Override

@@ -75,4 +75,9 @@ public class OrgaServiceImpl implements OrgaService {
     public int updateByPrimaryKeyCheckPropertyIsNull(Orga orga) {
         return orgaMapper.updateByPrimaryKeyCheckPropertyIsNull(orga);
     }
+
+    @Override
+    public List<Orga> ifXian(String bankCode, String bankKind) {
+        return orgaMapper.ifXian(bankCode, bankKind);
+    }
 }
