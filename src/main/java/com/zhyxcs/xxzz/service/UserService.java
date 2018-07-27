@@ -14,10 +14,8 @@ public interface UserService {
                                        String bankTypeCode,
                                        String bankCode,
                                        String bankName,
-                                       String userName);
-
-    List<HashMap> selectBysAddUserCodeAndBankType(String addUserCode,
-                                                  String bankTypeCode);
+                                       String userName,
+                                       String userCode);
 
     int insert(User record);
 

@@ -84,13 +84,9 @@
     <if test="userName != null and userName !=''">
         and a.sUserName like CONCAT('%', #{userName}, '%')
     </if>
-  </select>
-    <select id="selectBysAddUserCodeAndBankType" resultMap="selectResultMap" parameterType="java.lang.String">
-    select a.sUserCode, a.sBankCode, a.sUserName, b.sBankName, a.sUserState, a.sUserLevel, a.sUserOnTime,
-    a.sPWDError, a.sTelephone, a.sEmail, a.sAddUserCode
-    from tuser as a, torga as b
-    where a.sAddUserCode = #{addUserCode,jdbcType=VARCHAR}
-    and a.sBankCode = b.sBankCode and b.sBankTypeCode = #{bankTypeCode}
+    <if test="userCode != null and userCode != ''">
+        and a.sUserCode = #{userCode}
+    </if>
   </select>
     <update id="updateBasicByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.User">
     update tuser

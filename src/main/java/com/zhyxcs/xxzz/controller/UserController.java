@@ -34,24 +34,18 @@ public class UserController extends BaseController{
                                                      @RequestParam(value = "bankCode", required = false) String bankCode,
                                                      @RequestParam(value = "bankName", required = false) String bankName,
                                                      @RequestParam(value = "bankTypeCode", required = false) String bankTypeCode,
-                                                     @RequestParam(value = "userName", required = false) String userName){
+                                                     @RequestParam(value = "userName", required = false) String userName,
+                                                     @RequestParam(value = "userCode", required = false) String userCode){
         pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
         pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
 
         Map<String, Object> map = new HashMap();
         PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
-        List<HashMap> mapList = userService.selectBysAddUserCode(addUserCode, bankTypeCode, bankCode, bankName, userName);
+        List<HashMap> mapList = userService.selectBysAddUserCode(addUserCode, bankTypeCode, bankCode, bankName, userName, userCode);
         PageInfo<HashMap> pageInfo = new PageInfo(mapList);
         map.put("pageInfo", pageInfo);
 
         return map;
-    }
-
-    @RequestMapping(value = "/userWithBankType", method = RequestMethod.GET)
-    public List<HashMap> getUsersByAddUserCodeAndBankType(@RequestParam(value = "addUserCode") String addUserCode,
-                                                          @RequestParam(value = "bankTypeCode") String bankTypeCode){
-
-        return userService.selectBysAddUserCodeAndBankType(addUserCode, bankTypeCode);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)

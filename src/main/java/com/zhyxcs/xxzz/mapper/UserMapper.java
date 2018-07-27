@@ -23,10 +23,8 @@ public interface UserMapper {
                                        @Param("bankTypeCode") String bankTypeCode,
                                        @Param("bankCode") String bankCode,
                                        @Param("bankName") String bankName,
-                                       @Param("userName") String userName);
-
-    List<HashMap> selectBysAddUserCodeAndBankType(@Param("addUserCode") String addUserCode,
-                                                  @Param("bankTypeCode") String bankTypeCode);
+                                       @Param("userName") String userName,
+                                       @Param("userCode") String userCode);
 
     List<HashMap> ifBankEntryHasBankReview(@Param("addUserCode") String addUserCode);
 
