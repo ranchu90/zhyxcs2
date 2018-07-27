@@ -25,8 +25,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<HashMap> selectBysAddUserCode(String addUserCode) {
-        return userMapper.selectBysAddUserCode(addUserCode);
+    public List<HashMap> selectBysAddUserCode(String addUserCode,
+                                              String bankTypeCode,
+                                              String bankCode,
+                                              String bankName,
+                                              String userName) {
+        return userMapper.selectBysAddUserCode(addUserCode, bankTypeCode, bankCode, bankName, userName);
     }
 
     @Override

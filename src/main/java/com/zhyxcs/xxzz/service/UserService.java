@@ -10,7 +10,11 @@ public interface UserService {
 
     int updateByPrimaryKey(User record);
 
-    List<HashMap> selectBysAddUserCode(String addUserCode);
+    List<HashMap> selectBysAddUserCode(String addUserCode,
+                                       String bankTypeCode,
+                                       String bankCode,
+                                       String bankName,
+                                       String userName);
 
     List<HashMap> selectBysAddUserCodeAndBankType(String addUserCode,
                                                   String bankTypeCode);

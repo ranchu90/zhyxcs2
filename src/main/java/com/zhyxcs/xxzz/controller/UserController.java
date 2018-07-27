@@ -29,14 +29,18 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public Map<String, Object> getUsersByAddUserCode(@RequestParam(value = "pageSize", required = false) String pageSize,
-                                               @RequestParam(value = "pageNum", required = false) String pageNum,
-                                               @RequestParam(value = "addUserCode") String addUserCode){
+                                                     @RequestParam(value = "pageNum", required = false) String pageNum,
+                                                     @RequestParam(value = "addUserCode") String addUserCode,
+                                                     @RequestParam(value = "bankCode", required = false) String bankCode,
+                                                     @RequestParam(value = "bankName", required = false) String bankName,
+                                                     @RequestParam(value = "bankTypeCode", required = false) String bankTypeCode,
+                                                     @RequestParam(value = "userName", required = false) String userName){
         pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
         pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
 
         Map<String, Object> map = new HashMap();
         PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
-        List<HashMap> mapList = userService.selectBysAddUserCode(addUserCode);
+        List<HashMap> mapList = userService.selectBysAddUserCode(addUserCode, bankTypeCode, bankCode, bankName, userName);
         PageInfo<HashMap> pageInfo = new PageInfo(mapList);
         map.put("pageInfo", pageInfo);
 

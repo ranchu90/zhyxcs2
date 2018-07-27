@@ -72,6 +72,18 @@
     from tuser as a, torga as b
     where a.sAddUserCode = #{addUserCode,jdbcType=VARCHAR}
     and a.sBankCode = b.sBankCode
+    <if test="bankTypeCode != null and bankTypeCode != ''">
+        and b.sBankTypeCode = #{bankTypeCode}
+    </if>
+    <if test="bankCode != null and bankCode != ''">
+        and a.sBankCode = #{bankCode}
+    </if>
+    <if test="bankName != null and bankName != ''">
+        and b.sBankName like CONCAT('%', #{bankName},'%')
+    </if>
+    <if test="userName != null and userName !=''">
+        and a.sUserName like CONCAT('%', #{userName}, '%')
+    </if>
   </select>
     <select id="selectBysAddUserCodeAndBankType" resultMap="selectResultMap" parameterType="java.lang.String">
     select a.sUserCode, a.sBankCode, a.sUserName, b.sBankName, a.sUserState, a.sUserLevel, a.sUserOnTime,
