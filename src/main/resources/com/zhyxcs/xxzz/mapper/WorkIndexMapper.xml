@@ -313,7 +313,13 @@
                 </otherwise>
             </choose>
         </if>
-        order by sEndTime
+        <if test="bankCode != null and bankCode != ''">
+            and sBankCode = #{bankCode}
+        </if>
+        <if test="depositorName != null and depositorName != ''">
+            and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+        </if>
+        order by sCommitTimes
         <if test="approvalState >= 3">
             desc
         </if>
@@ -353,7 +359,13 @@
                 </otherwise>
             </choose>
         </if>
-        order by sEndTime
+        <if test="bankCode != null and bankCode != ''">
+            and sBankCode = #{bankCode}
+        </if>
+        <if test="depositorName != null and depositorName != ''">
+            and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+        </if>
+        order by sCommitTimes
         <if test="approvalState >= 3">
             desc
         </if>
@@ -375,7 +387,7 @@
         <if test="businessEmergency != null and businessEmergency !=''">
             sBusinessEmergency = #{businessEmergency}
         </if>
-        order by sEndTime
+        order by sCompleteTimes
         <if test="approvalState >= 3">
             desc
         </if>
@@ -396,6 +408,9 @@
             and sBusinessEmergency = #{businessEmergency}
         </if>
         and sBankCode = #{bankCode}
+        <if test="depositorName != null and depositorName != ''">
+            and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+        </if>
         order by sEndTime
         <if test="approvalState >= 3">
             desc
@@ -425,6 +440,9 @@
             and sBusinessEmergency = #{businessEmergency}
         </if>
         and sBankCode = #{bankCode}
+        <if test="depositorName != null and depositorName != ''">
+            and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+        </if>
         order by sEndTime
         <if test="approvalState >= 3">
             desc

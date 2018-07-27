@@ -33,7 +33,8 @@ public interface WorkIndexMapper {
                                                           @Param("approvalState") String approvalState,
                                                           @Param("userLevel") String userLevel,
                                                           @Param("businessEmergency") String businessEmergency,
-                                                          @Param("bankCode") String bankCode);
+                                                          @Param("bankCode") String bankCode,
+                                                          @Param("depositorName")String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(@Param("pageSize") String pageSize,
                                                            @Param("currentPage") String currentPage,
@@ -41,7 +42,8 @@ public interface WorkIndexMapper {
                                                            @Param("approvalState") String approvalState,
                                                            @Param("userLevel") String userLevel,
                                                            @Param("businessEmergency") String businessEmergency,
-                                                           @Param("bankCode") String bankCode);
+                                                           @Param("bankCode") String bankCode,
+                                                           @Param("depositorName")String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(@Param("pageSize") String pageSize,
                                                          @Param("currentPage") String currentPage,
@@ -51,7 +53,9 @@ public interface WorkIndexMapper {
                                                          @Param("businessEmergency") String businessEmergency,
                                                          @Param("pbcCode") String pbcCode,
                                                          @Param("ifUploadLicense") String ifUploadLicense,
-                                                         @Param("ifRecheck") String ifRecheck);
+                                                         @Param("ifRecheck") String ifRecheck,
+                                                         @Param("bankCode") String bankCode,
+                                                         @Param("depositorName")String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(@Param("pageSize") String pageSize,
                                                           @Param("currentPage") String currentPage,
@@ -61,7 +65,9 @@ public interface WorkIndexMapper {
                                                           @Param("businessEmergency") String businessEmergency,
                                                           @Param("pbcCode") String pbcCode,
                                                           @Param("ifUploadLicense") String ifUploadLicense,
-                                                          @Param("ifRecheck") String ifRecheck);
+                                                          @Param("ifRecheck") String ifRecheck,
+                                                          @Param("bankCode") String bankCode,
+                                                          @Param("depositorName")String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(@Param("pageSize") String pageSize,
                                                          @Param("currentPage") String currentPage,

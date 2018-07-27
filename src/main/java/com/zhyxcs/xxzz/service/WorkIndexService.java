@@ -26,7 +26,8 @@ public interface WorkIndexService {
                                                           String approvalState,
                                                           String userLevel,
                                                           String businessEmergency,
-                                                          String bankCode);
+                                                          String bankCode,
+                                                          String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeBankCharge(String pageSize,
                                                            String currentPage,
@@ -34,7 +35,8 @@ public interface WorkIndexService {
                                                            String approvalState,
                                                            String userLevel,
                                                            String businessEmergency,
-                                                           String bankCode);
+                                                           String bankCode,
+                                                           String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenEntry(String pageSize,
                                                          String currentPage,
@@ -44,7 +46,9 @@ public interface WorkIndexService {
                                                          String businessEmergency,
                                                          String pbcCode,
                                                          String ifUploadLicense,
-                                                         String ifRecheck);
+                                                         String ifRecheck,
+                                                         String bankCode,
+                                                         String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenCharge(String pageSize,
                                                           String currentPage,
@@ -54,7 +58,9 @@ public interface WorkIndexService {
                                                           String businessEmergency,
                                                           String pbcCode,
                                                           String ifUploadLicense,
-                                                          String ifRecheck);
+                                                          String ifRecheck,
+                                                          String bankCode,
+                                                          String depositorName);
 
     List<WorkIndex> queryRecordByPageAndUserCodeRenAdmin(String pageSize,
                                                          String currentPage,

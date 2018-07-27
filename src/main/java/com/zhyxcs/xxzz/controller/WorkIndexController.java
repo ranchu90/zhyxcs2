@@ -427,7 +427,9 @@ public class WorkIndexController extends BaseController{
                                                         @RequestParam(value = "approvalState") String approvalState,
                                                         @RequestParam(value = "businessEmergency") String businessEmergency,
                                                         @RequestParam(value = "ifUploadLicense", required = false) String ifUploadLicense,
-                                                        @RequestParam(value = "ifRecheck", required = false) String ifRecheck){
+                                                        @RequestParam(value = "ifRecheck", required = false) String ifRecheck,
+                                                        @RequestParam(value = "bankCode", required = false) String bankCode,
+                                                        @RequestParam(value = "depositorName", required = false) String depositorName){
 
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
@@ -449,19 +451,19 @@ public class WorkIndexController extends BaseController{
             switch (userLevel) {
                 case "1":
                     workIndexList = workIndexService.queryRecordByPageAndUserCodeBankEntry(pageSize,
-                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, depositorName);
                     break;
                 case "2":
                     workIndexList = workIndexService.queryRecordByPageAndUserCodeBankCharge(pageSize,
-                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode);
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, depositorName);
                     break;
                 case "4":
                     workIndexList = workIndexService.queryRecordByPageAndUserCodeRenEntry(pageSize,
-                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck, bankCode, depositorName);
                     break;
                 case "5":
                     workIndexList = workIndexService.queryRecordByPageAndUserCodeRenCharge(pageSize,
-                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck);
+                            currentPage, user.getSusercode(), approvalState, userLevel, businessEmergency, currentBankCode, ifUploadLicense, ifRecheck, bankCode, depositorName);
                     break;
                 case "7":
                     workIndexList = workIndexService.queryRecordByPageAndUserCodeRenAdmin(pageSize,
