@@ -319,6 +319,9 @@
         <if test="depositorName != null and depositorName != ''">
             and sDepositorName like CONCAT('%',#{depositorName} ,'%')
         </if>
+        <if test="businessType != null and businessType != ''">
+            and sBusinessCategory = #{businessType}
+        </if>
         order by sCommitTimes
         <if test="approvalState >= 3">
             desc
@@ -364,6 +367,9 @@
         </if>
         <if test="depositorName != null and depositorName != ''">
             and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+        </if>
+        <if test="businessType != null and businessType != ''">
+            and sBusinessCategory = #{businessType}
         </if>
         order by sCommitTimes
         <if test="approvalState >= 3">
@@ -411,6 +417,9 @@
         <if test="depositorName != null and depositorName != ''">
             and sDepositorName like CONCAT('%',#{depositorName} ,'%')
         </if>
+        <if test="businessType != null and businessType != ''">
+            and sBusinessCategory = #{businessType}
+        </if>
         order by sEndTime
         <if test="approvalState >= 3">
             desc
@@ -442,6 +451,9 @@
         and sBankCode = #{bankCode}
         <if test="depositorName != null and depositorName != ''">
             and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+        </if>
+        <if test="businessType != null and businessType != ''">
+            and sBusinessCategory = #{businessType}
         </if>
         order by sEndTime
         <if test="approvalState >= 3">

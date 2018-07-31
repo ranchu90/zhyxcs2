@@ -43,9 +43,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                                  String userLevel,
                                                                  String businessEmergency,
                                                                  String bankCode,
-                                                                 String depositorName) {
+                                                                 String depositorName,
+                                                                 String businessType) {
         return workIndexMapper.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage, userCode, approvalState,
-                userLevel, businessEmergency, bankCode, depositorName);
+                userLevel, businessEmergency, bankCode, depositorName, businessType);
     }
 
     @Override
@@ -56,9 +57,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                                   String userLevel,
                                                                   String businessEmergency,
                                                                   String bankCode,
-                                                                  String depositorName) {
+                                                                  String depositorName,
+                                                                  String businessType) {
         return workIndexMapper.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage, userCode, approvalState,
-                userLevel, businessEmergency, bankCode, depositorName);
+                userLevel, businessEmergency, bankCode, depositorName, businessType);
     }
 
     @Override
@@ -72,9 +74,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                                 String ifUploadLicense,
                                                                 String ifRecheck,
                                                                 String bankCode,
-                                                                String depositorName) {
+                                                                String depositorName,
+                                                                String businessType) {
         return workIndexMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState,
-                userLevel, businessEmergency, pbcCode, ifUploadLicense, ifRecheck, bankCode, depositorName);
+                userLevel, businessEmergency, pbcCode, ifUploadLicense, ifRecheck, bankCode, depositorName, businessType);
     }
 
     @Override
@@ -88,9 +91,10 @@ public class WorkIndexServiceImpl implements WorkIndexService {
                                                                  String ifUploadLicense,
                                                                  String ifRecheck,
                                                                  String bankCode,
-                                                                 String depositorName) {
+                                                                 String depositorName,
+                                                                 String businessType) {
         return workIndexMapper.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage, userCode, approvalState,
-                userLevel, businessEmergency, pbcCode, ifUploadLicense, ifRecheck, bankCode, depositorName);
+                userLevel, businessEmergency, pbcCode, ifUploadLicense, ifRecheck, bankCode, depositorName, businessType);
     }
 
     @Override
