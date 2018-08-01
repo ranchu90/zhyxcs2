@@ -20,6 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/api/image")
@@ -30,6 +32,9 @@ public class ImageController extends BaseController {
     private ImageConfig imageConfig;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    //公平锁
+    private Lock lock = new ReentrantLock(true);
 
     @RequestMapping(value = "/image", method = RequestMethod.POST)
     public Long insertNewImage(@RequestParam (value = "transactionNum") String transactionNum,
@@ -79,6 +84,7 @@ public class ImageController extends BaseController {
                 image.setSimagename(imageName);
                 image.setSstorepath(storePath);
 
+                lock.lock();
                 imageService.insert(image);
 
                 this.writeLog(Logs.IMAGE_UPLOAD);
@@ -87,6 +93,8 @@ public class ImageController extends BaseController {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                lock.unlock();
             }
         }
 
