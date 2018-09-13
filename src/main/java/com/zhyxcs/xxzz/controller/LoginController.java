@@ -41,13 +41,13 @@ public class LoginController extends BaseController {
 
                 if (interval/1000 < MaxInterval) {
                     result.put("state", "failed");
-                    result.put("message", "用户已登陆！");
+                    result.put("message", "用户已登陆！请联系管理员解锁或者30分钟后重试！");
                     result.put("code", 20000);
                     this.writeLog(Logs.LOGIN_FAILED);
 
                     return result;
                 } else {
-                    session.invalidate();
+                    session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
                     loginUser.remove(userCode);
                 }
             }
@@ -71,7 +71,8 @@ public class LoginController extends BaseController {
 
                         session.setAttribute(CramsConstants.SESSION_LOGIN_USER, dbUser);
                         session.setAttribute(CramsConstants.SESSION_ORGA_WITH_USER, orga);
-//                        session.setMaxInactiveInterval(5);
+                        session.setMaxInactiveInterval(30*60);
+//                        session.setMaxInactiveInterval(1);
 
                         HashMap userMap = new HashMap();
                         userMap.put("username", dbUser.getSusername());
