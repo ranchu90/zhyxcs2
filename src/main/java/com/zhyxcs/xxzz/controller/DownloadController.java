@@ -47,19 +47,26 @@ public class DownloadController {
             int i = bis.read(buff);
             while (i != -1) {
                 os.write(buff, 0, buff.length);
-                os.flush();
                 i = bis.read(buff);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("## Error Information ##: {DownloadController}", e);
+            logger.error("## Error Information ##: {DownloadController} #1", e);
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    logger.error("## Error Information ##: {DownloadController}", e);
+                    logger.error("## Error Information ##: {DownloadController} #2", e);
+                }
+            }
+
+            if (os != null){
+                try {
+                    os.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
