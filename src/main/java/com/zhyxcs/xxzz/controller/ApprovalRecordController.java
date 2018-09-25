@@ -11,12 +11,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/api/approvalRecord")
 public class ApprovalRecordController extends BaseController{
     @Autowired
     private ApprovalRecordService approvalRecordService;
+
+    //公平锁
+    private Lock lock = new ReentrantLock(true);
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -32,10 +37,13 @@ public class ApprovalRecordController extends BaseController{
         int result = 0;
 
         try {
+            lock.lock();
             result = approvalRecordService.insert(record);
         } catch (Exception e){
             e.printStackTrace();
             logger.error("## Error Information ##: {}", e);
+        } finally {
+            lock.unlock();
         }
 
         return result;

@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/api/licence")
@@ -31,6 +33,9 @@ public class LicenceImageController extends BaseController{
 
     @Autowired
     private LicenceImageService licenceImageService;
+
+    //公平锁
+    private Lock lock = new ReentrantLock(true);
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -87,7 +92,9 @@ public class LicenceImageController extends BaseController{
                 image.setSuploadusercode(user.getSusercode());
                 image.setSuploadusername(user.getSusername());
 
+                lock.lock();
                 licenceImageService.insert(image);
+                lock.unlock();
 
                 return 1;
             } catch (IllegalStateException e) {

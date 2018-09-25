@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BaseController {
     @Autowired
@@ -26,6 +28,8 @@ public class BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    //公平锁
+    private Lock lock = new ReentrantLock(true);
 
     public String getDisplayCount(){
         return pageConfig.getDisplayCount();
@@ -51,7 +55,10 @@ public class BaseController {
             systemLog.setSmacaddress(null);
             systemLog.setSlogtime(CommonUtils.newDate());
             systemLog.setScomments(comments);
+
+            lock.lock();
             systemLogService.insert(systemLog);
+            lock.unlock();
         }catch (Exception e){
             e.printStackTrace();
             logger.error("## Error Information ##: {BaseController}", e);

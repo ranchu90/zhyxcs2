@@ -86,6 +86,7 @@ public class ImageController extends BaseController {
 
                 lock.lock();
                 imageService.insert(image);
+                lock.unlock();
 
                 this.writeLog(Logs.IMAGE_UPLOAD);
                 return image.getSid();
@@ -93,8 +94,6 @@ public class ImageController extends BaseController {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                lock.unlock();
             }
         }
 

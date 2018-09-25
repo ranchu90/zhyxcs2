@@ -50,8 +50,11 @@ public class DownloadController {
                 i = bis.read(buff);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("## Error Information ##: {DownloadController} #1", e);
+            //如果是客户端断开连接，不记录异常
+            if (!e.getMessage().contains("ClientAbortException")) {
+                e.printStackTrace();
+                logger.error("## Error Information ##: {DownloadController} #1", e);
+            }
         } finally {
             if (bis != null) {
                 try {

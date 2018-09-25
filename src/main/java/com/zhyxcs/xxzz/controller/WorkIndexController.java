@@ -22,6 +22,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/api/workIndex")
@@ -47,6 +49,9 @@ public class WorkIndexController extends BaseController{
     @Autowired
     private WordConfig wordConfig;
 
+    //公平锁
+    private Lock lock = new ReentrantLock(true);
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.POST)
@@ -64,7 +69,9 @@ public class WorkIndexController extends BaseController{
             workIndex.setSbusinessemergency("0");
 
             try {
+                lock.lock();
                 workIndexService.newWorkIndex(workIndex);
+                lock.unlock();
             } catch (Exception e){
                 e.printStackTrace();
                 logger.error("## Error Information ##: {}", e);
@@ -332,7 +339,9 @@ public class WorkIndexController extends BaseController{
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
                     //人民银行退回
+                    lock.lock();
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                    lock.unlock();
                     break;
                 case ActionType.REVIEW:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_CHECK);
@@ -346,7 +355,9 @@ public class WorkIndexController extends BaseController{
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScheckusercode(userCode);
                     //人民银行通过
+                    lock.lock();
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, null);
+                    lock.unlock();
                     break;
                 case ActionType.RECHECK:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_PASS_AUDIT);
@@ -365,7 +376,9 @@ public class WorkIndexController extends BaseController{
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
                     //人民银行终止
+                    lock.lock();
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                    lock.unlock();
                     break;
             }
         } catch (Exception e) {
