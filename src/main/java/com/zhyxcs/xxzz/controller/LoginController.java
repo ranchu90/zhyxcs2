@@ -33,23 +33,28 @@ public class LoginController extends BaseController {
         if (loginUser.containsKey(userCode)) {
             HttpSession session = loginUser.get(userCode);
 
-            if (session != null && session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null) {
-                long lastTime = session.getLastAccessedTime();
-                long currentTime = CommonUtils.newDate().getTime();
-                long MaxInterval = session.getMaxInactiveInterval();
-                long interval = currentTime - lastTime;
+            try {
+                if (session != null && session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null) {
+                    long lastTime = session.getLastAccessedTime();
+                    long currentTime = CommonUtils.newDate().getTime();
+                    long MaxInterval = session.getMaxInactiveInterval();
+                    long interval = currentTime - lastTime;
 
-                if (interval/1000 < MaxInterval) {
-                    result.put("state", "failed");
-                    result.put("message", "用户已登陆！请联系管理员解锁或者30分钟后重试！");
-                    result.put("code", 20000);
-                    this.writeLog(Logs.LOGIN_FAILED);
+                    if (interval/1000 < MaxInterval) {
+                        result.put("state", "failed");
+                        result.put("message", "用户已登陆！请联系管理员解锁或者30分钟后重试！");
+                        result.put("code", 20000);
+                        this.writeLog(Logs.LOGIN_FAILED);
 
-                    return result;
-                } else {
-                    session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-                    loginUser.remove(userCode);
+                        return result;
+                    } else {
+                        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+                        loginUser.remove(userCode);
+                    }
                 }
+            } catch (IllegalStateException e){
+                loginUser.remove(userCode);
+                e.printStackTrace();
             }
         }
 
@@ -72,7 +77,7 @@ public class LoginController extends BaseController {
                         session.setAttribute(CramsConstants.SESSION_LOGIN_USER, dbUser);
                         session.setAttribute(CramsConstants.SESSION_ORGA_WITH_USER, orga);
                         session.setMaxInactiveInterval(30*60);
-//                        session.setMaxInactiveInterval(1);
+//                        session.setMaxInactiveInterval(30);
 
                         HashMap userMap = new HashMap();
                         userMap.put("username", dbUser.getSusername());
