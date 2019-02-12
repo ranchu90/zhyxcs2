@@ -8,4 +8,6 @@ public interface LicenceImageService {
     int deleteByPrimaryKey(String transactionNum);
 
     LicenceImage selectByPrimaryKey(String transactionNum);
+
+    int updateByPrimaryKey(LicenceImage image);
 }

@@ -13,4 +13,6 @@ public interface LicenceImageMapper {
     int deleteByPrimaryKey(@Param("transactionNum") String transactionNum);
 
     LicenceImage selectByPrimaryKey(@Param("transactionNum") String transactionNum);
+
+    int updateByPrimaryKey(LicenceImage image);
 }

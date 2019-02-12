@@ -27,6 +27,20 @@
           #{sapprovalcode,jdbcType=VARCHAR}, #{sidentifier,jdbcType=VARCHAR}, #{sbusinesscategory,jdbcType=VARCHAR},
           #{saccounttype,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR})
     </insert>
+    <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.LicenceImage">
+    update tlicenceimage
+    set sLicenceImageName = #{slicenceimagename,jdbcType=VARCHAR},
+      sUploadUserCode = #{suploadusercode,jdbcType=VARCHAR},
+      sUploadUserName = #{suploadusername,jdbcType=VARCHAR},
+      sStorePath = #{sstorepath,jdbcType=VARCHAR},
+      sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR},
+      sIdentifier = #{sidentifier,jdbcType=VARCHAR},
+      sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
+      sAccountType = #{saccounttype,jdbcType=VARCHAR},
+      sBankCode = #{sbankcode,jdbcType=VARCHAR},
+      sBankName = #{sbankname,jdbcType=VARCHAR}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </update>
     <select id="selectAll" resultMap="BaseResultMap" >
         select sTransactionNum, sLicenceImageName, sUploadUserCode, sUploadUserName, sStorePath,
         sApprovalCode, sIdentifier, sBusinessCategory, sAccountType, sBankCode, sBankName,

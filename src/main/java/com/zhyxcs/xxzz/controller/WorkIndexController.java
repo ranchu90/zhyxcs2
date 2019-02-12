@@ -71,10 +71,11 @@ public class WorkIndexController extends BaseController{
             try {
                 lock.lock();
                 workIndexService.newWorkIndex(workIndex);
-                lock.unlock();
             } catch (Exception e){
                 e.printStackTrace();
                 logger.error("## Error Information ##: {}", e);
+            } finally {
+                lock.unlock();
             }
 
             this.writeLog(Logs.TRANS_NEW_SUCCESS);
@@ -189,6 +190,17 @@ public class WorkIndexController extends BaseController{
 
     @RequestMapping(value = "/workIndex", method = RequestMethod.DELETE)
     public int deleteWorkIndexByTranID(@RequestParam(value = "stransactionnum") String stransactionnum){
+        WorkIndex workIndex = workIndexService.selectByPrimaryKey(stransactionnum);
+        HttpSession session = super.request.getSession(false);
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userCode = workIndex.getSupusercode();
+        String approvalState = workIndex.getSapprovalstate();
+
+        if (!userCode.equals(user.getSusercode()) || !(ActionType.APPROVAL_STATE_COMMERCE_NEW.equals(approvalState) || ActionType.APPROVAL_STATE_NO_PASS.equals(approvalState))){
+            this.writeLog(Logs.TRANS_DELETE_ILLEGAL + workIndex.toString());
+            return -1;
+        }
+
         List<Image> imageList = imageService.selectImagesByTranID(stransactionnum);
 
         for (Image image : imageList){
@@ -205,7 +217,7 @@ public class WorkIndexController extends BaseController{
         }
 
         this.writeLog(Logs.IMAGE_DELETE);
-        this.writeLog(Logs.TRANS_DELETE);
+        this.writeLog(Logs.TRANS_DELETE + workIndex.toString());
         return workIndexService.deleteByPrimaryKey(stransactionnum);
     }
 
@@ -308,6 +320,7 @@ public class WorkIndexController extends BaseController{
 
         Date date = CommonUtils.newDate();
         try {
+            lock.lock();
             switch (action) {
                 case ActionType.COMMIT:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_COMMERCE_REVIEW);
@@ -339,9 +352,7 @@ public class WorkIndexController extends BaseController{
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setSpbcreturntimes(workIndex.getSpbcreturntimes());
                     //人民银行退回
-                    lock.lock();
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
-                    lock.unlock();
                     break;
                 case ActionType.REVIEW:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_CHECK);
@@ -355,9 +366,7 @@ public class WorkIndexController extends BaseController{
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScheckusercode(userCode);
                     //人民银行通过
-                    lock.lock();
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, null);
-                    lock.unlock();
                     break;
                 case ActionType.RECHECK:
                     workIndex.setSapprovalstate(ActionType.APPROVAL_STATE_PBC_PASS_AUDIT);
@@ -376,13 +385,13 @@ public class WorkIndexController extends BaseController{
                     tempWorkIndex = workIndexService.selectByPrimaryKey(workIndex.getStransactionnum());
                     tempWorkIndex.setScompletetimes(workIndex.getScompletetimes());
                     //人民银行终止
-                    lock.lock();
                     businessStatisticsService.insert(tempWorkIndex, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
-                    lock.unlock();
                     break;
             }
         } catch (Exception e) {
             logger.error("## Error Information ##: {}", e);
+        } finally {
+            lock.unlock();
         }
 
         this.writeLog(Logs.TRANS_UPDATE_APPROVALSTATE + ":" + action);

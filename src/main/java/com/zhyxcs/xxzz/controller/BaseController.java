@@ -58,10 +58,11 @@ public class BaseController {
 
             lock.lock();
             systemLogService.insert(systemLog);
-            lock.unlock();
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             logger.error("## Error Information ##: {BaseController}", e);
+        } finally {
+            lock.unlock();
         }
     }
 }

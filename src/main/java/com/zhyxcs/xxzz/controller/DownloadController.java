@@ -1,6 +1,7 @@
 package com.zhyxcs.xxzz.controller;
 
 import com.zhyxcs.xxzz.config.WordConfig;
+import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,11 @@ public class DownloadController {
             }
         } catch (IOException e) {
             //如果是客户端断开连接，不记录异常
-            if (!e.getMessage().contains("ClientAbortException")) {
+            if (!(e instanceof org.apache.catalina.connector.ClientAbortException)) {
                 e.printStackTrace();
                 logger.error("## Error Information ##: {DownloadController} #1", e);
+            } else {
+                System.out.println("客户端断开下载浏览器链接1");
             }
         } finally {
             if (bis != null) {
@@ -69,7 +72,12 @@ public class DownloadController {
                 try {
                     os.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //如果是客户端断开连接，不记录异常,不打印信息
+                    if (!(e instanceof org.apache.catalina.connector.ClientAbortException)) {
+                        e.printStackTrace();
+                    } else {
+                        System.out.println("客户端断开下载浏览器链接2");
+                    }
                 }
             }
         }

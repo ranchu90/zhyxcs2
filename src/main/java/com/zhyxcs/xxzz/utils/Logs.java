@@ -18,6 +18,7 @@ public class Logs {
     public static final String TRANS_UPDATE_APPROVALCODE_IDENTIFIER = "更新开户核准号和编码";
     public static final String TRANS_QUERY_PAGES = "分页查询业务";
     public static final String TRANS_RECIEPT_DOWNLOAD = "下载账户核准通知书";
+    public static final String TRANS_DELETE_ILLEGAL = "非法删除";
 
     /*用户*/
     public static final String USER_NEW = "添加用户";
@@ -27,5 +28,6 @@ public class Logs {
 
     /*图片*/
     public static final String IMAGE_UPLOAD = "图片上传";
-    public static final String IMAGE_DELETE = "图片下载";
+    public static final String IMAGE_DELETE = "图片删除";
+    public static final String IMAGE_DELETE_ILLEGAL = "图片非法删除";
 }

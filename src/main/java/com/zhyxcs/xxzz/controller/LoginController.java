@@ -30,35 +30,48 @@ public class LoginController extends BaseController {
         Map result = new HashMap();
         String userCode = user.getSusercode();
 
-        if (loginUser.containsKey(userCode)) {
-            HttpSession session = loginUser.get(userCode);
-
-            try {
-                if (session != null && session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null) {
-                    long lastTime = session.getLastAccessedTime();
-                    long currentTime = CommonUtils.newDate().getTime();
-                    long MaxInterval = session.getMaxInactiveInterval();
-                    long interval = currentTime - lastTime;
-
-                    if (interval/1000 < MaxInterval) {
-                        result.put("state", "failed");
-                        result.put("message", "用户已登陆！请联系管理员解锁或者30分钟后重试！");
-                        result.put("code", 20000);
-                        this.writeLog(Logs.LOGIN_FAILED);
-
-                        return result;
-                    } else {
-                        session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
-                        loginUser.remove(userCode);
-                    }
-                }
-            } catch (IllegalStateException e){
-                loginUser.remove(userCode);
-                e.printStackTrace();
-            }
-        }
-
         User dbUser = userService.selectByPrimaryKey(user.getSusercode());
+//        if (null == dbUser) {
+//            result.put("state", "failed");
+//            result.put("message", "用户不存在！");
+//            result.put("code", 20000);
+//
+//            return result;
+//        } else {
+//            String userLevel = dbUser.getSuserlevel();
+//
+//            //用户不是管理员、做登录限制、同一时间系统只允许一个账号登录
+//            if (!"3".equals(userLevel) && !"6".equals(userLevel) && !"7".equals(userLevel)) {
+//                if (loginUser.containsKey(userCode)) {
+//                    HttpSession session = loginUser.get(userCode);
+//
+//                    try {
+//                        if (session != null && session.getAttribute(CramsConstants.SESSION_LOGIN_USER) != null) {
+//                            long lastTime = session.getLastAccessedTime();
+//                            long currentTime = CommonUtils.newDate().getTime();
+//                            long MaxInterval = session.getMaxInactiveInterval();
+//                            long interval = currentTime - lastTime;
+//
+//                            if (interval/1000 < MaxInterval) {
+//                                result.put("state", "failed");
+//                                result.put("message", "用户已登陆！请联系管理员解锁或者30分钟后重试！");
+//                                result.put("code", 20000);
+//                                this.writeLog(Logs.LOGIN_FAILED);
+//
+//                                return result;
+//                            } else {
+//                                session.removeAttribute(CramsConstants.SESSION_LOGIN_USER);
+//                                loginUser.remove(userCode);
+//                            }
+//                        }
+//                    } catch (IllegalStateException e){
+//                        loginUser.remove(userCode);
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+
         HttpSession session = super.request.getSession();
 
 //        System.out.println("login: " + session.getId());

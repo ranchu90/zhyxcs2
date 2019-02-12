@@ -26,4 +26,9 @@ public class LicenceImageImpl implements LicenceImageService {
     public LicenceImage selectByPrimaryKey(String transactionNum) {
         return licenceImageMapper.selectByPrimaryKey(transactionNum);
     }
+
+    @Override
+    public int updateByPrimaryKey(LicenceImage image) {
+        return licenceImageMapper.updateByPrimaryKey(image);
+    }
 }

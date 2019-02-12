@@ -330,4 +330,18 @@ public class WorkIndex {
     public void setSexpiretime(Date sexpiretime) {
         this.sexpiretime = sexpiretime;
     }
+
+    @Override
+    public String toString() {
+        return "WorkIndex{" +
+                "stransactionnum='" + stransactionnum + '\'' +
+                ", sdepositorname='" + sdepositorname + '\'' +
+                ", sapprovalstate='" + sapprovalstate + '\'' +
+                ", sbusinessemergency='" + sbusinessemergency + '\'' +
+                ", scommittimes=" + scommittimes +
+                ", scompletetimes=" + scompletetimes +
+                ", supusercode='" + supusercode + '\'' +
+                ", supusername='" + supusername + '\'' +
+                '}';
+    }
 }

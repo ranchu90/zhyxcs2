@@ -128,7 +128,12 @@ public class CommonUtils {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            //如果是客户端断开连接，不记录异常，不打印异常
+            if (!(e instanceof org.apache.catalina.connector.ClientAbortException)) {
+                e.printStackTrace();
+            } else {
+                System.out.println("客户端断开下载图片链接");
+            }
         }
     }
 

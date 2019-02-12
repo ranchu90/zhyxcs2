@@ -108,4 +108,18 @@ public class Image {
     public void setSuploadtime(Date suploadtime) {
         this.suploadtime = suploadtime;
     }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "stransactionnum='" + stransactionnum + '\'' +
+                ", simagetype='" + simagetype + '\'' +
+                ", sproofname='" + sproofname + '\'' +
+                ", soriginalname='" + soriginalname + '\'' +
+                ", simagename='" + simagename + '\'' +
+                ", simagesn=" + simagesn +
+                ", sstorepath='" + sstorepath + '\'' +
+                ", suploadtime=" + suploadtime +
+                '}';
+    }
 }

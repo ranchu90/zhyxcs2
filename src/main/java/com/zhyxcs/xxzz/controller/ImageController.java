@@ -3,7 +3,10 @@ package com.zhyxcs.xxzz.controller;
 import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.domain.Image;
 import com.zhyxcs.xxzz.domain.User;
+import com.zhyxcs.xxzz.domain.WorkIndex;
 import com.zhyxcs.xxzz.service.ImageService;
+import com.zhyxcs.xxzz.service.WorkIndexService;
+import com.zhyxcs.xxzz.utils.ActionType;
 import com.zhyxcs.xxzz.utils.CommonUtils;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import com.zhyxcs.xxzz.utils.Logs;
@@ -30,6 +33,8 @@ public class ImageController extends BaseController {
     private ImageService imageService;
     @Autowired
     private ImageConfig imageConfig;
+    @Autowired
+    private WorkIndexService workIndexService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,13 +56,18 @@ public class ImageController extends BaseController {
         String bankCodePath = user.getSbankcode();
 
         Date currentDate = CommonUtils.newDate();
-        SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
         String datePath = format.format(currentDate);
+        String yearMounthPath = datePath.substring(0, 6);
+        String dayPath = datePath.substring(6);
         String imageName = String.valueOf(UUID.randomUUID());
 
         //文件相对路径，存数据库
-        String storePath = bankCodePath + File.separatorChar + datePath
+//        String storePath = bankCodePath + File.separatorChar + datePath
+//                + File.separatorChar + imageName;
+        //年月-日-流水号
+        String storePath = yearMounthPath + File.separatorChar + dayPath + File.separatorChar + transactionNum
                 + File.separatorChar + imageName;
 
         //image文件存储真实路径
@@ -86,14 +96,14 @@ public class ImageController extends BaseController {
 
                 lock.lock();
                 imageService.insert(image);
-                lock.unlock();
-
-                this.writeLog(Logs.IMAGE_UPLOAD);
+                this.writeLog(Logs.IMAGE_UPLOAD + " " + image.toString());
                 return image.getSid();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                lock.unlock();
             }
         }
 
@@ -105,14 +115,21 @@ public class ImageController extends BaseController {
         Image image = imageService.selectByPrimaryKey(sID);
 
         if (image != null){
-            String path = image.getSstorepath();
-            String basePath = imageConfig.getBasePath();
-            File file = new File(basePath + path);
+            String workIndexNum = image.getStransactionnum();
+            WorkIndex workIndex = workIndexService.selectByPrimaryKey(workIndexNum);
+            String state = workIndex.getSapprovalstate();
+            if (ActionType.APPROVAL_STATE_COMMERCE_NEW.equals(state) || ActionType.APPROVAL_STATE_NO_PASS.equals(state)) {
+                String path = image.getSstorepath();
+                String basePath = imageConfig.getBasePath();
+                File file = new File(basePath + path);
 
-            if (file != null && file.delete()){
-                imageService.deleteByPrimaryKey(sID);
-                this.writeLog(Logs.IMAGE_DELETE);
-                return 1;
+                if (file != null && file.delete()) {
+                    imageService.deleteByPrimaryKey(sID);
+                    this.writeLog(Logs.IMAGE_DELETE);
+                    return 1;
+                }
+            } else {
+                this.writeLog(Logs.IMAGE_DELETE_ILLEGAL + " " + workIndexNum);
             }
         }
 

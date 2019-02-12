@@ -9,6 +9,7 @@ import com.zhyxcs.xxzz.utils.CramsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,13 +57,17 @@ public class LicenceImageController extends BaseController{
         String bankCodePath = user.getSbankcode();
 
         Date currentDate = CommonUtils.newDate();
-        SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
         String datePath = format.format(currentDate);
+        String yearMounthPath = datePath.substring(0, 6);
+        String dayPath = datePath.substring(6);
         String imageName = String.valueOf(UUID.randomUUID());
 
         //文件相对路径，存数据库
-        String storePath = bankCodePath + File.separatorChar + datePath
+//        String storePath = bankCodePath + File.separatorChar + datePath
+//                + File.separatorChar + imageName;
+        String storePath = yearMounthPath + File.separatorChar + dayPath + File.separatorChar + transactionNum
                 + File.separatorChar + imageName;
 
         //image文件存储真实路径
@@ -92,9 +97,14 @@ public class LicenceImageController extends BaseController{
                 image.setSuploadusercode(user.getSusercode());
                 image.setSuploadusername(user.getSusername());
 
-                lock.lock();
-                licenceImageService.insert(image);
-                lock.unlock();
+                try {
+                    lock.lock();
+                    licenceImageService.insert(image);
+                } catch (DuplicateKeyException e) {
+                    licenceImageService.updateByPrimaryKey(image);
+                } finally {
+                    lock.unlock();
+                }
 
                 return 1;
             } catch (IllegalStateException e) {
