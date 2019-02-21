@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhyxcs.xxzz.mapper.SupervisionMapper" >
+  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.Supervision" >
+    <constructor >
+      <idArg column="sTransactionNum" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sAccountNum" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sDepositorName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUniqueSocialCreditCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sApprovalCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sBusinessDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sBusinessCertificateDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sRelatedTransctionNum" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sKind" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sApprovalState" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sCommitTimes" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sReturnTimes" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sPBCReturnTimes" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sCompleteTimes" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sBusinessCategory" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sAccountType" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sBankCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sBankName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUpUserCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sUpUserName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sStartTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sEndTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="sReviewUserCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sCheckUserCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sRecheckResult" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sRecheckOpinion" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sRecheckTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tsupervision
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.Supervision" >
+    insert into tsupervision (sTransactionNum, sAccountNum, sDepositorName, 
+      sUniqueSocialCreditCode, sApprovalCode, 
+      sBusinessDate, sBusinessCertificateDate, 
+      sRelatedTransctionNum, sKind, sApprovalState, 
+      sCommitTimes, sReturnTimes, sPBCReturnTimes, 
+      sCompleteTimes, sBusinessCategory, sAccountType, 
+      sBankCode, sBankName, sUpUserCode, 
+      sUpUserName, sStartTime, sEndTime, 
+      sReviewUserCode, sCheckUserCode, sRecheckResult, 
+      sRecheckOpinion, sRecheckTime)
+    values (#{stransactionnum,jdbcType=VARCHAR}, #{saccountnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR}, 
+      #{suniquesocialcreditcode,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR}, 
+      #{sbusinessdate,jdbcType=TIMESTAMP}, #{sbusinesscertificatedate,jdbcType=TIMESTAMP}, 
+      #{srelatedtransctionnum,jdbcType=VARCHAR}, #{skind,jdbcType=VARCHAR}, #{sapprovalstate,jdbcType=VARCHAR}, 
+      #{scommittimes,jdbcType=TIMESTAMP}, #{sreturntimes,jdbcType=TIMESTAMP}, #{spbcreturntimes,jdbcType=TIMESTAMP}, 
+      #{scompletetimes,jdbcType=TIMESTAMP}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
+      #{sbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR}, 
+      #{supusername,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, 
+      #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR}, #{srecheckresult,jdbcType=VARCHAR}, 
+      #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision" >
+    update tsupervision
+    set sAccountNum = #{saccountnum,jdbcType=VARCHAR},
+      sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
+      sUniqueSocialCreditCode = #{suniquesocialcreditcode,jdbcType=VARCHAR},
+      sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR},
+      sBusinessDate = #{sbusinessdate,jdbcType=TIMESTAMP},
+      sBusinessCertificateDate = #{sbusinesscertificatedate,jdbcType=TIMESTAMP},
+      sRelatedTransctionNum = #{srelatedtransctionnum,jdbcType=VARCHAR},
+      sKind = #{skind,jdbcType=VARCHAR},
+      sApprovalState = #{sapprovalstate,jdbcType=VARCHAR},
+      sCommitTimes = #{scommittimes,jdbcType=TIMESTAMP},
+      sReturnTimes = #{sreturntimes,jdbcType=TIMESTAMP},
+      sPBCReturnTimes = #{spbcreturntimes,jdbcType=TIMESTAMP},
+      sCompleteTimes = #{scompletetimes,jdbcType=TIMESTAMP},
+      sBusinessCategory = #{sbusinesscategory,jdbcType=VARCHAR},
+      sAccountType = #{saccounttype,jdbcType=VARCHAR},
+      sBankCode = #{sbankcode,jdbcType=VARCHAR},
+      sBankName = #{sbankname,jdbcType=VARCHAR},
+      sUpUserCode = #{supusercode,jdbcType=VARCHAR},
+      sUpUserName = #{supusername,jdbcType=VARCHAR},
+      sStartTime = #{sstarttime,jdbcType=TIMESTAMP},
+      sEndTime = #{sendtime,jdbcType=TIMESTAMP},
+      sReviewUserCode = #{sreviewusercode,jdbcType=VARCHAR},
+      sCheckUserCode = #{scheckusercode,jdbcType=VARCHAR},
+      sRecheckResult = #{srecheckresult,jdbcType=VARCHAR},
+      sRecheckOpinion = #{srecheckopinion,jdbcType=VARCHAR},
+      sRecheckTime = #{srechecktime,jdbcType=TIMESTAMP}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sApprovalCode, 
+    sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, sApprovalState, 
+    sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, sAccountType, 
+    sBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, sEndTime, sReviewUserCode, 
+    sCheckUserCode, sRecheckResult, sRecheckOpinion, sRecheckTime
+    from tsupervision
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sApprovalCode, 
+    sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, sApprovalState, 
+    sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, sAccountType, 
+    sBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, sEndTime, sReviewUserCode, 
+    sCheckUserCode, sRecheckResult, sRecheckOpinion, sRecheckTime
+    from tsupervision
+  </select>
+</mapper>

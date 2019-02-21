@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhyxcs.xxzz.mapper.SupervisionImageStandardMapper" >
+  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.SupervisionImageStandard" >
+    <constructor >
+      <idArg column="sID" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="sBusineesCategory" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sAccountType" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sProofName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sProofAmount" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sifNeedLicence" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tsupervisionimagestandard
+    where sID = #{sid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.SupervisionImageStandard" >
+    insert into tsupervisionimagestandard (sID, sBusineesCategory, sAccountType, 
+      sProofName, sProofAmount, sifNeedLicence
+      )
+    values (#{sid,jdbcType=INTEGER}, #{sbusineescategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
+      #{sproofname,jdbcType=VARCHAR}, #{sproofamount,jdbcType=VARCHAR}, #{sifneedlicence,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.SupervisionImageStandard" >
+    update tsupervisionimagestandard
+    set sBusineesCategory = #{sbusineescategory,jdbcType=VARCHAR},
+      sAccountType = #{saccounttype,jdbcType=VARCHAR},
+      sProofName = #{sproofname,jdbcType=VARCHAR},
+      sProofAmount = #{sproofamount,jdbcType=VARCHAR},
+      sifNeedLicence = #{sifneedlicence,jdbcType=INTEGER}
+    where sID = #{sid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount, sifNeedLicence
+    from tsupervisionimagestandard
+    where sID = #{sid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount, sifNeedLicence
+    from tsupervisionimagestandard
+  </select>
+</mapper>
