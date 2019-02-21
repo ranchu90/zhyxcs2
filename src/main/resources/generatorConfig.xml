@@ -76,6 +76,16 @@
         <!--<table tableName="tworkindex" domainObjectName="WorkIndex">-->
         <!--</table>-->
         <!--<table tableName="tlicenceimage" domainObjectName="LicenceImage">-->
-        </table>
+        <!--</table>-->
+        <!--<table tableName="tsupervision" domainObjectName="Supervision">-->
+        <!--</table>-->
+        <!--<table tableName="tsupervisionbusinessstatistics" domainObjectName="SupervisionBusinessStatistics">-->
+        <!--</table>-->
+        <!--<table tableName="tsupervisiongroundsforreturn" domainObjectName="SupervisionGroundsForReturn">-->
+        <!--</table>-->
+        <!--<table tableName="tsupervisionimage" domainObjectName="SupervisionImage">-->
+        <!--</table>-->
+        <!--<table tableName="tsupervisionimagestandard" domainObjectName="SupervisionImageStandard">-->
+        <!--</table>-->
     </context>
 </generatorConfiguration>
