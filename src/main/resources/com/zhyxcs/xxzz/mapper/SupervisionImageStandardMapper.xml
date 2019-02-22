@@ -41,4 +41,13 @@
     select sID, sBusineesCategory, sAccountType, sProofName, sProofAmount, sifNeedLicence
     from tsupervisionimagestandard
   </select>
+  <select id="svBusinessCategory" resultType="java.lang.String">
+    select distinct sBusineesCategory
+    from tsupervisionimagestandard
+  </select>
+  <select id="svAccountType" resultType="java.lang.String">
+    select distinct sAccountType
+    from tsupervisionimagestandard
+    where sBusineesCategory = #{businessCategory}
+  </select>
 </mapper>
