@@ -3,6 +3,7 @@ package com.zhyxcs.xxzz.mapper;
 import com.zhyxcs.xxzz.domain.SupervisionImageStandard;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface SupervisionImageStandardMapper {
@@ -19,4 +20,6 @@ public interface SupervisionImageStandardMapper {
     List svBusinessCategory();
 
     List<String> svAccountType(@Param("businessCategory") String businessCategory);
+
+    List<HashMap<String, Object>> certificateType(@Param("businessCategory") String businessCategory, @Param("accountType") String accountType);
 }

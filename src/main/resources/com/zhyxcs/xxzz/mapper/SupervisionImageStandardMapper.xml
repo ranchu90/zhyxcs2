@@ -50,4 +50,9 @@
     from tsupervisionimagestandard
     where sBusineesCategory = #{businessCategory}
   </select>
+  <select id="certificateType" resultType="java.util.HashMap">
+    select sProofName, sProofAmount
+    from tsupervisionimagestandard
+    where sBusineesCategory = #{businessCategory} and sAccountType = #{accountType}
+  </select>
 </mapper>
