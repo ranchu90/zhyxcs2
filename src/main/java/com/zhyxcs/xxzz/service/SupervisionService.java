@@ -15,6 +15,8 @@ public interface SupervisionService {
 
     int updateByPrimaryKey(Supervision record);
 
+    int newSupervision(Supervision supervision);
+
     List<Supervision> queryRecordByPageAndUserCodeBankEntry(String pageSize,
                                                             String currentPage,
                                                             String userCode,

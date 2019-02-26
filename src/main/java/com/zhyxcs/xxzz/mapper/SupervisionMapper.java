@@ -16,6 +16,8 @@ public interface SupervisionMapper {
 
     int updateByPrimaryKey(Supervision record);
 
+    int newSupervision(Supervision supervision);
+
     List<Supervision> queryRecordByPageAndUserCodeBankEntry(@Param("pageSize") String pageSize,
                                                             @Param("currentPage") String currentPage,
                                                             @Param("userCode") String userCode,
@@ -25,37 +27,37 @@ public interface SupervisionMapper {
                                                             @Param("depositorName")String depositorName,
                                                             @Param("businessType") String businessType);
 
-    List<Supervision> queryRecordByPageAndUserCodeBankCharge(@Param("pageSize") String pageSize,
-                                                             @Param("currentPage") String currentPage,
-                                                             @Param("userCode") String userCode,
-                                                             @Param("approvalState") String approvalState,
-                                                             @Param("userLevel") String userLevel,
-                                                             @Param("bankCode") String bankCode,
-                                                             @Param("depositorName")String depositorName,
-                                                             @Param("businessType") String businessType);
-
-    List<Supervision> queryRecordByPageAndUserCodeRenEntry(@Param("pageSize") String pageSize,
-                                                           @Param("currentPage") String currentPage,
-                                                           @Param("userCode") String userCode,
-                                                           @Param("approvalState") String approvalState,
-                                                           @Param("userLevel") String userLevel,
-                                                           @Param("bankCode") String bankCode,
-                                                           @Param("depositorName")String depositorName,
-                                                           @Param("businessType") String businessType);
-
-    List<Supervision> queryRecordByPageAndUserCodeRenCharge(@Param("pageSize") String pageSize,
-                                                            @Param("currentPage") String currentPage,
-                                                            @Param("userCode") String userCode,
-                                                            @Param("approvalState") String approvalState,
-                                                            @Param("userLevel") String userLevel,
-                                                            @Param("bankCode") String bankCode,
-                                                            @Param("depositorName")String depositorName,
-                                                            @Param("businessType") String businessType);
-
-    List<Supervision> queryRecordByPageAndUserCodeRenAdmin(@Param("pageSize") String pageSize,
-                                                           @Param("currentPage") String currentPage,
-                                                           @Param("userCode") String userCode,
-                                                           @Param("approvalState") String approvalState,
-                                                           @Param("userLevel") String userLevel,
-                                                           @Param("businessEmergency") String businessEmergency);
+//    List<Supervision> queryRecordByPageAndUserCodeBankCharge(@Param("pageSize") String pageSize,
+//                                                             @Param("currentPage") String currentPage,
+//                                                             @Param("userCode") String userCode,
+//                                                             @Param("approvalState") String approvalState,
+//                                                             @Param("userLevel") String userLevel,
+//                                                             @Param("bankCode") String bankCode,
+//                                                             @Param("depositorName")String depositorName,
+//                                                             @Param("businessType") String businessType);
+//
+//    List<Supervision> queryRecordByPageAndUserCodeRenEntry(@Param("pageSize") String pageSize,
+//                                                           @Param("currentPage") String currentPage,
+//                                                           @Param("userCode") String userCode,
+//                                                           @Param("approvalState") String approvalState,
+//                                                           @Param("userLevel") String userLevel,
+//                                                           @Param("bankCode") String bankCode,
+//                                                           @Param("depositorName")String depositorName,
+//                                                           @Param("businessType") String businessType);
+//
+//    List<Supervision> queryRecordByPageAndUserCodeRenCharge(@Param("pageSize") String pageSize,
+//                                                            @Param("currentPage") String currentPage,
+//                                                            @Param("userCode") String userCode,
+//                                                            @Param("approvalState") String approvalState,
+//                                                            @Param("userLevel") String userLevel,
+//                                                            @Param("bankCode") String bankCode,
+//                                                            @Param("depositorName")String depositorName,
+//                                                            @Param("businessType") String businessType);
+//
+//    List<Supervision> queryRecordByPageAndUserCodeRenAdmin(@Param("pageSize") String pageSize,
+//                                                           @Param("currentPage") String currentPage,
+//                                                           @Param("userCode") String userCode,
+//                                                           @Param("approvalState") String approvalState,
+//                                                           @Param("userLevel") String userLevel,
+//                                                           @Param("businessEmergency") String businessEmergency);
 }

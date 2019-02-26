@@ -3,16 +3,14 @@ package com.zhyxcs.xxzz.controller.sv;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.controller.BaseController;
+import com.zhyxcs.xxzz.domain.Orga;
 import com.zhyxcs.xxzz.domain.Supervision;
 import com.zhyxcs.xxzz.domain.User;
 import com.zhyxcs.xxzz.domain.WorkIndex;
 import com.zhyxcs.xxzz.service.SupervisionService;
 import com.zhyxcs.xxzz.utils.CramsConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -38,10 +36,10 @@ public class SupervisionController extends BaseController {
         pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
         currentPage = (currentPage == null || "".equals(currentPage.trim())) ? "1" : currentPage;
 
+        List<Supervision> svList = null;
+
         Map<String, Object> mapTest = new HashMap();
         PageHelper.startPage(Integer.parseInt(currentPage), Integer.parseInt(pageSize));
-
-        List<Supervision> svList = null;
 
         try {
             //判断用户的查询权限，根据用户级别
@@ -103,4 +101,34 @@ public class SupervisionController extends BaseController {
         return map;
     }
 
+    @RequestMapping(value = "/supervision", method = RequestMethod.POST)
+    public Supervision insert(@RequestBody Supervision supervision){
+        HttpSession session = super.request.getSession(false);
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+
+        int result = 0;
+
+        if (orga != null && user !=null) {
+
+            supervision.setSbankcode(orga.getSbankcode());
+            supervision.setSbankname(orga.getSbankname());
+            supervision.setSupusername(user.getSusername());
+            supervision.setSupusercode(user.getSusercode());
+
+            try {
+
+                result = supervisionService.newSupervision(supervision);
+            } catch (Exception e){
+                e.printStackTrace();
+
+            }
+        }
+
+        if (null != supervision.getStransactionnum()){
+            return supervision;
+        } else {
+            return null;
+        }
+    }
 }

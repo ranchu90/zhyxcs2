@@ -106,21 +106,37 @@
     from tsupervision
   </select>
 
+  <insert id="newSupervision" parameterType="com.zhyxcs.xxzz.domain.Supervision" statementType="CALLABLE">
+    {
+        call generate_sv_serial_number_by_bankcode(
+         #{sbankcode, mode=IN,jdbcType=VARCHAR},
+         #{sdepositorname, mode=IN,jdbcType=VARCHAR},
+         #{sbusinesscategory, mode=IN,jdbcType=VARCHAR},
+         #{saccounttype, mode=IN,jdbcType=VARCHAR},
+         #{sbankname, mode=IN,jdbcType=VARCHAR},
+         #{supusercode, mode=IN,jdbcType=VARCHAR},
+         #{supusername, mode=IN,jdbcType=VARCHAR},
+         #{sapprovalcode, mode=IN,jdbcType=VARCHAR},
+         #{saccountnum, mode=IN,jdbcType=VARCHAR},
+         #{suniquesocialcreditcode, mode=IN,jdbcType=VARCHAR},
+         #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
+        )
+    }
+</insert>
+
   <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.Supervision">
     select *
     from tsupervision
     where
-    <if test="approvalState != null and approvalState != ''">
-      sApprovalState = #{approvalState}
-    </if>
-    and (sUpUserCode = #{userCode})
+    sApprovalState = #{approvalState,jdbcType=VARCHAR}
+    and sUpUserCode = #{userCode,jdbcType=VARCHAR}
     <if test="depositorName != null and depositorName != ''">
       and sDepositorName like CONCAT('%',#{depositorName} ,'%')
     </if>
     <if test="businessType != null and businessType != ''">
       and sBusinessCategory = #{businessType}
     </if>
-    order by sEndTime
+    order by sStartTime
     <if test="approvalState >= 3">
       desc
     </if>

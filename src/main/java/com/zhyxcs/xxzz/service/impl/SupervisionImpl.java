@@ -39,6 +39,11 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
+    public int newSupervision(Supervision supervision) {
+        return supervisionMapper.newSupervision(supervision);
+    }
+
+    @Override
     public List<Supervision> queryRecordByPageAndUserCodeBankEntry(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String bankCode, String depositorName, String businessType) {
         return supervisionMapper.queryRecordByPageAndUserCodeBankEntry(pageSize,
                 userCode,
