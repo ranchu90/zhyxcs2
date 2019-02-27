@@ -44,10 +44,12 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeBankEntry(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String bankCode, String depositorName, String businessType) {
+    public List<Supervision> queryRecordByPageAndUserCodeBankEntry(String pageSize, String currentPage, String userCode,
+                                                                   String approvalState, String userLevel, String bankCode,
+                                                                   String depositorName, String businessType) {
         return supervisionMapper.queryRecordByPageAndUserCodeBankEntry(pageSize,
-                userCode,
                 currentPage,
+                userCode,
                 approvalState,
                 userLevel,
                 bankCode,
@@ -56,22 +58,29 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage, String approvalState, String userLevel, String bankCode, String depositorName, String businessType) {
+    public List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage,
+                                                                    String approvalState, String userLevel, String bankCode,
+                                                                    String depositorName, String businessType) {
         return null;
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String approvalState, String userLevel, String pbcCode, String bankCode, String depositorName, String businessType) {
+    public List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String approvalState,
+                                                                  String userLevel, String pbcCode, String bankCode,
+                                                                  String depositorName, String businessType) {
         return null;
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String approvalState, String userLevel, String pbcCode, String bankCode, String depositorName, String businessType) {
+    public List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String approvalState,
+                                                                   String userLevel, String pbcCode, String bankCode,
+                                                                   String depositorName, String businessType) {
         return null;
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeRenAdmin(String pageSize, String currentPage, String userCode, String approvalState, String userLevel, String businessEmergency) {
+    public List<Supervision> queryRecordByPageAndUserCodeRenAdmin(String pageSize, String currentPage, String userCode,
+                                                                  String approvalState, String userLevel, String businessEmergency) {
         return null;
     }
 }

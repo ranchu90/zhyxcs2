@@ -125,8 +125,7 @@
 </insert>
 
   <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.Supervision">
-    select *
-    from tsupervision
+    select * from tsupervision
     where
     sApprovalState = #{approvalState,jdbcType=VARCHAR}
     and sUpUserCode = #{userCode,jdbcType=VARCHAR}
@@ -136,10 +135,7 @@
     <if test="businessType != null and businessType != ''">
       and sBusinessCategory = #{businessType}
     </if>
-    order by sStartTime
-    <if test="approvalState >= 3">
-      desc
-    </if>
+    order by sStartTime desc
   </select>
   <!--<select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
 

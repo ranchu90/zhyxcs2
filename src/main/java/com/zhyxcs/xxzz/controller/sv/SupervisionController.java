@@ -33,13 +33,13 @@ public class SupervisionController extends BaseController {
 //        String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
 
+        List<Supervision> svList = null;
+
         pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
         currentPage = (currentPage == null || "".equals(currentPage.trim())) ? "1" : currentPage;
 
-        List<Supervision> svList = null;
-
         Map<String, Object> mapTest = new HashMap();
-        PageHelper.startPage(Integer.parseInt(currentPage), Integer.parseInt(pageSize));
+//        PageHelper.startPage(Integer.parseInt(currentPage), Integer.parseInt(pageSize));
 
         try {
             //判断用户的查询权限，根据用户级别
