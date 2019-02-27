@@ -126,10 +126,11 @@ public class SVImageController extends BaseController {
             String workIndexNum = image.getStransactionnum();
             Supervision supervision = supervisionService.selectByPrimaryKey(workIndexNum);
             String state = supervision.getSapprovalstate();
-            //只有编辑状态的可以删除
-            if (ActionType.APPROVAL_STATE_COMMERCE_NEW.equals(state)) {
+            //只有编辑状态和整改状态的业务可以删除
+            if (ActionType.SV_APPROVAL_STATE_COMMERCE_NEW.equals(state) ||
+            ActionType.SV_APPROVAL_STATE_NO_PASS.equals(state)) {
                 String path = image.getSstorepath();
-                String basePath = imageConfig.getBasePath();
+                String basePath = imageConfig.getSvBasePath();
                 File file = new File(basePath + path);
 
                 if (file != null && file.delete()) {
@@ -161,7 +162,7 @@ public class SVImageController extends BaseController {
 
     @RequestMapping(value = "/image64", method = RequestMethod.GET)
     public void getBase64Image(@RequestParam(value = "path") String path, HttpServletResponse response){
-        String basePath = imageConfig.getBasePath();
+        String basePath = imageConfig.getSvBasePath();
 
         CommonUtils.downloadImage(basePath + path, response);
     }

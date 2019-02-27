@@ -13,4 +13,6 @@ public interface SupervisionImageMapper {
     List<SupervisionImage> selectAll();
 
     int updateByPrimaryKey(SupervisionImage record);
+
+    List<SupervisionImage> selectImagesByTranID(String sTransactionNum);
 }

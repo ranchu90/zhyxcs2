@@ -26,7 +26,7 @@ public class SVImageImpl implements SVImageService {
 
     @Override
     public List<SupervisionImage> selectImagesByTranID(String sTransactionNum) {
-        return null;
+        return supervisionImageMapper.selectImagesByTranID(sTransactionNum);
     }
 
     @Override
