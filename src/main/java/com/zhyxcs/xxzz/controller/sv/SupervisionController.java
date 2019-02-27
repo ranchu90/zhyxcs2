@@ -75,7 +75,7 @@ public class SupervisionController extends BaseController {
             workTemp.put("scompletetimes", completeDate);
             workTemp.put("sendtime", endDate);
             workTemp.put("scommittimes", commitDate);
-            workTemp.put("sapprovalstate", approvelState);
+            workTemp.put("sapprovalstate", this.approvalState(approvelState));
             workTemp.put("sapprovalcode", sv.getSapprovalcode());
             workTemp.put("saccounttype", sv.getSaccounttype());
             workTemp.put("sbankcode", sv.getSbankcode());
@@ -99,6 +99,19 @@ public class SupervisionController extends BaseController {
         map.put("workIndexList", newSVList);
 
         return map;
+    }
+
+    private String approvalState(String code){
+        switch (code){
+            case "0": return "待整改";
+            case "1": return "待编辑";
+            case "2": return "待复查";
+//            case "4": return "待通过";
+            case "3": return "待督查";
+            case "4": return "待复督查";
+            case "5": return "已完成";
+        }
+        return null;
     }
 
     @RequestMapping(value = "/supervision", method = RequestMethod.POST)

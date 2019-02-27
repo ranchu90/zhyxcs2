@@ -127,7 +127,14 @@
   <select id="queryRecordByPageAndUserCodeBankEntry" resultType="com.zhyxcs.xxzz.domain.Supervision">
     select * from tsupervision
     where
-    sApprovalState = #{approvalState,jdbcType=VARCHAR}
+    <choose>
+      <when test="approvalState == 4 or approvalState == 5">
+        (sApprovalState = '4' or sApprovalState = '5')
+      </when>
+       <otherwise>
+         sApprovalState = #{approvalState,jdbcType=VARCHAR}
+       </otherwise>
+    </choose>
     and sUpUserCode = #{userCode,jdbcType=VARCHAR}
     <if test="depositorName != null and depositorName != ''">
       and sDepositorName like CONCAT('%',#{depositorName} ,'%')
