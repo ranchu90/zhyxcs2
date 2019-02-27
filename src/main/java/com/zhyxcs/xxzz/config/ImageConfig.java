@@ -10,6 +10,15 @@ import org.springframework.stereotype.Component;
 public class ImageConfig {
     private String basePath;
     private String licenceBasePath;
+    private String svBasePath;
+
+    public String getSvBasePath() {
+        return svBasePath;
+    }
+
+    public void setSvBasePath(String svBasePath) {
+        this.svBasePath = svBasePath;
+    }
 
     public String getLicenceBasePath() {
         return licenceBasePath;
