@@ -1,6 +1,7 @@
 package com.zhyxcs.xxzz.utils;
 
 public class ActionType {
+    //影像传输系统
     public static final String COMMIT = "commit";
     public static final String COMMIT_REN = "commit_ren";
     public static final String CALL_BACK = "call_back";
@@ -13,7 +14,6 @@ public class ActionType {
     public static final String ACCELERATE = "accelerate";
     public static final String END = "end";
 
-    //影像传输系统
     //商业银行录入员新增任务，没有提交给商业银行复核员或没有提交给人民银行审核员之前
     public static final String APPROVAL_STATE_COMMERCE_NEW="0";
     //商业银行录入员完成影像录入，提交给商业银行复核员之后
@@ -28,6 +28,18 @@ public class ActionType {
     public static final String APPROVAL_STATE_ERROR="5";
 
     //事后监督系统
+    //录入员
+    public static final String SV_COMMIT = "commit";
+    //录入员和商业复查员
+    public static final String SV_COMMIT_REN = "commit_ren";
+    public static final String SV_SEND_BACK = "send_back";
+    //人行录入，人行复查
+    public static final String SV_WAIT_CORRECT = "wait_correct";
+    public static final String SV_REVIEW = "review";
+    public static final String SV_CHECK = "check";
+    public static final String SV_RECHECK = "recheck";
+    public static final String SV_END = "end";
+
     /*
     * 'APPROVAL_STATE_COMMERCE_NEW': 1,
     'APPROVAL_STATE_COMMERCE_REVIEW': 2,
@@ -46,6 +58,8 @@ public class ActionType {
     public static final String SV_APPROVAL_STATE_PBC_RECHECK="4";
     //商业银行复核员或人民银行审核员对商业银行录入员提交的业务不通过,返回整改的业务状态
     public static final String SV_APPROVAL_STATE_NO_PASS="0";
+    //被要求整改的业务
+    public static final String SV_APPROVAL_STATE_WAIT_CORRECT="6";
     //人民银行审核员终止业务，因商业银行提交的业务发生不可容忍的错误
     public static final String SV_APPROVAL_STATE_END="5";
 
