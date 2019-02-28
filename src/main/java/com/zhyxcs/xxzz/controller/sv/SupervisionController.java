@@ -2,14 +2,17 @@ package com.zhyxcs.xxzz.controller.sv;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.controller.BaseController;
 import com.zhyxcs.xxzz.domain.*;
+import com.zhyxcs.xxzz.service.SVImageService;
 import com.zhyxcs.xxzz.service.SupervisionService;
 import com.zhyxcs.xxzz.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.*;
 
 @RestController
@@ -17,6 +20,10 @@ import java.util.*;
 public class SupervisionController extends BaseController {
     @Autowired
     SupervisionService supervisionService;
+    @Autowired
+    SVImageService svImageService;
+    @Autowired
+    private ImageConfig imageConfig;
 
     @RequestMapping(value = "/supervisions", method = RequestMethod.GET)
     public HashMap<String, Object> getSupervisionsByPages(@RequestParam(value = "pageSize") String pageSize,
@@ -210,5 +217,49 @@ public class SupervisionController extends BaseController {
         }
 
         return resultMap;
+    }
+
+    @RequestMapping(value = "/supervision", method = RequestMethod.DELETE)
+    public int deleteWorkIndexByTranID(@RequestParam(value = "stransactionnum") String stransactionnum){
+        Supervision supervision = supervisionService.selectByPrimaryKey(stransactionnum);
+
+        HttpSession session = super.request.getSession(false);
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userCode = supervision.getSupusercode();
+        String approvalState = supervision.getSapprovalstate();
+
+        if (!userCode.equals(user.getSusercode()) || !(ActionType.SV_APPROVAL_STATE_COMMERCE_NEW.equals(approvalState))){
+            this.writeLog(Logs.TRANS_DELETE_ILLEGAL + supervision.toString());
+            return -1;
+        }
+
+        List<SupervisionImage> imageList = svImageService.selectImagesByTranID(stransactionnum);
+
+        for (SupervisionImage image : imageList){
+
+            if (image != null){
+                String path = image.getSstorepath();
+                String basePath = imageConfig.getSvBasePath();
+                File file = new File(basePath + path);
+
+                if (file != null && file.delete()){
+                    svImageService.deleteByPrimaryKey(image.getSid());
+                }
+            }
+        }
+
+        this.writeLog(Logs.IMAGE_DELETE);
+        this.writeLog(Logs.TRANS_DELETE + supervision.toString());
+        return supervisionService.deleteByPrimaryKey(stransactionnum);
+    }
+
+    @RequestMapping(value = "/supervisionNum", method = RequestMethod.GET)
+    public int queryRecordTotalNum(@RequestParam(value = "approvalState") String approvalState){
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String currentBankCode = user.getSbankcode();
+        String userLevel = user.getSuserlevel();
+
+        return supervisionService.queryRecordTotalNum(user.getSusercode(), userLevel, approvalState, currentBankCode);
     }
 }

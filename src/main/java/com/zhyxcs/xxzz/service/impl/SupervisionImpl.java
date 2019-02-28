@@ -88,4 +88,9 @@ public class SupervisionImpl implements SupervisionService {
     public int updateApprovalStateNameByPrimaryKey(Supervision supervision, String action) {
         return supervisionMapper.updateApprovalStateNameByPrimaryKey(supervision, action);
     }
+
+    @Override
+    public int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode) {
+        return supervisionMapper.queryRecordTotalNum(useCode, userLevel, approvalState, bankCode);
+    }
 }

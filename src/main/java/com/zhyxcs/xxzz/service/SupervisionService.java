@@ -60,4 +60,6 @@ public interface SupervisionService {
                                                            String businessEmergency);
 
     int updateApprovalStateNameByPrimaryKey(Supervision supervision, String action);
+
+    int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode);
 }

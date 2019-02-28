@@ -169,4 +169,13 @@
     </if>
     where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
   </update>
+
+  <select id="queryRecordTotalNum" resultType="int">
+    select count(sTransactionNum)
+    from tsupervision
+    where sApprovalState = #{approvalState}
+    <if test="userLevel == 1">
+      and sUpUserCode = #{userCode} and sBankCode = #{bankCode}
+    </if>
+  </select>
 </mapper>
