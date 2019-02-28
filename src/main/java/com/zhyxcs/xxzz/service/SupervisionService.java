@@ -58,4 +58,6 @@ public interface SupervisionService {
                                                            String approvalState,
                                                            String userLevel,
                                                            String businessEmergency);
+
+    int updateApprovalStateNameByPrimaryKey(Supervision supervision, String action);
 }

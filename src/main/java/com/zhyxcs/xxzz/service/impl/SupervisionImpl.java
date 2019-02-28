@@ -83,4 +83,9 @@ public class SupervisionImpl implements SupervisionService {
                                                                   String approvalState, String userLevel, String businessEmergency) {
         return null;
     }
+
+    @Override
+    public int updateApprovalStateNameByPrimaryKey(Supervision supervision, String action) {
+        return supervisionMapper.updateApprovalStateNameByPrimaryKey(supervision, action);
+    }
 }

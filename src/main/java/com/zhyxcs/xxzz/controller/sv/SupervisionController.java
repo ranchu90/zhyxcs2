@@ -3,12 +3,9 @@ package com.zhyxcs.xxzz.controller.sv;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.controller.BaseController;
-import com.zhyxcs.xxzz.domain.Orga;
-import com.zhyxcs.xxzz.domain.Supervision;
-import com.zhyxcs.xxzz.domain.User;
-import com.zhyxcs.xxzz.domain.WorkIndex;
+import com.zhyxcs.xxzz.domain.*;
 import com.zhyxcs.xxzz.service.SupervisionService;
-import com.zhyxcs.xxzz.utils.CramsConstants;
+import com.zhyxcs.xxzz.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -143,5 +140,75 @@ public class SupervisionController extends BaseController {
         } else {
             return null;
         }
+    }
+
+    @RequestMapping(value = "/ApprovalState", method = RequestMethod.PUT)
+    public HashMap updateSupervisionByApprovalState(@RequestBody Supervision supervision,
+                                                  @RequestParam(value = "action") String action,
+                                                  @RequestParam(value = "groundsId", required = false) String groundsId,
+                                                  @RequestParam(value = "grounds", required = false) String grounds,
+                                                  @RequestParam(value = "groundsState", required = false) String groundsState){
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userCode = user.getSusercode();
+        String userName = user.getSusername();
+        HashMap resultMap = new HashMap();
+
+        Supervision dbSupervision = supervisionService.selectByPrimaryKey(supervision.getStransactionnum());
+        //如果数据库不存在此业务返回错误代码
+        if (dbSupervision == null) {
+            resultMap.put("error", "没有这笔业务！");
+            return resultMap;
+        }
+
+        String dbApprovalState = dbSupervision.getSapprovalstate();
+
+        //审核通过的业务只能被复审或上传许可证
+        if (ActionType.SV_APPROVAL_STATE_NO_PASS.equals(dbApprovalState) &&
+                !(action.equals(ActionType.RECHECK) || action.equals(ActionType.UPLOAD_LICENCE))){
+            resultMap.put("error", "该业务已通过无法进行退回、撤销、终止操作！");
+            return resultMap;
+        }
+
+        //被终止的业务无法修改状态
+        if (ActionType.SV_APPROVAL_STATE_END.equals(dbApprovalState)){
+            resultMap.put("error", "该业务已被终止！");
+            return resultMap;
+        }
+
+        Supervision tempSupervision;
+
+        Date date = CommonUtils.newDate();
+        try {
+//            lock.lock();
+            switch (action) {
+                case ActionType.COMMIT:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_REVIEW);
+                    supervision.setSendtime(date);
+                    break;
+                case ActionType.COMMIT_REN:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
+                    supervision.setSendtime(date);
+                    supervision.setScommittimes(date);
+                    break;
+            }
+        } catch (Exception e) {
+//            logger.error("## Error Information ##: {}", e);
+        } finally {
+//            lock.unlock();
+        }
+
+        this.writeLog(Logs.TRANS_UPDATE_APPROVALSTATE + ":" + action);
+
+        int result = 0;
+
+        try {
+            result = supervisionService.updateApprovalStateNameByPrimaryKey(supervision, action);
+            resultMap.put("success", "更新成功！");
+        } catch (Exception e) {
+//            logger.error("## Error Information ##: {}", e);
+        }
+
+        return resultMap;
     }
 }

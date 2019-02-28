@@ -60,4 +60,6 @@ public interface SupervisionMapper {
 //                                                           @Param("approvalState") String approvalState,
 //                                                           @Param("userLevel") String userLevel,
 //                                                           @Param("businessEmergency") String businessEmergency);
+
+    int updateApprovalStateNameByPrimaryKey(Supervision supervision, @Param("action") String action);
 }

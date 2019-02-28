@@ -156,4 +156,17 @@
   <!--<select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
 
   <!--</select>-->
+
+  <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
+    update tsupervision
+    set sApprovalState = #{supervision.sapprovalstate,jdbcType=VARCHAR}
+    <if test="action == 'commit'">
+      , sEndTime = #{supervision.sendtime, jdbcType=TIMESTAMP}
+    </if>
+    <if test="action == 'commit_ren'">
+      , sEndTime = #{supervision.sendtime, jdbcType=TIMESTAMP}
+      , sCommitTimes = #{supervision.scommittimes, jdbcType=TIMESTAMP}
+    </if>
+    where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
+  </update>
 </mapper>
