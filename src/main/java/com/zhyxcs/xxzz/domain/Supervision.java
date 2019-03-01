@@ -37,6 +37,8 @@ public class Supervision {
 
     private String sbankcode;
 
+    private String spbcbankcode;
+
     private String sbankname;
 
     private String supusercode;
@@ -51,13 +53,15 @@ public class Supervision {
 
     private String scheckusercode;
 
+    private String srecheckusercode;
+
     private String srecheckresult;
 
     private String srecheckopinion;
 
     private Date srechecktime;
 
-    public Supervision(String stransactionnum, String saccountnum, String sdepositorname, String suniquesocialcreditcode, String sapprovalcode, Date sbusinessdate, Date sbusinesscertificatedate, String srelatedtransctionnum, String skind, String sapprovalstate, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, String sbusinesscategory, String saccounttype, String sbankcode, String sbankname, String supusercode, String supusername, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckresult, String srecheckopinion, Date srechecktime) {
+    public Supervision(String stransactionnum, String saccountnum, String sdepositorname, String suniquesocialcreditcode, String sapprovalcode, Date sbusinessdate, Date sbusinesscertificatedate, String srelatedtransctionnum, String skind, String sapprovalstate, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckresult, String srecheckopinion, Date srechecktime) {
         this.stransactionnum = stransactionnum;
         this.saccountnum = saccountnum;
         this.sdepositorname = sdepositorname;
@@ -75,6 +79,7 @@ public class Supervision {
         this.sbusinesscategory = sbusinesscategory;
         this.saccounttype = saccounttype;
         this.sbankcode = sbankcode;
+        this.spbcbankcode = spbcbankcode;
         this.sbankname = sbankname;
         this.supusercode = supusercode;
         this.supusername = supusername;
@@ -82,6 +87,7 @@ public class Supervision {
         this.sendtime = sendtime;
         this.sreviewusercode = sreviewusercode;
         this.scheckusercode = scheckusercode;
+        this.srecheckusercode = srecheckusercode;
         this.srecheckresult = srecheckresult;
         this.srecheckopinion = srecheckopinion;
         this.srechecktime = srechecktime;
@@ -227,6 +233,14 @@ public class Supervision {
         this.sbankcode = sbankcode == null ? null : sbankcode.trim();
     }
 
+    public String getSpbcbankcode() {
+        return spbcbankcode;
+    }
+
+    public void setSpbcbankcode(String spbcbankcode) {
+        this.spbcbankcode = spbcbankcode == null ? null : spbcbankcode.trim();
+    }
+
     public String getSbankname() {
         return sbankname;
     }
@@ -281,6 +295,14 @@ public class Supervision {
 
     public void setScheckusercode(String scheckusercode) {
         this.scheckusercode = scheckusercode == null ? null : scheckusercode.trim();
+    }
+
+    public String getSrecheckusercode() {
+        return srecheckusercode;
+    }
+
+    public void setSrecheckusercode(String srecheckusercode) {
+        this.srecheckusercode = srecheckusercode == null ? null : srecheckusercode.trim();
     }
 
     public String getSrecheckresult() {

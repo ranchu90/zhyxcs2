@@ -7,6 +7,7 @@ import com.zhyxcs.xxzz.controller.BaseController;
 import com.zhyxcs.xxzz.domain.*;
 import com.zhyxcs.xxzz.service.SVImageService;
 import com.zhyxcs.xxzz.service.SupervisionService;
+import com.zhyxcs.xxzz.service.UserService;
 import com.zhyxcs.xxzz.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class SupervisionController extends BaseController {
     SupervisionService supervisionService;
     @Autowired
     SVImageService svImageService;
+    @Autowired
+    UserService userService;
     @Autowired
     private ImageConfig imageConfig;
 
@@ -261,5 +264,52 @@ public class SupervisionController extends BaseController {
         String userLevel = user.getSuserlevel();
 
         return supervisionService.queryRecordTotalNum(user.getSusercode(), userLevel, approvalState, currentBankCode);
+    }
+
+    @RequestMapping(value = "/operators", method = RequestMethod.GET)
+    public HashMap queryOperators(@RequestParam(value = "transactionNum") String transactionNum){
+        HashMap<String, Object> map = new HashMap<>();
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+        String userCode = user.getSusercode();
+        String bankCode = orga.getSbankcode();
+        Supervision supervision = supervisionService.selectByPrimaryKey(transactionNum);
+
+        if (supervision != null){
+            String upUserCode = supervision.getSupusercode();
+            String reviewUserCode = supervision.getSreviewusercode();
+            String checkUserCode = supervision.getScheckusercode();
+            String recheckUserCode = supervision.getSrecheckusercode();
+
+            if (userCode.equals(upUserCode) || userCode.equals(reviewUserCode) ||
+                    userCode.equals(checkUserCode) || userCode.equals(recheckUserCode) || userCode.equals("admin") ||
+                    bankCode.equals(supervision.getSpbcbankcode()) || bankCode.equals(supervision.getSbankcode())){
+                String upUserName = supervision.getSupusername();
+                String reviewName;
+                String checkName;
+                String recheckName;
+
+                User reviewUser = userService.selectByPrimaryKey(reviewUserCode);
+                reviewName = reviewUser != null? reviewUser.getSusername() : null;
+
+                User checkUser = userService.selectByPrimaryKey(checkUserCode);
+                checkName = checkUser != null? checkUser.getSusername() : null;
+
+                User recheckUser = userService.selectByPrimaryKey(recheckUserCode);
+                recheckName = recheckUser != null? recheckUser.getSusername() : null;
+
+                map.put("upUserName", upUserName);
+                map.put("reviewName", reviewName);
+                map.put("checkName", checkName);
+                map.put("recheckName", recheckName);
+            } else {
+                map.put("error", "无权限查看经办人！");
+            }
+        } else {
+            map.put("error", "该笔业务不存在！");
+        }
+
+        return map;
     }
 }
