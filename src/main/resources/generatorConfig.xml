@@ -77,8 +77,8 @@
         <!--</table>-->
         <!--<table tableName="tlicenceimage" domainObjectName="LicenceImage">-->
         <!--</table>-->
-        <!--<table tableName="tsupervision" domainObjectName="Supervision">-->
-        <!--</table>-->
+        <table tableName="tsupervision" domainObjectName="Supervision">
+        </table>
         <!--<table tableName="tsupervisionbusinessstatistics" domainObjectName="SupervisionBusinessStatistics">-->
         <!--</table>-->
         <!--<table tableName="tsupervisiongroundsforreturn" domainObjectName="SupervisionGroundsForReturn">-->
