@@ -38,6 +38,8 @@ public interface SupervisionMapper {
 
     int updateApprovalStateNameByPrimaryKey(Supervision supervision, @Param("action") String action);
 
-    int queryRecordTotalNum(@Param("useCode") String useCode, @Param("userLevel") String userLevel, @Param("approvalState") String approvalState,
+    int queryRecordTotalNum(@Param("userCode") String userCode, @Param("userLevel") String userLevel, @Param("approvalState") String approvalState,
                             @Param("bankCode") String bankCode);
+
+    int occupyTransaction(Supervision supervision);
 }

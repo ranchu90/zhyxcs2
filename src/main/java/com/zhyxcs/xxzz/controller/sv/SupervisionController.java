@@ -37,7 +37,7 @@ public class SupervisionController extends BaseController {
                                                           @RequestParam(value = "businessType", required = false) String businessType){
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
-//        String currentBankCode = user.getSbankcode();
+        String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
 
         List<Supervision> svList = null;
@@ -53,11 +53,11 @@ public class SupervisionController extends BaseController {
             switch (userLevel) {
                 case "1":
                     svList = supervisionService.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage,
-                            user.getSusercode(), approvalState, userLevel, bankCode, depositorName, businessType);
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType);
                     break;
                 case "2":
                     svList = supervisionService.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage,
-                            user.getSusercode(), approvalState, userLevel, bankCode, depositorName, businessType);
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType);
                     break;
             }
         } catch (Exception e) {
@@ -207,6 +207,11 @@ public class SupervisionController extends BaseController {
                     supervision.setSendtime(date);
                     supervision.setScommittimes(date);
                     break;
+                case ActionType.REVIEW:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
+                    supervision.setSreviewusercode(userCode);
+                    supervision.setScommittimes(date);
+                    break;
             }
         } catch (Exception e) {
 //            logger.error("## Error Information ##: {}", e);
@@ -317,5 +322,60 @@ public class SupervisionController extends BaseController {
         }
 
         return map;
+    }
+
+    @RequestMapping(value = "/occupy", method = RequestMethod.GET)
+    public HashMap occupyTransaction(@RequestParam(value = "transactionNum") String transactionNum){
+        HttpSession session = super.request.getSession(false);
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        String userLevel = user.getSuserlevel();
+        String userBankCode = user.getSbankcode();
+        String userCode = user.getSusercode();
+
+        HashMap result = new HashMap();
+
+        Supervision supervision = supervisionService.selectByPrimaryKey(transactionNum);
+
+        if (supervision != null){
+            switch (userLevel) {
+                case "2":
+                    String reviewUserCode = supervision.getSreviewusercode();
+                    if (!userBankCode.equals(supervision.getSbankcode()) || (reviewUserCode!=null && !reviewUserCode.equals(userCode))) {
+                        result.put("error", "你没有权限操作该笔业务！");
+                        return result;
+                    } else if (reviewUserCode == null) {
+                        supervision.setSreviewusercode(userCode);
+                        supervisionService.occupyTransaction(supervision);
+                    }
+
+                    break;
+                case "4":
+                    String checkUserCode = supervision.getScheckusercode();
+                    if (!userBankCode.equals(supervision.getSpbcbankcode()) || (checkUserCode!=null && !checkUserCode.equals(userCode))) {
+                        result.put("error", "你没有权限操作该笔业务！");
+                        return result;
+                    } else if (checkUserCode == null) {
+                        supervision.setScheckusercode(userCode);
+                        supervisionService.occupyTransaction(supervision);
+                    }
+                    break;
+                case "5":
+                    String reCheckUserCode = supervision.getSrecheckusercode();
+                    if (!userBankCode.equals(supervision.getSpbcbankcode()) || (reCheckUserCode!=null && !reCheckUserCode.equals(userCode))) {
+                        result.put("error", "你没有权限操作该笔业务！");
+                        return result;
+                    } else if (reCheckUserCode == null) {
+                        supervision.setSrecheckusercode(userCode);
+                        supervisionService.occupyTransaction(supervision);
+                    }
+                    break;
+            }
+
+            result.put("success", "success");
+        } else {
+            result.put("error", "该流水号监督业务不存在");
+        }
+
+        return result;
     }
 }

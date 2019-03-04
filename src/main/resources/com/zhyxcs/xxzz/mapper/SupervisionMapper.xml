@@ -188,6 +188,10 @@
       , sEndTime = #{supervision.sendtime, jdbcType=TIMESTAMP}
       , sCommitTimes = #{supervision.scommittimes, jdbcType=TIMESTAMP}
     </if>
+    <if test="action == 'review'">
+      , sReviewUserCode = #{supervision.sreviewusercode, jdbcType=TIMESTAMP}
+      , sCommitTimes = #{supervision.scommittimes, jdbcType=TIMESTAMP}
+    </if>
     where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
   </update>
 
@@ -196,7 +200,26 @@
     from tsupervision
     where sApprovalState = #{approvalState,jdbcType=VARCHAR}
     <if test="userLevel == 1">
-      and sUpUserCode = #{useCode,jdbcType=VARCHAR} and sBankCode = #{bankCode,jdbcType=VARCHAR}
+      and sUpUserCode = #{userCode,jdbcType=VARCHAR} and sBankCode = #{bankCode,jdbcType=VARCHAR}
+    </if>
+    <if test="userLevel == 2">
+      <choose>
+        <when test="approvalState == 2">
+          and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
+        </when>
+        <otherwise>
+          and sReviewUserCode = #{userCode}
+        </otherwise>
+      </choose>
+      and sBankCode = #{bankCode,jdbcType=VARCHAR}
     </if>
   </select>
+
+  <update id="occupyTransaction" parameterType="com.zhyxcs.xxzz.domain.Supervision">
+    update tsupervision
+    set sReviewUserCode = #{sreviewusercode,jdbcType=VARCHAR},
+    sCheckUserCode = #{scheckusercode,jdbcType=VARCHAR},
+    sRecheckUserCode = #{srecheckusercode,jdbcType=VARCHAR}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+    </update>
 </mapper>

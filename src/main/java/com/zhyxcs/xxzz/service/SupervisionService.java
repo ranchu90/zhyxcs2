@@ -63,4 +63,6 @@ public interface SupervisionService {
     int updateApprovalStateNameByPrimaryKey(Supervision supervision, String action);
 
     int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode);
+
+    int occupyTransaction(Supervision supervision);
 }

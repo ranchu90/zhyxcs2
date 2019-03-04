@@ -94,4 +94,9 @@ public class SupervisionImpl implements SupervisionService {
     public int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode) {
         return supervisionMapper.queryRecordTotalNum(useCode, userLevel, approvalState, bankCode);
     }
+
+    @Override
+    public int occupyTransaction(Supervision supervision) {
+        return supervisionMapper.occupyTransaction(supervision);
+    }
 }
