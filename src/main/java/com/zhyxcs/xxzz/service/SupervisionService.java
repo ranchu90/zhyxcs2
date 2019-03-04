@@ -28,6 +28,7 @@ public interface SupervisionService {
 
     List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize,
                                                              String currentPage,
+                                                             String userCode,
                                                              String approvalState,
                                                              String userLevel,
                                                              String bankCode,

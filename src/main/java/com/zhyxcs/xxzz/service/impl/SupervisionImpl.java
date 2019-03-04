@@ -58,10 +58,11 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage,
+    public List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage,String userCode,
                                                                     String approvalState, String userLevel, String bankCode,
                                                                     String depositorName, String businessType) {
-        return null;
+        return supervisionMapper.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage, userCode, approvalState,
+                userLevel, bankCode, depositorName, businessType);
     }
 
     @Override

@@ -152,9 +152,22 @@
     </if>
     order by sStartTime desc
   </select>
-  <!--<select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
-
-  <!--</select>-->
+  <select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">
+    select * from tsupervision
+    where
+    sApprovalState = #{approvalState,jdbcType=VARCHAR}
+    and
+    sBankCode = #{bankCode,jdbcType=VARCHAR}
+      <choose>
+          <when test="approvalState == 2">
+              and (sReviewUserCode = #{userCode} or sReviewUserCode is null)
+          </when>
+          <otherwise>
+              and sReviewUserCode = #{userCode}
+          </otherwise>
+      </choose>
+      order by sEndTime desc
+  </select>
   <!--<select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
 
   <!--</select>-->

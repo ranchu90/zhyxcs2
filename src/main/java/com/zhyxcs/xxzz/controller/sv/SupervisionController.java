@@ -52,8 +52,12 @@ public class SupervisionController extends BaseController {
             //判断用户的查询权限，根据用户级别
             switch (userLevel) {
                 case "1":
-                    svList = supervisionService.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage, user.getSusercode(), approvalState,
-                            userLevel, bankCode, depositorName, businessType);
+                    svList = supervisionService.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage,
+                            user.getSusercode(), approvalState, userLevel, bankCode, depositorName, businessType);
+                    break;
+                case "2":
+                    svList = supervisionService.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage,
+                            user.getSusercode(), approvalState, userLevel, bankCode, depositorName, businessType);
                     break;
             }
         } catch (Exception e) {
@@ -67,38 +71,40 @@ public class SupervisionController extends BaseController {
 
         List<Object> newSVList = new ArrayList<Object>();
 
-        for (Supervision sv : svList){
-            String approvelState = sv.getSapprovalstate();
+        if (null != svList) {
+            for (Supervision sv : svList){
+                String approvelState = sv.getSapprovalstate();
 
-            HashMap<String,Object> workTemp = new HashMap<String, Object>();
-            Date recheckDate = sv.getSrechecktime();
-            Date startDate = sv.getSstarttime();
-            Date completeDate = sv.getScompletetimes();
-            Date endDate = sv.getSendtime();
-            Date commitDate = sv.getScommittimes();
+                HashMap<String,Object> tempSV = new HashMap<String, Object>();
+                Date recheckDate = sv.getSrechecktime();
+                Date startDate = sv.getSstarttime();
+                Date completeDate = sv.getScompletetimes();
+                Date endDate = sv.getSendtime();
+                Date commitDate = sv.getScommittimes();
 
-            workTemp.put("srechecktime", recheckDate);
-            workTemp.put("sstarttime", startDate);
-            workTemp.put("scompletetimes", completeDate);
-            workTemp.put("sendtime", endDate);
-            workTemp.put("scommittimes", commitDate);
-            workTemp.put("sapprovalstate", this.approvalState(approvelState));
-            workTemp.put("sapprovalcode", sv.getSapprovalcode());
-            workTemp.put("saccounttype", sv.getSaccounttype());
-            workTemp.put("sbankcode", sv.getSbankcode());
-            workTemp.put("sbankname", sv.getSbankname());
-            workTemp.put("sbusinesscategory", sv.getSbusinesscategory());
-            workTemp.put("scheckusercode", sv.getScheckusercode());
-            workTemp.put("sdepositorname", sv.getSdepositorname());
-            workTemp.put("srecheckopinion", sv.getSrecheckopinion());
-            workTemp.put("srecheckresult", sv.getSrecheckresult());
-            workTemp.put("sreviewusercode", sv.getSreviewusercode());
-            workTemp.put("stransactionnum", sv.getStransactionnum());
-            workTemp.put("supusercode", sv.getSupusercode());
-            workTemp.put("supusername", sv.getSupusername());
-            workTemp.put("sreturntimes", sv.getSreturntimes());
+                tempSV.put("srechecktime", recheckDate);
+                tempSV.put("sstarttime", startDate);
+                tempSV.put("scompletetimes", completeDate);
+                tempSV.put("sendtime", endDate);
+                tempSV.put("scommittimes", commitDate);
+                tempSV.put("sapprovalstate", this.approvalState(approvelState));
+                tempSV.put("sapprovalcode", sv.getSapprovalcode());
+                tempSV.put("saccounttype", sv.getSaccounttype());
+                tempSV.put("sbankcode", sv.getSbankcode());
+                tempSV.put("sbankname", sv.getSbankname());
+                tempSV.put("sbusinesscategory", sv.getSbusinesscategory());
+                tempSV.put("scheckusercode", sv.getScheckusercode());
+                tempSV.put("sdepositorname", sv.getSdepositorname());
+                tempSV.put("srecheckopinion", sv.getSrecheckopinion());
+                tempSV.put("srecheckresult", sv.getSrecheckresult());
+                tempSV.put("sreviewusercode", sv.getSreviewusercode());
+                tempSV.put("stransactionnum", sv.getStransactionnum());
+                tempSV.put("supusercode", sv.getSupusercode());
+                tempSV.put("supusername", sv.getSupusername());
+                tempSV.put("sreturntimes", sv.getSreturntimes());
 
-            newSVList.add(workTemp);
+                newSVList.add(tempSV);
+            }
         }
 
         HashMap<String,Object> map = new HashMap<String, Object>();
