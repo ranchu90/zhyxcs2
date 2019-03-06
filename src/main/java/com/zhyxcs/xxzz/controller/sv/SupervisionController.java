@@ -212,6 +212,11 @@ public class SupervisionController extends BaseController {
                     supervision.setSreviewusercode(userCode);
                     supervision.setScommittimes(date);
                     break;
+                case ActionType.SEND_BACK:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_NEW);
+                    supervision.setSreviewusercode(userCode);
+                    supervision.setSreturntimes(date);
+                    break;
             }
         } catch (Exception e) {
 //            logger.error("## Error Information ##: {}", e);

@@ -181,17 +181,21 @@
   <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
     update tsupervision
     set sApprovalState = #{supervision.sapprovalstate,jdbcType=VARCHAR}
-    <if test="action == 'commit'">
+      <if test="action == 'commit'">
       , sEndTime = #{supervision.sendtime, jdbcType=TIMESTAMP}
-    </if>
-    <if test="action == 'commit_ren'">
+      </if>
+      <if test="action == 'commit_ren'">
       , sEndTime = #{supervision.sendtime, jdbcType=TIMESTAMP}
       , sCommitTimes = #{supervision.scommittimes, jdbcType=TIMESTAMP}
-    </if>
-    <if test="action == 'review'">
-      , sReviewUserCode = #{supervision.sreviewusercode, jdbcType=TIMESTAMP}
+      </if>
+      <if test="action == 'review'">
+      , sReviewUserCode = #{supervision.sreviewusercode, jdbcType=VARCHAR}
       , sCommitTimes = #{supervision.scommittimes, jdbcType=TIMESTAMP}
-    </if>
+      </if>
+      <if test="action == 'send_back'">
+        , sReviewUserCode = #{supervision.sreviewusercode, jdbcType=VARCHAR}
+        , sReturnTimes = #{supervision.sreturntimes, jdbcType=TIMESTAMP}
+      </if>
     where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
   </update>
 
