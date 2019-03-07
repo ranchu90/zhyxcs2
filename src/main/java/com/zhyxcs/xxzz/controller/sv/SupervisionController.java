@@ -34,7 +34,8 @@ public class SupervisionController extends BaseController {
                                                           @RequestParam(value = "approvalState") String approvalState,
                                                           @RequestParam(value = "bankCode", required = false) String bankCode,
                                                           @RequestParam(value = "depositorName", required = false) String depositorName,
-                                                          @RequestParam(value = "businessType", required = false) String businessType){
+                                                          @RequestParam(value = "businessType", required = false) String businessType,
+                                                          @RequestParam(value = "kind", required = false) String kind){
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String currentBankCode = user.getSbankcode();
@@ -187,8 +188,8 @@ public class SupervisionController extends BaseController {
 
         //审核通过的业务只能被复审或上传许可证
         if (ActionType.SV_APPROVAL_STATE_NO_PASS.equals(dbApprovalState) &&
-                !(action.equals(ActionType.RECHECK) || action.equals(ActionType.UPLOAD_LICENCE))){
-            resultMap.put("error", "该业务已通过无法进行退回、撤销、终止操作！");
+                !(action.equals(ActionType.SV_COMMIT))){
+            resultMap.put("error", "被要求进行整改的业务只能进行提交和修改操作！");
             return resultMap;
         }
 
