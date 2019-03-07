@@ -66,14 +66,15 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String approvalState,
+    public List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String userCode, String approvalState,
                                                                   String userLevel, String pbcCode, String bankCode,
                                                                   String depositorName, String businessType) {
-        return null;
+        return supervisionMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState,
+                userLevel, pbcCode, bankCode, depositorName, businessType);
     }
 
     @Override
-    public List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String approvalState,
+    public List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String userCode, String approvalState,
                                                                    String userLevel, String pbcCode, String bankCode,
                                                                    String depositorName, String businessType) {
         return null;

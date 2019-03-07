@@ -37,6 +37,7 @@ public interface SupervisionService {
 
     List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize,
                                                            String currentPage,
+                                                           String userCode,
                                                            String approvalState,
                                                            String userLevel,
                                                            String pbcCode,
@@ -46,6 +47,7 @@ public interface SupervisionService {
 
     List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize,
                                                             String currentPage,
+                                                            String userCode,
                                                             String approvalState,
                                                             String userLevel,
                                                             String pbcCode,

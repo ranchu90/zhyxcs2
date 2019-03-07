@@ -36,6 +36,16 @@ public interface SupervisionMapper {
                                                             @Param("depositorName") String depositorName,
                                                             @Param("businessType") String businessType);
 
+    List<Supervision> queryRecordByPageAndUserCodeRenEntry(@Param("pageSize") String pageSize,
+                                                                  @Param("currentPage") String currentPage,
+                                                                  @Param("userCode") String userCode,
+                                                                  @Param("approvalState") String approvalState,
+                                                                  @Param("userLevel") String userLevel,
+                                                                  @Param("pbcCode") String pbcCode,
+                                                                  @Param("bankCode") String bankCode,
+                                                                  @Param("depositorName") String depositorName,
+                                                                  @Param("businessType") String businessType);
+
     int updateApprovalStateNameByPrimaryKey(Supervision supervision, @Param("action") String action);
 
     int queryRecordTotalNum(@Param("userCode") String userCode, @Param("userLevel") String userLevel, @Param("approvalState") String approvalState,

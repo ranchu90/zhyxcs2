@@ -168,12 +168,32 @@
       </choose>
       order by sEndTime desc
   </select>
-  <!--<select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
-
-  <!--</select>-->
-  <!--<select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
-
-  <!--</select>-->
+  <select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.Supervision">
+    select * from tsupervision
+    where
+    sApprovalState = #{approvalState,jdbcType=VARCHAR}
+    and
+    sPBCBankCode = #{pbcCode,jdbcType=VARCHAR}
+      <choose>
+        <when test="approvalState == 3">
+          and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
+        </when>
+        <otherwise>
+          and sCheckUserCode = #{userCode,jdbcType=VARCHAR}
+        </otherwise>
+      </choose>
+    <if test="bankCode != null">
+      and sBankCode = #{bankCode,jdbcType=VARCHAR}
+    </if>
+    <choose>
+      <when test="approvalState == 3">
+        order by sCommitTimes desc
+      </when>
+      <otherwise>
+        order by sCommitTimes asc
+      </otherwise>
+    </choose>
+  </select>
   <!--<select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
 
   <!--</select>-->

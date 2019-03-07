@@ -51,13 +51,19 @@ public class SupervisionController extends BaseController {
         try {
             //判断用户的查询权限，根据用户级别
             switch (userLevel) {
-                case "1":
+                case "1": //商业银行录入
                     svList = supervisionService.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage,
                             user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType);
                     break;
-                case "2":
+                case "2": //商业银行监督
                     svList = supervisionService.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage,
                             user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType);
+                    break;
+                case "4": //人民银行监督
+                    svList = supervisionService.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage,
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, bankCode, depositorName, businessType);
+                    break;
+                case "5": //人民银行复监督
                     break;
             }
         } catch (Exception e) {
