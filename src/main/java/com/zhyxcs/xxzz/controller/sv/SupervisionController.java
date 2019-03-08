@@ -205,6 +205,7 @@ public class SupervisionController extends BaseController {
         try {
 //            lock.lock();
             switch (action) {
+                    //商业银行录入
                 case ActionType.COMMIT:
                     supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_REVIEW);
                     supervision.setSendtime(date);
@@ -214,6 +215,7 @@ public class SupervisionController extends BaseController {
                     supervision.setSendtime(date);
                     supervision.setScommittimes(date);
                     break;
+                    //商业银行的复查
                 case ActionType.REVIEW:
                     supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
                     supervision.setSreviewusercode(userCode);
@@ -224,9 +226,21 @@ public class SupervisionController extends BaseController {
                     supervision.setSreviewusercode(userCode);
                     supervision.setSreturntimes(date);
                     break;
+                    //人民银行的监督
+                case ActionType.CHECK:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_RECHECK);
+                    supervision.setScheckusercode(userCode);
+                    supervision.setScompletetimes(date);
+                    break;
+                case ActionType.RE_EDIT:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_NO_PASS);
+                    supervision.setScheckusercode(userCode);
+                    supervision.setScompletetimes(date);
+                    this.newSupervision(supervision);
+                    break;
             }
         } catch (Exception e) {
-//            logger.error("## Error Information ##: {}", e);
+//            logger.error("## Error Information ##: {}", e);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ·······················
         } finally {
 //            lock.unlock();
         }
@@ -243,6 +257,37 @@ public class SupervisionController extends BaseController {
         }
 
         return resultMap;
+    }
+
+    private int newSupervision(Supervision supervision){
+        String transactionNum = supervision.getStransactionnum();
+        int length = transactionNum.length();
+        if (length == 24){
+            transactionNum = transactionNum + "00";
+        } else {
+            String num = transactionNum.substring(24, 26);
+            int tmp = Integer.parseInt(num);
+            tmp += 1;
+            transactionNum = transactionNum.substring(0, 24) + tmp;
+        }
+
+        Supervision newSupervision = new Supervision();
+        newSupervision.setStransactionnum(transactionNum);
+        newSupervision.setSaccountnum(supervision.getSaccountnum());
+        newSupervision.setSdepositorname(supervision.getSdepositorname());
+        newSupervision.setSuniquesocialcreditcode(supervision.getSuniquesocialcreditcode());
+        newSupervision.setSkind("1");
+        newSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_NEW);
+        newSupervision.setSbusinesscategory(supervision.getSbusinesscategory());
+        newSupervision.setSaccounttype(supervision.getSaccounttype());
+        newSupervision.setSbankcode(supervision.getSbankcode());
+        newSupervision.setSpbcbankcode(supervision.getSpbcbankcode());
+        newSupervision.setSbankname(supervision.getSbankname());
+        newSupervision.setSupusercode(supervision.getSupusercode());
+        newSupervision.setSupusername(supervision.getSupusername());
+        newSupervision.setSstarttime(supervision.getScommittimes());
+
+        return supervisionService.insert(newSupervision);
     }
 
     @RequestMapping(value = "/supervision", method = RequestMethod.DELETE)

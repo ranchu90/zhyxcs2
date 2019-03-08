@@ -216,6 +216,10 @@
         , sReviewUserCode = #{supervision.sreviewusercode, jdbcType=VARCHAR}
         , sReturnTimes = #{supervision.sreturntimes, jdbcType=TIMESTAMP}
       </if>
+      <if test="action == 'check'">
+        , sCheckUserCode = #{supervision.scheckusercode, jdbcType=VARCHAR}
+        , sCompleteTimes = #{supervision.scompletetimes, jdbcType=VARCHAR}
+      </if>
     where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
   </update>
 

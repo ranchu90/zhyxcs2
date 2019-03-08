@@ -11,7 +11,7 @@ public class ActionType {
     public static final String CHECK = "check";
     public static final String RECHECK = "recheck";
     public static final String UPLOAD_LICENCE = "upload_licence";
-    public static final String ACCELERATE = "accelerate";
+    public static final String RE_EDIT = "re_edit";
     public static final String END = "end";
 
     //商业银行录入员新增任务，没有提交给商业银行复核员或没有提交给人民银行审核员之前
