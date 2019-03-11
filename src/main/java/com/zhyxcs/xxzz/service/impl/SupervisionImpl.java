@@ -46,7 +46,7 @@ public class SupervisionImpl implements SupervisionService {
     @Override
     public List<Supervision> queryRecordByPageAndUserCodeBankEntry(String pageSize, String currentPage, String userCode,
                                                                    String approvalState, String userLevel, String bankCode,
-                                                                   String depositorName, String businessType) {
+                                                                   String depositorName, String businessType, String kind) {
         return supervisionMapper.queryRecordByPageAndUserCodeBankEntry(pageSize,
                 currentPage,
                 userCode,
@@ -54,23 +54,24 @@ public class SupervisionImpl implements SupervisionService {
                 userLevel,
                 bankCode,
                 depositorName,
-                businessType);
+                businessType,
+                kind);
     }
 
     @Override
     public List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize, String currentPage,String userCode,
                                                                     String approvalState, String userLevel, String bankCode,
-                                                                    String depositorName, String businessType) {
+                                                                    String depositorName, String businessType, String kind) {
         return supervisionMapper.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage, userCode, approvalState,
-                userLevel, bankCode, depositorName, businessType);
+                userLevel, bankCode, depositorName, businessType, kind);
     }
 
     @Override
     public List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize, String currentPage, String userCode, String approvalState,
                                                                   String userLevel, String pbcCode, String bankCode,
-                                                                  String depositorName, String businessType) {
+                                                                  String depositorName, String businessType, String kind) {
         return supervisionMapper.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage, userCode, approvalState,
-                userLevel, pbcCode, bankCode, depositorName, businessType);
+                userLevel, pbcCode, bankCode, depositorName, businessType, kind);
     }
 
     @Override
@@ -92,8 +93,8 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
-    public int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode) {
-        return supervisionMapper.queryRecordTotalNum(useCode, userLevel, approvalState, bankCode);
+    public int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode, String kind) {
+        return supervisionMapper.queryRecordTotalNum(useCode, userLevel, approvalState, bankCode, kind);
     }
 
     @Override

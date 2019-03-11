@@ -24,7 +24,8 @@ public interface SupervisionService {
                                                             String userLevel,
                                                             String bankCode,
                                                             String depositorName,
-                                                            String businessType);
+                                                            String businessType,
+                                                            String kind);
 
     List<Supervision> queryRecordByPageAndUserCodeBankCharge(String pageSize,
                                                              String currentPage,
@@ -33,7 +34,8 @@ public interface SupervisionService {
                                                              String userLevel,
                                                              String bankCode,
                                                              String depositorName,
-                                                             String businessType);
+                                                             String businessType,
+                                                             String kind);
 
     List<Supervision> queryRecordByPageAndUserCodeRenEntry(String pageSize,
                                                            String currentPage,
@@ -43,7 +45,8 @@ public interface SupervisionService {
                                                            String pbcCode,
                                                            String bankCode,
                                                            String depositorName,
-                                                           String businessType);
+                                                           String businessType,
+                                                           String kind);
 
     List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize,
                                                             String currentPage,
@@ -64,7 +67,7 @@ public interface SupervisionService {
 
     int updateApprovalStateNameByPrimaryKey(Supervision supervision, String action);
 
-    int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode);
+    int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode, String kind);
 
     int occupyTransaction(Supervision supervision);
 }

@@ -54,15 +54,18 @@ public class SupervisionController extends BaseController {
             switch (userLevel) {
                 case "1": //商业银行录入
                     svList = supervisionService.queryRecordByPageAndUserCodeBankEntry(pageSize, currentPage,
-                            user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType);
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType,
+                            kind);
                     break;
                 case "2": //商业银行监督
                     svList = supervisionService.queryRecordByPageAndUserCodeBankCharge(pageSize, currentPage,
-                            user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType);
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, depositorName, businessType,
+                            kind);
                     break;
                 case "4": //人民银行监督
                     svList = supervisionService.queryRecordByPageAndUserCodeRenEntry(pageSize, currentPage,
-                            user.getSusercode(), approvalState, userLevel, currentBankCode, bankCode, depositorName, businessType);
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, bankCode, depositorName,
+                            businessType, kind);
                     break;
                 case "5": //人民银行复监督
                     break;
@@ -236,7 +239,7 @@ public class SupervisionController extends BaseController {
                     supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_NO_PASS);
                     supervision.setScheckusercode(userCode);
                     supervision.setScompletetimes(date);
-                    this.newSupervision(supervision);
+                    this.newSupervision(supervision.getStransactionnum());
                     break;
             }
         } catch (Exception e) {
@@ -259,8 +262,8 @@ public class SupervisionController extends BaseController {
         return resultMap;
     }
 
-    private int newSupervision(Supervision supervision){
-        String transactionNum = supervision.getStransactionnum();
+    private int newSupervision(String transactionNum){
+        Supervision supervision = supervisionService.selectByPrimaryKey(transactionNum);
         int length = transactionNum.length();
         if (length == 24){
             transactionNum = transactionNum + "00";
@@ -285,7 +288,7 @@ public class SupervisionController extends BaseController {
         newSupervision.setSbankname(supervision.getSbankname());
         newSupervision.setSupusercode(supervision.getSupusercode());
         newSupervision.setSupusername(supervision.getSupusername());
-        newSupervision.setSstarttime(supervision.getScommittimes());
+        newSupervision.setSstarttime(CommonUtils.newDate());
 
         return supervisionService.insert(newSupervision);
     }
@@ -325,13 +328,15 @@ public class SupervisionController extends BaseController {
     }
 
     @RequestMapping(value = "/supervisionNum", method = RequestMethod.GET)
-    public int queryRecordTotalNum(@RequestParam(value = "approvalState") String approvalState){
+    public int queryRecordTotalNum(@RequestParam(value = "approvalState") String approvalState,
+                                   @RequestParam(value = "kind", required = false) String kind){
         HttpSession session = super.request.getSession();
         User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
         String currentBankCode = user.getSbankcode();
         String userLevel = user.getSuserlevel();
 
-        return supervisionService.queryRecordTotalNum(user.getSusercode(), userLevel, approvalState, currentBankCode);
+        return supervisionService.queryRecordTotalNum(user.getSusercode(), userLevel,
+                approvalState, currentBankCode, kind);
     }
 
     @RequestMapping(value = "/operators", method = RequestMethod.GET)
