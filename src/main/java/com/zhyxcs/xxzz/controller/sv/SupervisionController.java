@@ -270,8 +270,14 @@ public class SupervisionController extends BaseController {
         } else {
             String num = transactionNum.substring(24, 26);
             int tmp = Integer.parseInt(num);
-            tmp += 1;
-            transactionNum = transactionNum.substring(0, 24) + tmp;
+            ++tmp;
+            String tmpStr;
+            if (tmp <10) {
+                tmpStr = "0" + tmp;
+            } else {
+                tmpStr = "" + tmp;
+            }
+            transactionNum = transactionNum.substring(0, 24) + tmpStr;
         }
 
         Supervision newSupervision = new Supervision();
