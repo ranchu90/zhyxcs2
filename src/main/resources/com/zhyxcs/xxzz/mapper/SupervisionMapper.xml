@@ -203,9 +203,35 @@
       and sKind = #{kind,jdbcType=VARCHAR}
     </if>
   </select>
-  <!--<select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">-->
-
-  <!--</select>-->
+  <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">
+    select * from tsupervision
+    where
+    sApprovalState = #{approvalState,jdbcType=VARCHAR}
+    and
+    sPBCBankCode = #{pbcCode,jdbcType=VARCHAR}
+    <choose>
+      <when test="approvalState != 4">
+        and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
+      </when>
+      <otherwise>
+        and sRecheckUserCode = #{userCode,jdbcType=VARCHAR}
+      </otherwise>
+    </choose>
+    <if test="bankCode != null">
+      and sBankCode = #{bankCode,jdbcType=VARCHAR}
+    </if>
+    <choose>
+      <when test="approvalState >= 3">
+        order by sCommitTimes desc
+      </when>
+      <otherwise>
+        order by sCommitTimes asc
+      </otherwise>
+    </choose>
+    <if test="kind != null and kind != ''">
+      and sKind = #{kind,jdbcType=VARCHAR}
+    </if>
+  </select>
 
   <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
     update tsupervision
@@ -227,11 +253,15 @@
       </if>
       <if test="action == 'check'">
         , sCheckUserCode = #{supervision.scheckusercode, jdbcType=VARCHAR}
-        , sCompleteTimes = #{supervision.scompletetimes, jdbcType=VARCHAR}
+        , sCompleteTimes = #{supervision.scompletetimes, jdbcType=TIMESTAMP}
       </if>
       <if test="action == 're_edit'">
         , sCheckUserCode = #{supervision.scheckusercode, jdbcType=VARCHAR}
-        , sCompleteTimes = #{supervision.scompletetimes, jdbcType=VARCHAR}
+        , sCompleteTimes = #{supervision.scompletetimes, jdbcType=TIMESTAMP}
+      </if>
+      <if test="action == 'end'">
+        , sRecheckUserCode = #{supervision.srecheckusercode, jdbcType=VARCHAR}
+        , sReCheckTime = #{supervision.srechecktime, jdbcType=TIMESTAMP}
       </if>
     where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
   </update>
@@ -265,5 +295,84 @@
     sCheckUserCode = #{scheckusercode,jdbcType=VARCHAR},
     sRecheckUserCode = #{srecheckusercode,jdbcType=VARCHAR}
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
-    </update>
+  </update>
+
+  <select id="queryRecordByConditions" resultType="com.zhyxcs.xxzz.domain.Supervision">
+    select * from tsupervision
+    where
+    (sApprovalState = '3' or sApprovalState = '5')
+    <if test="orgaCode != null">
+      and sBankCode = #{orgaCode}
+    </if>
+    <if test="businessCategory != null">
+      and sBusinessCategory = #{businessCategory}
+    </if>
+    <if test="accountType != null">
+      and sAccountType = #{accountType}
+    </if>
+    <if test="bankEntryUserCode != null">
+      and sUpUserCode = #{bankEntryUserCode}
+    </if>
+    <if test="bankReviewUserCode != null">
+      and sReviewUserCode = #{bankReviewUserCode}
+    </if>
+    <if test="renEntryUserCode != null">
+      and sCheckUserCode = #{renEntryUserCode}
+    </if>
+    <if test="renRecheckUserCode != null">
+      and sReCheckUserCode = #{renRecheckUserCode}
+    </if>
+    <if test="transactionNum != null">
+      and sTransactionNum = #{transactionNum}
+    </if>
+    <if test="approvalCode != null">
+      and sApprovalCode = #{approvalCode}
+    </if>
+    <if test="startTime != null">
+      and date(sCommitTimes) <![CDATA[ >= ]]> #{startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endTime != null">
+      and date(sCompleteTimes) <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="currentBankArea != null || currentCity != null || bankKind != null || bankType != null">
+      and sBankCode in
+      (select sBankCode from torga
+      where
+      <if test="currentBankArea != null">
+        sBankAreaCode = #{currentBankArea}
+      </if>
+      <if test="currentBankArea != null and currentCity != null">
+        and
+      </if>
+      <if test="currentCity != null">
+        sBankCityCode = #{currentCity}
+      </if>
+      <if test="(currentBankArea != null || currentCity != null) and bankType != null">
+        and
+      </if>
+      <if test="bankType != null">
+        sBankTypeCode = #{bankType}
+      </if>
+      <if test="(currentBankArea != null || currentCity != null || bankType != null) and bankKind != null">
+        and
+      </if>
+      <if test="bankKind != null">
+        sBankKind = #{bankKind}
+      </if>
+      )
+    </if>
+    <if test="bankCodeList != null and bankCodeList.size > 0">
+      and sBankCode IN
+      <foreach collection="bankCodeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="pbcCodeList != null and pbcCodeList.size > 0">
+      and sPBCBankCode IN
+      <foreach collection="pbcCodeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    order by sEndTime
+  </select>
 </mapper>

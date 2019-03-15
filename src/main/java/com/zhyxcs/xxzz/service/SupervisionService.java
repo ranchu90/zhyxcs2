@@ -56,7 +56,8 @@ public interface SupervisionService {
                                                             String pbcCode,
                                                             String bankCode,
                                                             String depositorName,
-                                                            String businessType);
+                                                            String businessType,
+                                                            String kind);
 
     List<Supervision> queryRecordByPageAndUserCodeRenAdmin(String pageSize,
                                                            String currentPage,
@@ -70,4 +71,23 @@ public interface SupervisionService {
     int queryRecordTotalNum(String useCode, String userLevel, String approvalState, String bankCode, String kind);
 
     int occupyTransaction(Supervision supervision);
+
+    List<Supervision> queryRecordByConditions(String currentBankArea,
+                                            String currentCity,
+                                            String bankKind,
+                                            String bankType,
+                                            String businessCategory,
+                                            String accountType,
+                                            String orgaCode,
+                                            String bankEntryUserCode,
+                                            String bankReviewUserCode,
+                                            String renEntryUserCode,
+                                            String renRecheckUserCode,
+                                            String transactionNum,
+                                            String approvalCode,
+                                            String identifier,
+                                            String startTime,
+                                            String endTime,
+                                            List<String> bankCodeList,
+                                            List<String> pbcCodeList);
 }

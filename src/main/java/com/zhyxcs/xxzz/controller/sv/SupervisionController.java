@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.controller.BaseController;
 import com.zhyxcs.xxzz.domain.*;
+import com.zhyxcs.xxzz.service.OrgaService;
 import com.zhyxcs.xxzz.service.SVImageService;
 import com.zhyxcs.xxzz.service.SupervisionService;
 import com.zhyxcs.xxzz.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -26,7 +28,87 @@ public class SupervisionController extends BaseController {
     @Autowired
     UserService userService;
     @Autowired
+    OrgaService orgaService;
+    @Autowired
     private ImageConfig imageConfig;
+
+    @RequestMapping(value = "/supervision", method = RequestMethod.GET)
+    public Map<String,Object> getWorkIndexes(@RequestParam(value = "pageSize", required = false) String pageSize,
+                                             @RequestParam(value = "pageNum", required = false) String pageNum,
+                                             @RequestParam(value = "currentBankArea", required = false) String currentBankArea,
+                                             @RequestParam(value = "currentCity", required = false) String currentCity,
+                                             @RequestParam(value = "bankKind", required = false) String bankKind,
+                                             @RequestParam(value = "bankType", required = false) String bankType,
+                                             @RequestParam(value = "businessCategory", required = false) String businessCategory,
+                                             @RequestParam(value = "accountType", required = false) String accountType,
+                                             @RequestParam(value = "orgaCode", required = false) String orgaCode,
+                                             @RequestParam(value = "bankEntryUserCode", required = false) String bankEntryUserCode,
+                                             @RequestParam(value = "bankReviewUserCode", required = false) String bankReviewUserCode,
+                                             @RequestParam(value = "renEntryUserCode", required = false) String renEntryUserCode,
+                                             @RequestParam(value = "renRecheckUserCode", required = false) String renRecheckUserCode,
+                                             @RequestParam(value = "transactionNum", required = false) String transactionNum,
+                                             @RequestParam(value = "approvalCode", required = false) String approvalCode,
+                                             @RequestParam(value = "identifier", required = false) String identifier,
+                                             @RequestParam(value = "startTime", required = false) Date startTimeDate,
+                                             @RequestParam(value = "endTime", required = false) Date endTimeDate){
+        pageSize = (pageSize == null || "".equals(pageSize.trim())) ? this.getDisplayCount() : pageSize;
+        pageNum = (pageNum == null || "".equals(pageNum.trim())) ? "1" : pageNum;
+        currentBankArea = (currentBankArea == null || "".equals(currentBankArea)) ? null : currentBankArea;
+        currentCity = (currentCity == null || "".equals(currentCity)) ? null : currentCity;
+        bankKind = (bankKind == null || "".equals(bankKind)) ? null : bankKind;
+        bankType = (bankType == null || "".equals(bankType)) ? null : bankType;
+        businessCategory = (businessCategory == null || "".equals(businessCategory)) ? null : businessCategory;
+        accountType = (accountType == null || "".equals(accountType)) ? null : accountType;
+        orgaCode = (orgaCode == null || "".equals(orgaCode)) ? null : orgaCode;
+        bankEntryUserCode = (bankEntryUserCode == null || "".equals(bankEntryUserCode)) ? null : bankEntryUserCode;
+        bankReviewUserCode = (bankReviewUserCode == null || "".equals(bankReviewUserCode)) ? null : bankReviewUserCode;
+        renEntryUserCode = (renEntryUserCode == null || "".equals(renEntryUserCode)) ? null : renEntryUserCode;
+        renRecheckUserCode = (renRecheckUserCode == null || "".equals(renRecheckUserCode)) ? null : renRecheckUserCode;
+        transactionNum = (transactionNum == null || "".equals(transactionNum)) ? null : transactionNum;
+        approvalCode = (approvalCode == null || "".equals(approvalCode)) ? null : approvalCode;
+        identifier = (identifier == null || "".equals(identifier)) ? null : identifier;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String startTime = (startTimeDate == null) ? null : format.format(startTimeDate);
+        String endTime = (endTimeDate == null) ? null : format.format(endTimeDate);
+
+
+        HttpSession session = super.request.getSession();
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+        Orga orga = (Orga) session.getAttribute(CramsConstants.SESSION_ORGA_WITH_USER);
+
+        Map<String, Object> map = new HashMap();
+        String bankCode = orga.getSbankcode();
+
+        List<String> pbcCodeList;
+        List<String> bankCodeList;
+
+        if (!"7".equals(user.getSuserlevel()) &&
+                !"4".equals(user.getSuserlevel()) &&
+                !"5".equals(user.getSuserlevel())) {
+            bankCodeList = orgaService.getUnderBankcodeList(bankCode);
+            pbcCodeList = null;
+        } else {
+            pbcCodeList = orgaService.getUnderBankcodeList(bankCode);
+            bankCodeList = null;
+        }
+
+        try {
+            PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+            List<Supervision> list = supervisionService.queryRecordByConditions(currentBankArea, currentCity, bankKind,
+                    bankType, businessCategory, accountType, orgaCode, bankEntryUserCode, bankReviewUserCode,
+                    renEntryUserCode, renRecheckUserCode, transactionNum, approvalCode, identifier, startTime, endTime,
+                    bankCodeList, pbcCodeList);
+            PageInfo<Supervision> supervisionPageInfo = new PageInfo(list);
+            map.put("pageInfo", supervisionPageInfo);
+
+//            this.writeLog(Logs.TRANS_QUERY);
+        } catch (Exception e){
+            e.printStackTrace();
+//            logger.error("## Error Information ##: {}", e);
+        }
+
+        return map;
+    }
 
     @RequestMapping(value = "/supervisions", method = RequestMethod.GET)
     public HashMap<String, Object> getSupervisionsByPages(@RequestParam(value = "pageSize") String pageSize,
@@ -68,6 +150,9 @@ public class SupervisionController extends BaseController {
                             businessType, kind);
                     break;
                 case "5": //人民银行复监督
+                    svList = supervisionService.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage,
+                            user.getSusercode(), approvalState, userLevel, currentBankCode, bankCode, depositorName,
+                            businessType, kind);
                     break;
             }
         } catch (Exception e) {
@@ -241,6 +326,11 @@ public class SupervisionController extends BaseController {
                     supervision.setScompletetimes(date);
                     this.newSupervision(supervision.getStransactionnum());
                     break;
+                    //人民银行的复监督
+                case ActionType.END:
+                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_END);
+                    supervision.setSrecheckusercode(userCode);
+                    supervision.setSrechecktime(date);
             }
         } catch (Exception e) {
 //            logger.error("## Error Information ##: {}", e);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ·······················

@@ -77,8 +77,10 @@ public class SupervisionImpl implements SupervisionService {
     @Override
     public List<Supervision> queryRecordByPageAndUserCodeRenCharge(String pageSize, String currentPage, String userCode, String approvalState,
                                                                    String userLevel, String pbcCode, String bankCode,
-                                                                   String depositorName, String businessType) {
-        return null;
+                                                                   String depositorName, String businessType,
+                                                                   String kind) {
+        return supervisionMapper.queryRecordByPageAndUserCodeRenCharge(pageSize, currentPage, userCode, approvalState,
+                userLevel, pbcCode, bankCode, depositorName, businessType, kind);
     }
 
     @Override
@@ -100,5 +102,17 @@ public class SupervisionImpl implements SupervisionService {
     @Override
     public int occupyTransaction(Supervision supervision) {
         return supervisionMapper.occupyTransaction(supervision);
+    }
+
+    @Override
+    public List<Supervision> queryRecordByConditions(String currentBankArea, String currentCity, String bankKind,
+                                                     String bankType, String businessCategory, String accountType,
+                                                     String orgaCode, String bankEntryUserCode, String bankReviewUserCode,
+                                                     String renEntryUserCode, String renRecheckUserCode, String transactionNum,
+                                                     String approvalCode, String identifier, String startTime, String endTime,
+                                                     List<String> bankCodeList, List<String> pbcCodeList) {
+        return supervisionMapper.queryRecordByConditions(currentBankArea, currentCity, bankKind, bankType,
+                businessCategory, accountType, orgaCode, bankEntryUserCode, bankReviewUserCode, renEntryUserCode,
+                renRecheckUserCode, transactionNum, approvalCode, identifier, startTime, endTime, bankCodeList, pbcCodeList);
     }
 }
