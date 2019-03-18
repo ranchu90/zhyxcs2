@@ -42,4 +42,9 @@ public class SVImageStandardController extends BaseController {
                                                             @RequestParam(value = "accountType") String accountType){
         return svImageStandardService.certificateType(businessCategory, accountType);
     }
+
+    @RequestMapping(value = "/businessCategory", method = RequestMethod.GET)
+    public List<String> getBusinessCategory(){
+        return svImageStandardService.svBusinessCategory();
+    }
 }
