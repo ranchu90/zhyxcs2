@@ -172,6 +172,12 @@
       <if test="kind != null and kind != ''">
         and sKind = #{kind,jdbcType=VARCHAR}
       </if>
+    <if test="depositorName != null and depositorName != ''">
+      and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+    </if>
+    <if test="businessType != null and businessType != ''">
+      and sBusinessCategory = #{businessType}
+    </if>
       order by sEndTime desc
   </select>
   <select id="queryRecordByPageAndUserCodeRenEntry" resultType="com.zhyxcs.xxzz.domain.Supervision">
@@ -191,6 +197,15 @@
     <if test="bankCode != null">
       and sBankCode = #{bankCode,jdbcType=VARCHAR}
     </if>
+    <if test="kind != null and kind != ''">
+      and sKind = #{kind,jdbcType=VARCHAR}
+    </if>
+    <if test="depositorName != null and depositorName != ''">
+      and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+    </if>
+    <if test="businessType != null and businessType != ''">
+      and sBusinessCategory = #{businessType}
+    </if>
     <choose>
       <when test="approvalState == 3">
         order by sCommitTimes desc
@@ -199,9 +214,6 @@
         order by sCommitTimes asc
       </otherwise>
     </choose>
-    <if test="kind != null and kind != ''">
-      and sKind = #{kind,jdbcType=VARCHAR}
-    </if>
   </select>
   <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">
     select * from tsupervision
@@ -220,6 +232,15 @@
     <if test="bankCode != null">
       and sBankCode = #{bankCode,jdbcType=VARCHAR}
     </if>
+    <if test="kind != null and kind != ''">
+      and sKind = #{kind,jdbcType=VARCHAR}
+    </if>
+    <if test="depositorName != null and depositorName != ''">
+      and sDepositorName like CONCAT('%',#{depositorName} ,'%')
+    </if>
+    <if test="businessType != null and businessType != ''">
+      and sBusinessCategory = #{businessType}
+    </if>
     <choose>
       <when test="approvalState >= 3">
         order by sCommitTimes desc
@@ -228,9 +249,6 @@
         order by sCommitTimes asc
       </otherwise>
     </choose>
-    <if test="kind != null and kind != ''">
-      and sKind = #{kind,jdbcType=VARCHAR}
-    </if>
   </select>
 
   <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
