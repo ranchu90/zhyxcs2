@@ -197,6 +197,8 @@ public class SupervisionController extends BaseController {
                 tempSV.put("supusercode", sv.getSupusercode());
                 tempSV.put("supusername", sv.getSupusername());
                 tempSV.put("sreturntimes", sv.getSreturntimes());
+                tempSV.put("saccountnum", sv.getSaccountnum());
+                tempSV.put("suniquesocialcreditcode", sv.getSuniquesocialcreditcode());
 
                 newSVList.add(tempSV);
             }
