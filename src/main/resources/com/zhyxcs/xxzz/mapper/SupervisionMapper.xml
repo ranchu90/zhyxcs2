@@ -7,6 +7,7 @@
       <arg column="sAccountNum" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sUniqueSocialCreditCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountTime" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sApprovalCode" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sBusinessDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="sBusinessCertificateDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -40,8 +41,8 @@
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.Supervision">
     insert into tsupervision (sTransactionNum, sAccountNum, sDepositorName, 
-      sUniqueSocialCreditCode, sApprovalCode, 
-      sBusinessDate, sBusinessCertificateDate, 
+      sUniqueSocialCreditCode, sAccountTime, 
+      sApprovalCode, sBusinessDate, sBusinessCertificateDate, 
       sRelatedTransctionNum, sKind, sApprovalState, 
       sCommitTimes, sReturnTimes, sPBCReturnTimes, 
       sCompleteTimes, sBusinessCategory, sAccountType, 
@@ -51,8 +52,8 @@
       sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
       sRecheckTime)
     values (#{stransactionnum,jdbcType=VARCHAR}, #{saccountnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR}, 
-      #{suniquesocialcreditcode,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR}, 
-      #{sbusinessdate,jdbcType=TIMESTAMP}, #{sbusinesscertificatedate,jdbcType=TIMESTAMP}, 
+      #{suniquesocialcreditcode,jdbcType=VARCHAR}, #{saccounttime,jdbcType=VARCHAR}, 
+      #{sapprovalcode,jdbcType=VARCHAR}, #{sbusinessdate,jdbcType=TIMESTAMP}, #{sbusinesscertificatedate,jdbcType=TIMESTAMP}, 
       #{srelatedtransctionnum,jdbcType=VARCHAR}, #{skind,jdbcType=VARCHAR}, #{sapprovalstate,jdbcType=VARCHAR}, 
       #{scommittimes,jdbcType=TIMESTAMP}, #{sreturntimes,jdbcType=TIMESTAMP}, #{spbcreturntimes,jdbcType=TIMESTAMP}, 
       #{scompletetimes,jdbcType=TIMESTAMP}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
@@ -67,6 +68,7 @@
     set sAccountNum = #{saccountnum,jdbcType=VARCHAR},
       sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
       sUniqueSocialCreditCode = #{suniquesocialcreditcode,jdbcType=VARCHAR},
+      sAccountTime = #{saccounttime,jdbcType=VARCHAR},
       sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR},
       sBusinessDate = #{sbusinessdate,jdbcType=TIMESTAMP},
       sBusinessCertificateDate = #{sbusinesscertificatedate,jdbcType=TIMESTAMP},
@@ -95,21 +97,21 @@
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sApprovalCode, 
-    sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, sApprovalState, 
-    sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, sAccountType, 
-    sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, sEndTime, 
-    sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
+    select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sAccountTime, 
+    sApprovalCode, sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, 
+    sApprovalState, sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, 
+    sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, 
+    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
     sRecheckTime
     from tsupervision
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sApprovalCode, 
-    sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, sApprovalState, 
-    sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, sAccountType, 
-    sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, sEndTime, 
-    sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
+    select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sAccountTime, 
+    sApprovalCode, sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, 
+    sApprovalState, sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, 
+    sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, 
+    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
     sRecheckTime
     from tsupervision
   </select>
@@ -127,6 +129,7 @@
          #{sapprovalcode, mode=IN,jdbcType=VARCHAR},
          #{saccountnum, mode=IN,jdbcType=VARCHAR},
          #{suniquesocialcreditcode, mode=IN,jdbcType=VARCHAR},
+         #{saccounttime, mode=IN,jdbcType=VARCHAR},
          #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
         )
     }
@@ -222,7 +225,7 @@
     and
     sPBCBankCode = #{pbcCode,jdbcType=VARCHAR}
     <choose>
-      <when test="approvalState != 4">
+      <when test="approvalState != 5">
         and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
       </when>
       <otherwise>

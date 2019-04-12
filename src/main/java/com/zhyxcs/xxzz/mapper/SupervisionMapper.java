@@ -29,14 +29,14 @@ public interface SupervisionMapper {
                                                             @Param("kind") String kind);
 
     List<Supervision> queryRecordByPageAndUserCodeBankCharge(@Param("pageSize") String pageSize,
-                                                            @Param("currentPage") String currentPage,
-                                                            @Param("userCode") String userCode,
-                                                            @Param("approvalState") String approvalState,
-                                                            @Param("userLevel") String userLevel,
-                                                            @Param("bankCode") String bankCode,
-                                                            @Param("depositorName") String depositorName,
-                                                            @Param("businessType") String businessType,
-                                                            @Param("kind") String kind);
+                                                             @Param("currentPage") String currentPage,
+                                                             @Param("userCode") String userCode,
+                                                             @Param("approvalState") String approvalState,
+                                                             @Param("userLevel") String userLevel,
+                                                             @Param("bankCode") String bankCode,
+                                                             @Param("depositorName") String depositorName,
+                                                             @Param("businessType") String businessType,
+                                                             @Param("kind") String kind);
 
     List<Supervision> queryRecordByPageAndUserCodeRenEntry(@Param("pageSize") String pageSize,
                                                            @Param("currentPage") String currentPage,
@@ -68,21 +68,21 @@ public interface SupervisionMapper {
     int occupyTransaction(Supervision supervision);
 
     List<Supervision> queryRecordByConditions(@Param("currentBankArea") String currentBankArea,
-                                            @Param("currentCity") String currentCity,
-                                            @Param("bankKind") String bankKind,
-                                            @Param("bankType") String bankType,
-                                            @Param("businessCategory") String businessCategory,
-                                            @Param("accountType") String accountType,
-                                            @Param("orgaCode") String orgaCode,
-                                            @Param("bankEntryUserCode") String bankEntryUserCode,
-                                            @Param("bankReviewUserCode") String bankReviewUserCode,
-                                            @Param("renEntryUserCode") String renEntryUserCode,
-                                            @Param("renRecheckUserCode") String renRecheckUserCode,
-                                            @Param("transactionNum") String transactionNum,
-                                            @Param("approvalCode") String approvalCode,
-                                            @Param("identifier") String identifier,
-                                            @Param("startTime") String startTime,
-                                            @Param("endTime") String endTime,
-                                            @Param("bankCodeList") List<String> bankCodeList,
-                                            @Param("pbcCodeList") List<String> pbcCodeList);
+                                              @Param("currentCity") String currentCity,
+                                              @Param("bankKind") String bankKind,
+                                              @Param("bankType") String bankType,
+                                              @Param("businessCategory") String businessCategory,
+                                              @Param("accountType") String accountType,
+                                              @Param("orgaCode") String orgaCode,
+                                              @Param("bankEntryUserCode") String bankEntryUserCode,
+                                              @Param("bankReviewUserCode") String bankReviewUserCode,
+                                              @Param("renEntryUserCode") String renEntryUserCode,
+                                              @Param("renRecheckUserCode") String renRecheckUserCode,
+                                              @Param("transactionNum") String transactionNum,
+                                              @Param("approvalCode") String approvalCode,
+                                              @Param("identifier") String identifier,
+                                              @Param("startTime") String startTime,
+                                              @Param("endTime") String endTime,
+                                              @Param("bankCodeList") List<String> bankCodeList,
+                                              @Param("pbcCodeList") List<String> pbcCodeList);
 }

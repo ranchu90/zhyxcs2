@@ -11,6 +11,8 @@ public class Supervision {
 
     private String suniquesocialcreditcode;
 
+    private String saccounttime;
+
     private String sapprovalcode;
 
     private Date sbusinessdate;
@@ -61,11 +63,12 @@ public class Supervision {
 
     private Date srechecktime;
 
-    public Supervision(String stransactionnum, String saccountnum, String sdepositorname, String suniquesocialcreditcode, String sapprovalcode, Date sbusinessdate, Date sbusinesscertificatedate, String srelatedtransctionnum, String skind, String sapprovalstate, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckresult, String srecheckopinion, Date srechecktime) {
+    public Supervision(String stransactionnum, String saccountnum, String sdepositorname, String suniquesocialcreditcode, String saccounttime, String sapprovalcode, Date sbusinessdate, Date sbusinesscertificatedate, String srelatedtransctionnum, String skind, String sapprovalstate, Date scommittimes, Date sreturntimes, Date spbcreturntimes, Date scompletetimes, String sbusinesscategory, String saccounttype, String sbankcode, String spbcbankcode, String sbankname, String supusercode, String supusername, Date sstarttime, Date sendtime, String sreviewusercode, String scheckusercode, String srecheckusercode, String srecheckresult, String srecheckopinion, Date srechecktime) {
         this.stransactionnum = stransactionnum;
         this.saccountnum = saccountnum;
         this.sdepositorname = sdepositorname;
         this.suniquesocialcreditcode = suniquesocialcreditcode;
+        this.saccounttime = saccounttime;
         this.sapprovalcode = sapprovalcode;
         this.sbusinessdate = sbusinessdate;
         this.sbusinesscertificatedate = sbusinesscertificatedate;
@@ -127,6 +130,14 @@ public class Supervision {
 
     public void setSuniquesocialcreditcode(String suniquesocialcreditcode) {
         this.suniquesocialcreditcode = suniquesocialcreditcode == null ? null : suniquesocialcreditcode.trim();
+    }
+
+    public String getSaccounttime() {
+        return saccounttime;
+    }
+
+    public void setSaccounttime(String saccounttime) {
+        this.saccounttime = saccounttime == null ? null : saccounttime.trim();
     }
 
     public String getSapprovalcode() {

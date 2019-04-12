@@ -213,7 +213,7 @@ public class SupervisionController extends BaseController {
 
     private String approvalState(String code){
         switch (code){
-            case "0": return "待整改";
+            case "0": return "整改";
             case "1": return "待编辑";
             case "2": return "待复查";
 //            case "4": return "待通过";
