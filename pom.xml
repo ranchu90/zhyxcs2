@@ -5,10 +5,10 @@
 
     <groupId>com.zhyxcs.xxzz</groupId>
     <artifactId>zhyxcs2</artifactId>
-    <version>1.1.8-SNAPSHOT</version>
+    <version>zhyxcs-2.0.0</version>
     <packaging>jar</packaging>
 
-    <name>zhyxcs</name>
+    <name>zhyxcs2</name>
     <description>zhyxcs project for Spring Boot</description>
 
     <parent>
