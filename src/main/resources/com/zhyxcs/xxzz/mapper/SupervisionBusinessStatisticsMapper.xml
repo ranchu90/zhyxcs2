@@ -23,12 +23,15 @@
     where sID = #{sid,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.SupervisionBusinessStatistics" >
-    insert into tsupervisionbusinessstatistics (sID, sTransactionNum, sPBCode, 
+    <selectKey resultType="java.lang.Long" keyProperty="sid" keyColumn="sID" order="BEFORE">
+      select getSequenceNextVal('super_statistics_seq');
+    </selectKey>
+    insert into tsupervisionbusinessstatistics (sID, sTransactionNum, sPBCode,
       sBankAreaCode, sBankCityCode, sBankKind, 
       sBankTypeCode, sBusinessCategory, sAccountType, 
       sPass, sOverTime, sErrorType, 
       sHappenTimes)
-    values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{spbcode,jdbcType=VARCHAR}, 
+    values (#{sid,jdbcType=BIGINT}, #{stransactionnum,jdbcType=VARCHAR}, #{spbcode,jdbcType=VARCHAR},
       #{sbankareacode,jdbcType=VARCHAR}, #{sbankcitycode,jdbcType=VARCHAR}, #{sbankkind,jdbcType=VARCHAR}, 
       #{sbanktypecode,jdbcType=VARCHAR}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
       #{spass,jdbcType=VARCHAR}, #{sovertime,jdbcType=VARCHAR}, #{serrortype,jdbcType=VARCHAR}, 
@@ -61,4 +64,8 @@
     sBusinessCategory, sAccountType, sPass, sOverTime, sErrorType, sHappenTimes
     from tsupervisionbusinessstatistics
   </select>
+
+  <select id="getCountByTransactionNum" resultType="int">
+        select count(*) from tsupervisionbusinessstatistics where sTransactionNum = #{transactionNum}
+    </select>
 </mapper>

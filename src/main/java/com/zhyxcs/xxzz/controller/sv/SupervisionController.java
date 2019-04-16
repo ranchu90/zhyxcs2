@@ -5,32 +5,36 @@ import com.github.pagehelper.PageInfo;
 import com.zhyxcs.xxzz.config.ImageConfig;
 import com.zhyxcs.xxzz.controller.BaseController;
 import com.zhyxcs.xxzz.domain.*;
-import com.zhyxcs.xxzz.service.OrgaService;
-import com.zhyxcs.xxzz.service.SVImageService;
-import com.zhyxcs.xxzz.service.SupervisionService;
-import com.zhyxcs.xxzz.service.UserService;
+import com.zhyxcs.xxzz.service.*;
 import com.zhyxcs.xxzz.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/api/supervision")
 public class SupervisionController extends BaseController {
     @Autowired
-    SupervisionService supervisionService;
+    private SupervisionService supervisionService;
     @Autowired
-    SVImageService svImageService;
+    private SVImageService svImageService;
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    OrgaService orgaService;
+    private OrgaService orgaService;
     @Autowired
     private ImageConfig imageConfig;
+    @Autowired
+    private SupervisionBusinessStaticsService supervisionBusinessStaticsService;
+
+    //公平锁
+    private Lock lock = new ReentrantLock(true);
 
     @RequestMapping(value = "/supervision", method = RequestMethod.GET)
     public Map<String,Object> getWorkIndexes(@RequestParam(value = "pageSize", required = false) String pageSize,
@@ -321,18 +325,23 @@ public class SupervisionController extends BaseController {
                     supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_RECHECK);
                     supervision.setScheckusercode(userCode);
                     supervision.setScompletetimes(date);
+                    //人民银行监督通过
+                    supervisionBusinessStaticsService.insert(dbSupervision, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
                     break;
                 case ActionType.RE_EDIT:
                     supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_NO_PASS);
                     supervision.setScheckusercode(userCode);
                     supervision.setScompletetimes(date);
                     this.newSupervision(supervision.getStransactionnum());
+                    //人民银行退回，插入退回理由
+                    supervisionBusinessStaticsService.insert(dbSupervision, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
                     break;
                     //人民银行的复监督
                 case ActionType.END:
                     supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_END);
                     supervision.setSrecheckusercode(userCode);
                     supervision.setSrechecktime(date);
+                    break;
             }
         } catch (Exception e) {
 //            logger.error("## Error Information ##: {}", e);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ·······················
@@ -354,11 +363,83 @@ public class SupervisionController extends BaseController {
         return resultMap;
     }
 
+    private int copySVImagesWhileReturned(String transactionNum, String newtransactionNum){
+        ArrayList<SupervisionImage> svImageLists = (ArrayList<SupervisionImage>) svImageService.selectImagesByTranID(transactionNum);
+
+        //逐个复制图片
+        for (int i=0; i<svImageLists.size(); ++i){
+            SupervisionImage oldImage = svImageLists.get(i);
+            String basePath = imageConfig.getSvBasePath();
+
+            Date currentDate = CommonUtils.newDate();
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+
+            String datePath = format.format(currentDate);
+            String yearMounthPath = datePath.substring(0, 6);
+            String dayPath = datePath.substring(6);
+            String imageName = String.valueOf(UUID.randomUUID());
+
+            //年月-日-流水号
+            String storePath = yearMounthPath + File.separatorChar + dayPath + File.separatorChar + newtransactionNum
+                    + File.separatorChar + imageName;
+
+            //image文件存储真实路径 = basePath + storePath
+
+            File fileS = new File(basePath + oldImage.getSstorepath());
+            File fileD = new File(basePath + storePath);
+
+            if (!fileD.exists()) {
+
+                if (!fileD.getParentFile().exists()) {
+                    fileD.getParentFile().mkdirs();
+                }
+
+                try {
+                    this.copyFileUsingStream(fileS, fileD);
+
+                    oldImage.setSimagename(imageName);
+                    oldImage.setSstorepath(storePath);
+                    oldImage.setStransactionnum(newtransactionNum);
+                    lock.lock();
+                    svImageService.insert(oldImage);
+                    this.writeLog(Logs.IMAGE_UPLOAD + " " + oldImage.toString());
+                } catch (Exception e){
+                    e.printStackTrace();
+                    return 0;
+                } finally {
+                    lock.unlock();
+                }
+            }
+        }
+        return 1;
+    }
+
+    /*
+    * 退回时，复制图片
+    * */
+    private void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
     private int newSupervision(String transactionNum){
         Supervision supervision = supervisionService.selectByPrimaryKey(transactionNum);
         int length = transactionNum.length();
+        String newtransactionNum = transactionNum;
         if (length == 24){
-            transactionNum = transactionNum + "00";
+            newtransactionNum = transactionNum + "00";
         } else {
             String num = transactionNum.substring(24, 26);
             int tmp = Integer.parseInt(num);
@@ -369,11 +450,11 @@ public class SupervisionController extends BaseController {
             } else {
                 tmpStr = "" + tmp;
             }
-            transactionNum = transactionNum.substring(0, 24) + tmpStr;
+            newtransactionNum = transactionNum.substring(0, 24) + tmpStr;
         }
 
         Supervision newSupervision = new Supervision();
-        newSupervision.setStransactionnum(transactionNum);
+        newSupervision.setStransactionnum(newtransactionNum);
         newSupervision.setSaccountnum(supervision.getSaccountnum());
         newSupervision.setSdepositorname(supervision.getSdepositorname());
         newSupervision.setSuniquesocialcreditcode(supervision.getSuniquesocialcreditcode());
@@ -387,6 +468,9 @@ public class SupervisionController extends BaseController {
         newSupervision.setSupusercode(supervision.getSupusercode());
         newSupervision.setSupusername(supervision.getSupusername());
         newSupervision.setSstarttime(CommonUtils.newDate());
+
+        //复制图片
+        this.copySVImagesWhileReturned(transactionNum, newtransactionNum);
 
         return supervisionService.insert(newSupervision);
     }
