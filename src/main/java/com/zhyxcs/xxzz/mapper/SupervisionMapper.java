@@ -85,4 +85,10 @@ public interface SupervisionMapper {
                                               @Param("endTime") String endTime,
                                               @Param("bankCodeList") List<String> bankCodeList,
                                               @Param("pbcCodeList") List<String> pbcCodeList);
+
+    int correctTransaction(Supervision supervision);
+
+    int endTransaction(Supervision supervision);
+
+    int updateBasicElementsByPrimaryKey(Supervision supervision);
 }

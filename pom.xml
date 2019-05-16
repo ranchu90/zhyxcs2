@@ -5,7 +5,7 @@
 
     <groupId>com.zhyxcs.xxzz</groupId>
     <artifactId>zhyxcs2</artifactId>
-    <version>zhyxcs-2.0.0</version>
+    <version>zhyxcs-2.0.5</version>
     <packaging>jar</packaging>
 
     <name>zhyxcs2</name>

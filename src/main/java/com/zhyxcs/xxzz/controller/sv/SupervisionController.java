@@ -203,6 +203,9 @@ public class SupervisionController extends BaseController {
                 tempSV.put("sreturntimes", sv.getSreturntimes());
                 tempSV.put("saccountnum", sv.getSaccountnum());
                 tempSV.put("suniquesocialcreditcode", sv.getSuniquesocialcreditcode());
+                tempSV.put("saccounttime", sv.getSaccounttime());
+                tempSV.put("saccountclosetime", sv.getSaccountclosetime());
+                tempSV.put("skind", sv.getSkind());
 
                 newSVList.add(tempSV);
             }
@@ -224,8 +227,56 @@ public class SupervisionController extends BaseController {
             case "3": return "待督查";
             case "4": return "待复督查";
             case "5": return "已完成";
+            case "6": return "被终止";
         }
         return null;
+    }
+
+    @RequestMapping(value = "/basicElements", method = RequestMethod.PUT)
+    public HashMap updateBasicElements(@RequestBody Supervision supervision){
+        HttpSession session = super.request.getSession(false);
+        User user = (User) session.getAttribute(CramsConstants.SESSION_LOGIN_USER);
+
+        HashMap resultMap = new HashMap();
+
+        String superUserCode = supervision.getSupusercode();
+        String currentUSerCode = user.getSusercode();
+        if (!currentUSerCode.equals(superUserCode)){
+            resultMap.put("result", "error");
+            resultMap.put("info", "这条业务不属于你！");
+            return resultMap;
+        }
+
+        String transactionNum = supervision.getStransactionnum();
+
+        Supervision dbSupervision = supervisionService.selectByPrimaryKey(transactionNum);
+
+        if (dbSupervision == null) {
+            resultMap.put("result", "error");
+            resultMap.put("info", "这条业务不存在！");
+            return resultMap;
+        }
+
+        String depositorName = supervision.getSdepositorname();
+        String accountNum = supervision.getSaccountnum();
+        String openTime = supervision.getSaccounttime();
+        String unitCode = supervision.getSuniquesocialcreditcode();
+
+        if (depositorName == null || accountNum == null || openTime == null || unitCode == null){
+            return null;
+        }
+
+        int result = supervisionService.updateBasicElementsByPrimaryKey(supervision);
+
+        if (result < 0 ){
+            resultMap.put("result", "error");
+            resultMap.put("info", "更新失败！");
+            return resultMap;
+        }
+
+        resultMap.put("result", "success");
+        resultMap.put("info", "基础信息更新成功！");
+        return resultMap;
     }
 
     @RequestMapping(value = "/supervision", method = RequestMethod.POST)
@@ -300,47 +351,61 @@ public class SupervisionController extends BaseController {
 //            lock.lock();
             switch (action) {
                     //商业银行录入
-                case ActionType.COMMIT:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_REVIEW);
-                    supervision.setSendtime(date);
+                case ActionType.SV_COMMIT:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_REVIEW);
+                    dbSupervision.setSendtime(date);
                     break;
-                case ActionType.COMMIT_REN:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
-                    supervision.setSendtime(date);
-                    supervision.setScommittimes(date);
+                case ActionType.SV_COMMIT_REN:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
+                    dbSupervision.setSendtime(date);
+                    dbSupervision.setScommittimes(date);
                     break;
                     //商业银行的复查
-                case ActionType.REVIEW:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
-                    supervision.setSreviewusercode(userCode);
-                    supervision.setScommittimes(date);
+                case ActionType.SV_REVIEW:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_CHECK);
+                    dbSupervision.setSreviewusercode(userCode);
+                    dbSupervision.setScommittimes(date);
                     break;
-                case ActionType.SEND_BACK:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_NEW);
-                    supervision.setSreviewusercode(userCode);
-                    supervision.setSreturntimes(date);
+                case ActionType.SV_SEND_BACK:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_NEW);
+                    dbSupervision.setSreviewusercode(userCode);
+                    dbSupervision.setSreturntimes(date);
                     break;
                     //人民银行的监督
-                case ActionType.CHECK:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_RECHECK);
-                    supervision.setScheckusercode(userCode);
-                    supervision.setScompletetimes(date);
+                case ActionType.SV_CHECK:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_PBC_RECHECK);
+                    dbSupervision.setScheckusercode(userCode);
+                    dbSupervision.setScompletetimes(date);
+                    String kind = dbSupervision.getSkind();
+                    //将已经通过的 整改业务的上流业务标记为整改完成
+                    if ("1".equals(kind)){
+                        supervisionService.correctTransaction(dbSupervision);
+                    }
+
                     //人民银行监督通过
                     supervisionBusinessStaticsService.insert(dbSupervision, AuditStatus.APPROVAL, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
                     break;
-                case ActionType.RE_EDIT:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_NO_PASS);
-                    supervision.setScheckusercode(userCode);
-                    supervision.setScompletetimes(date);
+                case ActionType.SV_RE_EDIT:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_NO_PASS);
+                    dbSupervision.setScheckusercode(userCode);
+                    dbSupervision.setScompletetimes(date);
                     this.newSupervision(supervision.getStransactionnum());
                     //人民银行退回，插入退回理由
                     supervisionBusinessStaticsService.insert(dbSupervision, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
                     break;
+                case ActionType.SV_FORCE_END:
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_FORCE_END);
+                    dbSupervision.setScheckusercode(userCode);
+                    dbSupervision.setScompletetimes(date);
+                    //人民银行强行终止业务，插入退回理由
+                    supervisionBusinessStaticsService.insert(dbSupervision, AuditStatus.UNTREAD, OvertimeStatus.NOOVER, new GroundsForReturn(Long.valueOf(groundsId), grounds, groundsState));
+                    break;
                     //人民银行的复监督
                 case ActionType.END:
-                    supervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_END);
-                    supervision.setSrecheckusercode(userCode);
-                    supervision.setSrechecktime(date);
+                    dbSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_END);
+                    dbSupervision.setSrecheckusercode(userCode);
+                    dbSupervision.setSrechecktime(date);
+                    supervisionService.endTransaction(dbSupervision);
                     break;
             }
         } catch (Exception e) {
@@ -354,7 +419,7 @@ public class SupervisionController extends BaseController {
         int result = 0;
 
         try {
-            result = supervisionService.updateApprovalStateNameByPrimaryKey(supervision, action);
+            result = supervisionService.updateApprovalStateNameByPrimaryKey(dbSupervision, action);
             resultMap.put("success", "更新成功！");
         } catch (Exception e) {
 //            logger.error("## Error Information ##: {}", e);
@@ -458,6 +523,8 @@ public class SupervisionController extends BaseController {
         newSupervision.setSaccountnum(supervision.getSaccountnum());
         newSupervision.setSdepositorname(supervision.getSdepositorname());
         newSupervision.setSuniquesocialcreditcode(supervision.getSuniquesocialcreditcode());
+        newSupervision.setSaccounttime(supervision.getSaccounttime());
+        newSupervision.setSaccountclosetime(supervision.getSaccountclosetime());
         newSupervision.setSkind("1");
         newSupervision.setSapprovalstate(ActionType.SV_APPROVAL_STATE_COMMERCE_NEW);
         newSupervision.setSbusinesscategory(supervision.getSbusinesscategory());
@@ -468,6 +535,7 @@ public class SupervisionController extends BaseController {
         newSupervision.setSupusercode(supervision.getSupusercode());
         newSupervision.setSupusername(supervision.getSupusername());
         newSupervision.setSstarttime(CommonUtils.newDate());
+        newSupervision.setSrelatedtransctionnum(transactionNum);
 
         //复制图片
         this.copySVImagesWhileReturned(transactionNum, newtransactionNum);

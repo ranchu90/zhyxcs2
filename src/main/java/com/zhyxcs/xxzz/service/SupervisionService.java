@@ -90,4 +90,10 @@ public interface SupervisionService {
                                             String endTime,
                                             List<String> bankCodeList,
                                             List<String> pbcCodeList);
+
+    int correctTransaction(Supervision supervision);
+
+    int endTransaction(Supervision supervision);
+
+    int updateBasicElementsByPrimaryKey(Supervision supervision);
 }

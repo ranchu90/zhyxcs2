@@ -115,4 +115,19 @@ public class SupervisionImpl implements SupervisionService {
                 businessCategory, accountType, orgaCode, bankEntryUserCode, bankReviewUserCode, renEntryUserCode,
                 renRecheckUserCode, transactionNum, approvalCode, identifier, startTime, endTime, bankCodeList, pbcCodeList);
     }
+
+    @Override
+    public int correctTransaction(Supervision supervision) {
+        return supervisionMapper.correctTransaction(supervision);
+    }
+
+    @Override
+    public int endTransaction(Supervision supervision) {
+        return supervisionMapper.endTransaction(supervision);
+    }
+
+    @Override
+    public int updateBasicElementsByPrimaryKey(Supervision supervision) {
+        return supervisionMapper.updateBasicElementsByPrimaryKey(supervision);
+    }
 }

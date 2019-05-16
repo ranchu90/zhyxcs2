@@ -11,7 +11,6 @@ public class ActionType {
     public static final String CHECK = "check";
     public static final String RECHECK = "recheck";
     public static final String UPLOAD_LICENCE = "upload_licence";
-    public static final String RE_EDIT = "re_edit";
     public static final String END = "end";
 
     //商业银行录入员新增任务，没有提交给商业银行复核员或没有提交给人民银行审核员之前
@@ -38,7 +37,9 @@ public class ActionType {
     public static final String SV_REVIEW = "review";
     public static final String SV_CHECK = "check";
     public static final String SV_RECHECK = "recheck";
+    public static final String SV_RE_EDIT = "re_edit";
     public static final String SV_END = "end";
+    public static final String SV_FORCE_END = "force_end";
 
     /*
     * 'APPROVAL_STATE_COMMERCE_NEW': 1,
@@ -56,11 +57,12 @@ public class ActionType {
     public static final String SV_APPROVAL_STATE_PBC_CHECK="3";
     //人民银行审核员完成审核并通过审核
     public static final String SV_APPROVAL_STATE_PBC_RECHECK="4";
+    //被要求整改的业务
     //商业银行复核员或人民银行审核员对商业银行录入员提交的业务不通过,返回整改的业务状态
     public static final String SV_APPROVAL_STATE_NO_PASS="0";
-    //被要求整改的业务
-    public static final String SV_APPROVAL_STATE_WAIT_CORRECT="6";
     //人民银行审核员终止业务，因商业银行提交的业务发生不可容忍的错误
+    public static final String SV_APPROVAL_STATE_FORCE_END="6";
+    //正常结束
     public static final String SV_APPROVAL_STATE_END="5";
 
     //业务不需要加急

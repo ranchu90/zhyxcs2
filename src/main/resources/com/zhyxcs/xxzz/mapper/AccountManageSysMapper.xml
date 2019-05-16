@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhyxcs.xxzz.mapper.AccountManageSysMapper">
+  <resultMap id="BaseResultMap" type="com.zhyxcs.xxzz.domain.AccountManageSys">
+    <constructor>
+      <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sRegisterAreaCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sStatutoryName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sSuperiorUnit" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sSuperiorStatutoryAccountApprovalCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sSuperiorStatutoryName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sDepositorSupportDocumentFirstCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountOpenBankCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountKind" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountNum" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountOpenDate" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountCloseDate" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.AccountManageSys">
+    insert into taccountmanagesys (sDepositorName, sRegisterAreaCode, 
+      sStatutoryName, sSuperiorUnit, sSuperiorStatutoryAccountApprovalCode, 
+      sSuperiorStatutoryName, sDepositorSupportDocumentFirstCode, 
+      sAccountOpenBankCode, sAccountKind, sAccountNum, 
+      sAccountName, sAccountOpenDate, sAccountCloseDate, 
+      sAccountStatus)
+    values (#{sdepositorname,jdbcType=VARCHAR}, #{sregisterareacode,jdbcType=VARCHAR}, 
+      #{sstatutoryname,jdbcType=VARCHAR}, #{ssuperiorunit,jdbcType=VARCHAR}, #{ssuperiorstatutoryaccountapprovalcode,jdbcType=VARCHAR}, 
+      #{ssuperiorstatutoryname,jdbcType=VARCHAR}, #{sdepositorsupportdocumentfirstcode,jdbcType=VARCHAR}, 
+      #{saccountopenbankcode,jdbcType=VARCHAR}, #{saccountkind,jdbcType=VARCHAR}, #{saccountnum,jdbcType=VARCHAR}, 
+      #{saccountname,jdbcType=VARCHAR}, #{saccountopendate,jdbcType=VARCHAR}, #{saccountclosedate,jdbcType=VARCHAR}, 
+      #{saccountstatus,jdbcType=VARCHAR})
+    on duplicate key update
+      sRegisterAreaCode = values(sRegisterAreaCode),
+      sStatutoryName = values(sStatutoryName),
+      sSuperiorUnit = values(sSuperiorUnit),
+      sSuperiorStatutoryAccountApprovalCode = values(sSuperiorStatutoryAccountApprovalCode),
+      sSuperiorStatutoryName = values(sSuperiorStatutoryName),
+      sAccountOpenBankCode = values(sAccountOpenBankCode),
+      sAccountKind = values(sAccountKind),
+      sAccountName = values(sAccountName),
+      sAccountCloseDate =  values(sAccountCloseDate),
+      sAccountStatus = values(sAccountStatus)
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select sDepositorName, sRegisterAreaCode, sStatutoryName, sSuperiorUnit, sSuperiorStatutoryAccountApprovalCode, 
+    sSuperiorStatutoryName, sDepositorSupportDocumentFirstCode, sAccountOpenBankCode, 
+    sAccountKind, sAccountNum, sAccountName, sAccountOpenDate, sAccountCloseDate, sAccountStatus
+    from taccountmanagesys
+  </select>
+  <select id="selectByUnitCodeAccountNumAndOpenDate" resultMap="BaseResultMap">
+    select sDepositorName, sRegisterAreaCode, sStatutoryName, sSuperiorUnit, sSuperiorStatutoryAccountApprovalCode,
+    sSuperiorStatutoryName, sDepositorSupportDocumentFirstCode, sAccountOpenBankCode,
+    sAccountKind, sAccountNum, sAccountName, sAccountOpenDate, sAccountCloseDate, sAccountStatus
+    from taccountmanagesys
+    where sAccountNum = #{accountNum,jdbcType=VARCHAR}
+    and sAccountOpenDate = #{openDate,jdbcType=VARCHAR}
+    and sDepositorSupportDocumentFirstCode = #{unitCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByUnitCodeAccountNumAndOpenDateVersionTwo" resultMap="BaseResultMap">
+    select sDepositorName, sRegisterAreaCode, sStatutoryName, sSuperiorUnit, sSuperiorStatutoryAccountApprovalCode,
+    sSuperiorStatutoryName, sDepositorSupportDocumentFirstCode, sAccountOpenBankCode,
+    sAccountKind, sAccountNum, sAccountName, sAccountOpenDate, sAccountCloseDate, sAccountStatus
+    from taccountmanagesys
+    where sAccountNum = #{accountNum,jdbcType=VARCHAR}
+    and sAccountStatus = #{status,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByUnitCodeAccountNumAndOpenDateBlur" resultMap="BaseResultMap">
+    select sDepositorName, sRegisterAreaCode, sStatutoryName, sSuperiorUnit, sSuperiorStatutoryAccountApprovalCode,
+    sSuperiorStatutoryName, sDepositorSupportDocumentFirstCode, sAccountOpenBankCode,
+    sAccountKind, sAccountNum, sAccountName, sAccountOpenDate, sAccountCloseDate, sAccountStatus
+    from taccountmanagesys
+    where sDepositorSupportDocumentFirstCode = #{unitCode,jdbcType=VARCHAR}
+    and sDepositorName = #{depositorName,jdbcType=VARCHAR}
+    order by sAccountOpenDate desc
+  </select>
+
+  <update id="updateByUnitCodeAccountNumAndOpenDate" parameterType="com.zhyxcs.xxzz.domain.AccountManageSys">
+    update taccountmanagesys
+    set sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
+    sRegisterAreaCode = #{sregisterareacode,jdbcType=VARCHAR},
+    sStatutoryName = #{sstatutoryname,jdbcType=VARCHAR},
+    sSuperiorUnit = #{ssuperiorunit,jdbcType=VARCHAR},
+    sSuperiorStatutoryAccountApprovalCode = #{ssuperiorstatutoryaccountapprovalcode,jdbcType=VARCHAR},
+    sSuperiorStatutoryName = #{ssuperiorstatutoryname,jdbcType=VARCHAR},
+    sAccountOpenBankCode = #{saccountopenbankcode,jdbcType=VARCHAR},
+    sAccountKind = #{saccountkind,jdbcType=VARCHAR},
+    sAccountName = #{saccountname,jdbcType=VARCHAR},
+    sAccountCloseDate =  #{saccountclosedate,jdbcType=VARCHAR},
+    sAccountStatus = #{saccountstatus,jdbcType=VARCHAR}
+    where sAccountNum = #{accountNum,jdbcType=VARCHAR}
+    and sAccountOpenDate = #{openDate,jdbcType=VARCHAR}
+    and sDepositorSupportDocumentFirstCode = #{unitCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

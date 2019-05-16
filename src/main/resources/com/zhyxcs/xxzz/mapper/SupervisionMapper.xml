@@ -8,6 +8,7 @@
       <arg column="sDepositorName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sUniqueSocialCreditCode" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sAccountTime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sAccountCloseTime" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sApprovalCode" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="sBusinessDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="sBusinessCertificateDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -42,26 +43,28 @@
   <insert id="insert" parameterType="com.zhyxcs.xxzz.domain.Supervision">
     insert into tsupervision (sTransactionNum, sAccountNum, sDepositorName, 
       sUniqueSocialCreditCode, sAccountTime, 
-      sApprovalCode, sBusinessDate, sBusinessCertificateDate, 
-      sRelatedTransctionNum, sKind, sApprovalState, 
-      sCommitTimes, sReturnTimes, sPBCReturnTimes, 
-      sCompleteTimes, sBusinessCategory, sAccountType, 
-      sBankCode, sPBCBankCode, sBankName, 
-      sUpUserCode, sUpUserName, sStartTime, 
-      sEndTime, sReviewUserCode, sCheckUserCode, 
-      sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
-      sRecheckTime)
+      sAccountCloseTime, sApprovalCode, sBusinessDate, 
+      sBusinessCertificateDate, sRelatedTransctionNum, 
+      sKind, sApprovalState, sCommitTimes, 
+      sReturnTimes, sPBCReturnTimes, sCompleteTimes, 
+      sBusinessCategory, sAccountType, sBankCode, 
+      sPBCBankCode, sBankName, sUpUserCode, 
+      sUpUserName, sStartTime, sEndTime, 
+      sReviewUserCode, sCheckUserCode, sRecheckUserCode, 
+      sRecheckResult, sRecheckOpinion, sRecheckTime
+      )
     values (#{stransactionnum,jdbcType=VARCHAR}, #{saccountnum,jdbcType=VARCHAR}, #{sdepositorname,jdbcType=VARCHAR}, 
       #{suniquesocialcreditcode,jdbcType=VARCHAR}, #{saccounttime,jdbcType=VARCHAR}, 
-      #{sapprovalcode,jdbcType=VARCHAR}, #{sbusinessdate,jdbcType=TIMESTAMP}, #{sbusinesscertificatedate,jdbcType=TIMESTAMP}, 
-      #{srelatedtransctionnum,jdbcType=VARCHAR}, #{skind,jdbcType=VARCHAR}, #{sapprovalstate,jdbcType=VARCHAR}, 
-      #{scommittimes,jdbcType=TIMESTAMP}, #{sreturntimes,jdbcType=TIMESTAMP}, #{spbcreturntimes,jdbcType=TIMESTAMP}, 
-      #{scompletetimes,jdbcType=TIMESTAMP}, #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, 
-      #{sbankcode,jdbcType=VARCHAR}, #{spbcbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, 
-      #{supusercode,jdbcType=VARCHAR}, #{supusername,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP}, 
-      #{sendtime,jdbcType=TIMESTAMP}, #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR}, 
-      #{srecheckusercode,jdbcType=VARCHAR}, #{srecheckresult,jdbcType=VARCHAR}, #{srecheckopinion,jdbcType=VARCHAR}, 
-      #{srechecktime,jdbcType=TIMESTAMP})
+      #{saccountclosetime,jdbcType=VARCHAR}, #{sapprovalcode,jdbcType=VARCHAR}, #{sbusinessdate,jdbcType=TIMESTAMP}, 
+      #{sbusinesscertificatedate,jdbcType=TIMESTAMP}, #{srelatedtransctionnum,jdbcType=VARCHAR}, 
+      #{skind,jdbcType=VARCHAR}, #{sapprovalstate,jdbcType=VARCHAR}, #{scommittimes,jdbcType=TIMESTAMP},
+      #{sreturntimes,jdbcType=TIMESTAMP}, #{spbcreturntimes,jdbcType=TIMESTAMP}, #{scompletetimes,jdbcType=TIMESTAMP}, 
+      #{sbusinesscategory,jdbcType=VARCHAR}, #{saccounttype,jdbcType=VARCHAR}, #{sbankcode,jdbcType=VARCHAR}, 
+      #{spbcbankcode,jdbcType=VARCHAR}, #{sbankname,jdbcType=VARCHAR}, #{supusercode,jdbcType=VARCHAR}, 
+      #{supusername,jdbcType=VARCHAR}, #{sstarttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, 
+      #{sreviewusercode,jdbcType=VARCHAR}, #{scheckusercode,jdbcType=VARCHAR}, #{srecheckusercode,jdbcType=VARCHAR}, 
+      #{srecheckresult,jdbcType=VARCHAR}, #{srecheckopinion,jdbcType=VARCHAR}, #{srechecktime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
     update tsupervision
@@ -69,6 +72,7 @@
       sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
       sUniqueSocialCreditCode = #{suniquesocialcreditcode,jdbcType=VARCHAR},
       sAccountTime = #{saccounttime,jdbcType=VARCHAR},
+      sAccountCloseTime = #{saccountclosetime,jdbcType=VARCHAR},
       sApprovalCode = #{sapprovalcode,jdbcType=VARCHAR},
       sBusinessDate = #{sbusinessdate,jdbcType=TIMESTAMP},
       sBusinessCertificateDate = #{sbusinesscertificatedate,jdbcType=TIMESTAMP},
@@ -98,21 +102,21 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sAccountTime, 
-    sApprovalCode, sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, 
-    sApprovalState, sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, 
-    sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, 
-    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
-    sRecheckTime
+    sAccountCloseTime, sApprovalCode, sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, 
+    sKind, sApprovalState, sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, 
+    sBusinessCategory, sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, 
+    sUpUserName, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, 
+    sRecheckResult, sRecheckOpinion, sRecheckTime
     from tsupervision
     where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select sTransactionNum, sAccountNum, sDepositorName, sUniqueSocialCreditCode, sAccountTime, 
-    sApprovalCode, sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, sKind, 
-    sApprovalState, sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, sBusinessCategory, 
-    sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, sUpUserName, sStartTime, 
-    sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, sRecheckResult, sRecheckOpinion, 
-    sRecheckTime
+    sAccountCloseTime, sApprovalCode, sBusinessDate, sBusinessCertificateDate, sRelatedTransctionNum, 
+    sKind, sApprovalState, sCommitTimes, sReturnTimes, sPBCReturnTimes, sCompleteTimes, 
+    sBusinessCategory, sAccountType, sBankCode, sPBCBankCode, sBankName, sUpUserCode, 
+    sUpUserName, sStartTime, sEndTime, sReviewUserCode, sCheckUserCode, sRecheckUserCode, 
+    sRecheckResult, sRecheckOpinion, sRecheckTime
     from tsupervision
   </select>
 
@@ -130,6 +134,7 @@
          #{saccountnum, mode=IN,jdbcType=VARCHAR},
          #{suniquesocialcreditcode, mode=IN,jdbcType=VARCHAR},
          #{saccounttime, mode=IN,jdbcType=VARCHAR},
+         #{saccountclosetime, mode=IN,jdbcType=VARCHAR},
          #{stransactionnum, mode=OUT,jdbcType=VARCHAR}
         )
     }
@@ -156,7 +161,14 @@
     <if test="kind != null and kind != ''">
       and sKind = #{kind,jdbcType=VARCHAR}
     </if>
-    order by sStartTime desc
+    <choose>
+      <when test="approvalState == 1">
+        order by sStartTime desc
+      </when>
+      <otherwise>
+        order by sCommitTimes desc
+      </otherwise>
+    </choose>
   </select>
   <select id="queryRecordByPageAndUserCodeBankCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">
     select * from tsupervision
@@ -209,14 +221,7 @@
     <if test="businessType != null and businessType != ''">
       and sBusinessCategory = #{businessType}
     </if>
-    <choose>
-      <when test="approvalState == 3">
-        order by sCommitTimes desc
-      </when>
-      <otherwise>
-        order by sCommitTimes asc
-      </otherwise>
-    </choose>
+      order by sCommitTimes desc
   </select>
   <select id="queryRecordByPageAndUserCodeRenCharge" resultType="com.zhyxcs.xxzz.domain.Supervision">
     select * from tsupervision
@@ -225,7 +230,7 @@
     and
     sPBCBankCode = #{pbcCode,jdbcType=VARCHAR}
     <choose>
-      <when test="approvalState != 5">
+      <when test="approvalState != 5 or approvalState != 6">
         and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
       </when>
       <otherwise>
@@ -244,14 +249,7 @@
     <if test="businessType != null and businessType != ''">
       and sBusinessCategory = #{businessType}
     </if>
-    <choose>
-      <when test="approvalState >= 3">
-        order by sCommitTimes desc
-      </when>
-      <otherwise>
-        order by sCommitTimes asc
-      </otherwise>
-    </choose>
+    order by sCommitTimes desc
   </select>
 
   <update id="updateApprovalStateNameByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
@@ -279,11 +277,17 @@
       <if test="action == 're_edit'">
         , sCheckUserCode = #{supervision.scheckusercode, jdbcType=VARCHAR}
         , sCompleteTimes = #{supervision.scompletetimes, jdbcType=TIMESTAMP}
+        , sKind = '1'
       </if>
       <if test="action == 'end'">
         , sRecheckUserCode = #{supervision.srecheckusercode, jdbcType=VARCHAR}
         , sReCheckTime = #{supervision.srechecktime, jdbcType=TIMESTAMP}
       </if>
+    <if test="action == 'force_end'">
+      , sRecheckUserCode = #{supervision.srecheckusercode, jdbcType=VARCHAR}
+      , sReCheckTime = #{supervision.srechecktime, jdbcType=TIMESTAMP}
+      , sCompleteTimes = #{supervision.scompletetimes, jdbcType=TIMESTAMP}
+    </if>
     where sTransactionNum = #{supervision.stransactionnum,jdbcType=VARCHAR}
   </update>
 
@@ -304,6 +308,28 @@
         </otherwise>
       </choose>
       and sBankCode = #{bankCode,jdbcType=VARCHAR}
+    </if>
+    <if test="userLevel == 4">
+      <choose>
+        <when test="approvalState == 3">
+          and (sCheckUserCode = #{userCode} or sCheckUserCode is null)
+        </when>
+        <otherwise>
+          and sCheckUserCode = #{userCode}
+        </otherwise>
+      </choose>
+      and sPBCBankCode = #{bankCode,jdbcType=VARCHAR}
+    </if>
+    <if test="userLevel == 5">
+      <choose>
+        <when test="approvalState == 4">
+          and (sRecheckUserCode = #{userCode} or sRecheckUserCode is null)
+        </when>
+        <otherwise>
+          and sRecheckUserCode = #{userCode}
+        </otherwise>
+      </choose>
+      and sPBCBankCode = #{bankCode,jdbcType=VARCHAR}
     </if>
     <if test="kind != null and kind != ''">
       and sKind = #{kind,jdbcType=VARCHAR}
@@ -382,18 +408,41 @@
       </if>
       )
     </if>
-    <if test="bankCodeList != null and bankCodeList.size > 0">
+    <if test="bankCodeList != null and bankCodeList.size &gt; 0">
       and sBankCode IN
-      <foreach collection="bankCodeList" item="item" index="index" open="(" close=")" separator=",">
+      <foreach close=")" collection="bankCodeList" index="index" item="item" open="(" separator=",">
         #{item}
       </foreach>
     </if>
-    <if test="pbcCodeList != null and pbcCodeList.size > 0">
+    <if test="pbcCodeList != null and pbcCodeList.size &gt; 0">
       and sPBCBankCode IN
-      <foreach collection="pbcCodeList" item="item" index="index" open="(" close=")" separator=",">
+      <foreach close=")" collection="pbcCodeList" index="index" item="item" open="(" separator=",">
         #{item}
       </foreach>
     </if>
     order by sEndTime
   </select>
+
+  <update id="correctTransaction" parameterType="com.zhyxcs.xxzz.domain.Supervision">
+    update tsupervision
+    set sKind = '2'
+    where sTransactionNum like CONCAT('%',substring(#{stransactionnum,jdbcType=VARCHAR}, 1, 24) ,'%')
+  </update>
+
+  <update id="endTransaction" parameterType="com.zhyxcs.xxzz.domain.Supervision">
+    update tsupervision
+    set sKind = '5'
+    where sTransactionNum like CONCAT('%',substring(#{stransactionnum,jdbcType=VARCHAR}, 1, 24) ,'%')
+  </update>
+
+  <update id="updateBasicElementsByPrimaryKey" parameterType="com.zhyxcs.xxzz.domain.Supervision">
+    update tsupervision
+    set
+      sAccountNum = #{saccountnum,jdbcType=VARCHAR},
+      sDepositorName = #{sdepositorname,jdbcType=VARCHAR},
+      sUniqueSocialCreditCode = #{suniquesocialcreditcode,jdbcType=VARCHAR},
+      sAccountTime = #{saccounttime,jdbcType=VARCHAR},
+      sAccountCloseTime = #{saccountclosetime,jdbcType=VARCHAR}
+    where sTransactionNum = #{stransactionnum,jdbcType=VARCHAR}
+  </update>
 </mapper>
